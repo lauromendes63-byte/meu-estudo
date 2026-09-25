@@ -1,5 +1,5 @@
-// Service Worker - Meu Estudo Caderno Médico
-const CACHE_NAME = 'meu-estudo-v1';
+// Service Worker - Meu Estudo Caderno Médico (Ultra-Fast Offline Support)
+const CACHE_NAME = 'meu-estudo-v1.6.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -32,10 +32,15 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   
+  // NEVER cache version.json so live update detector is always 100% accurate
+  if (event.request.url.includes('/version.json')) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        // Return cached and update in background
+        // Return cached asset immediately for 0ms load time, revalidate in background
         fetch(event.request).then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
@@ -43,8 +48,10 @@ self.addEventListener('fetch', (event) => {
         }).catch(() => {});
         return cachedResponse;
       }
+
+      // Fetch from network and cache (support both basic and cors responses like Tailwind and Confetti)
       return fetch(event.request).then((networkResponse) => {
-        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+        if (!networkResponse || networkResponse.status !== 200) {
           return networkResponse;
         }
         const responseToCache = networkResponse.clone();

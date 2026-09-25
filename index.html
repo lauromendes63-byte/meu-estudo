@@ -78,13 +78,15 @@
       padding-bottom: calc(max(14px, env(safe-area-inset-bottom)) + 76px);
     }
 
-    /* Bottom Sheet Animation */
+    /* Bottom Sheet Animation (120Hz Hardware Accelerated) */
     .sheet-overlay {
-      transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity;
     }
     .sheet-drawer {
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      transform: translateY(100%);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform;
+      transform: translate3d(0, 100%, 0);
       max-height: 94vh;
     }
     .sheet-open .sheet-overlay {
@@ -92,7 +94,54 @@
       pointer-events: auto;
     }
     .sheet-open .sheet-drawer {
-      transform: translateY(0);
+      transform: translate3d(0, 0, 0);
+    }
+
+    /* Modal / Dialog Smooth Entrance & Backdrop Blur */
+    dialog {
+      transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, opacity;
+      transform: scale(0.96) translateY(8px);
+      opacity: 0;
+    }
+    dialog[open] {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+    dialog::backdrop {
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      opacity: 0;
+      transition: opacity 0.22s ease-out;
+    }
+    dialog[open]::backdrop {
+      opacity: 1;
+    }
+
+    /* Tab entrance smooth animation (GPU Accelerated) */
+    .tab-pane {
+      animation: tabEnter 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      will-change: transform, opacity;
+    }
+    @keyframes tabEnter {
+      from {
+        opacity: 0;
+        transform: translate3d(0, 6px, 0);
+      }
+      to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+
+    /* Micro-interactions táteis e suaves sem consumo de CPU */
+    .tap-smooth {
+      transition: transform 0.12s cubic-bezier(0.2, 0, 0, 1), background-color 0.15s ease;
+      will-change: transform;
+    }
+    .tap-smooth:active {
+      transform: scale3d(0.97, 0.97, 1);
     }
 
     /* Scrollbar ultra-sutil */
@@ -107,45 +156,45 @@
 
     /* Clinical Note Highlights in Light Mode */
     .tag-red {
-      background-color: #fef2f2;
-      color: #dc2626;
-      border: 1px solid #fecaca;
+      background-color: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
       border-radius: 6px;
       padding: 1px 7px;
-      font-weight: 600;
+      font-weight: 700;
     }
     .tag-yellow {
-      background-color: #fefce8;
-      color: #ca8a04;
-      border: 1px solid #fef08a;
+      background-color: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fcd34d;
       border-radius: 6px;
       padding: 1px 7px;
-      font-weight: 600;
+      font-weight: 700;
     }
     .tag-green {
-      background-color: #f0fdf4;
-      color: #16a34a;
-      border: 1px solid #bbf7d0;
+      background-color: #d1fae5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
       border-radius: 6px;
       padding: 1px 7px;
-      font-weight: 600;
+      font-weight: 700;
     }
     .tag-blue {
-      background-color: #eff6ff;
-      color: #2563eb;
-      border: 1px solid #bfdbfe;
+      background-color: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #93c5fd;
       border-radius: 6px;
       padding: 1px 7px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
-    /* Soft pulse */
+    /* Soft pulse ultra-leve (0% CPU no compositor GPU) */
     @keyframes softPulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.6; transform: scale(1.08); }
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.65; }
     }
     .animate-soft-pulse {
-      animation: softPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      animation: softPulse 2.4s ease-in-out infinite;
     }
   </style>
 </head>
@@ -686,13 +735,14 @@
   <!-- ==================== APPLICATION LOGIC ==================== -->
   <script>
     // --- APP VERSION & AUTO-UPDATE DETECTOR ---
-    const CURRENT_APP_VERSION = '1.5.0';
-    const CURRENT_BUILD_TIMESTAMP = '2026-09-25T17:15:00.000Z';
-    const CURRENT_BUILD_LABEL = '25/09/2026 às 14:15';
+    const CURRENT_APP_VERSION = '1.6.0';
+    const CURRENT_BUILD_TIMESTAMP = '2026-09-25T17:30:00.000Z';
+    const CURRENT_BUILD_LABEL = '25/09/2026 às 14:30';
 
     let pendingServerUpdate = null;
 
     async function checkServerVersion(isManual = false) {
+      if (!isManual && document.hidden) return;
       try {
         const res = await fetch(`/version.json?_t=${Date.now()}`, {
           cache: 'no-store',
@@ -1121,6 +1171,9 @@
 
     function closeLessonSheet() {
       vibrate(8);
+      if (document.activeElement && typeof document.activeElement.blur === 'function') {
+        document.activeElement.blur();
+      }
       document.getElementById('sheet-lesson').classList.remove('sheet-open');
     }
 
@@ -2458,6 +2511,68 @@
       }
     });
 
+    // --- ANDROID HARDWARE & GESTURE BACK BUTTON NAVIGATION ---
+    let lastBackPressTime = 0;
+    let isExitingApp = false;
+
+    function initAndroidBackHandler() {
+      try {
+        history.replaceState({ app: 'meu-estudo', step: 'root' }, '');
+        history.pushState({ app: 'meu-estudo', step: 'guard' }, '');
+      } catch (e) {
+        console.warn('History API not supported', e);
+      }
+
+      window.addEventListener('popstate', (event) => {
+        if (isExitingApp) return;
+
+        // 1. Se Bottom Sheet de Aula estiver aberta, fecha suavemente
+        const sheet = document.getElementById('sheet-lesson');
+        if (sheet && sheet.classList.contains('sheet-open')) {
+          closeLessonSheet();
+          history.pushState({ app: 'meu-estudo', step: 'guard' }, '');
+          return;
+        }
+
+        // 2. Se houver algum modal (<dialog>) aberto, fecha
+        const openDialog = document.querySelector('dialog[open]');
+        if (openDialog) {
+          openDialog.close();
+          history.pushState({ app: 'meu-estudo', step: 'guard' }, '');
+          return;
+        }
+
+        // 3. Se estiver na visualização detalhada de um Módulo, volta para lista de Módulos
+        if (AppState.activeTab === 'tab-modulo-detail') {
+          AppState.currentModuleId = null;
+          switchTab('tab-modulos');
+          history.pushState({ app: 'meu-estudo', step: 'guard' }, '');
+          return;
+        }
+
+        // 4. Se estiver em abas secundárias (Estudo ou Provas), volta para a aba Módulos
+        if (AppState.activeTab !== 'tab-modulos') {
+          switchTab('tab-modulos');
+          history.pushState({ app: 'meu-estudo', step: 'guard' }, '');
+          return;
+        }
+
+        // 5. Na tela inicial (Módulos): proteção contra encerramento acidental (toque duplo em 2s)
+        const now = Date.now();
+        if (now - lastBackPressTime < 2000) {
+          isExitingApp = true;
+          history.back();
+          setTimeout(() => {
+            try { window.close(); } catch (err) {}
+          }, 120);
+        } else {
+          lastBackPressTime = now;
+          showToast("Pressione voltar novamente para sair", "👋");
+          history.pushState({ app: 'meu-estudo', step: 'guard' }, '');
+        }
+      });
+    }
+
     // Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -2470,6 +2585,7 @@
       loadState();
       updateUI();
       switchTab('tab-modulos');
+      initAndroidBackHandler();
 
       checkServerVersion(false);
 
@@ -2480,8 +2596,10 @@
       });
 
       setInterval(() => {
-        checkServerVersion(false);
-      }, 40000);
+        if (!document.hidden) {
+          checkServerVersion(false);
+        }
+      }, 45000);
     });
   </script>
 </body>
