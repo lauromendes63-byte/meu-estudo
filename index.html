@@ -199,35 +199,32 @@
   <main id="main-content" class="flex-1 overflow-y-auto pb-nav px-3.5 pt-3 z-10">
 
     <!-- ==================== ABA 1: MÓDULOS ==================== -->
-    <section id="tab-modulos" class="tab-pane space-y-3.5">
+    <section id="tab-modulos" class="tab-pane space-y-3">
       
-      <!-- Primary Action Buttons (Os botões que o usuário elogiou, mantidos e refinados) -->
-      <div class="grid grid-cols-2 gap-2.5">
-        <button id="btn-quick-new-lesson-home" class="py-2.5 px-3 rounded-2xl bg-gradient-to-r from-brand-600 via-brand-500 to-emerald-500 hover:from-brand-500 hover:to-brand-400 text-white font-extrabold text-xs shadow-md shadow-brand-500/20 flex items-center justify-center gap-1.5 active:scale-95 transition-all border border-brand-400/30">
-          <span class="text-base leading-none">✚</span>
-          <span>Nova Aula</span>
-        </button>
-        <button id="btn-open-create-module" class="py-2.5 px-3 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200/90 text-slate-800 font-extrabold text-xs shadow-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all">
-          <span class="text-base leading-none">📁</span>
-          <span>Novo Módulo</span>
-        </button>
-      </div>
-
-      <!-- Section Title & View Mode Switcher (Sem prolixismo) -->
-      <div class="pt-0.5 flex items-center justify-between px-1">
+      <!-- Section Title, Add Module Button & View Mode Switcher -->
+      <div class="flex items-center justify-between px-1 pt-0.5">
         <div class="flex items-center gap-2">
-          <h2 class="text-[15.5px] font-black text-slate-900 tracking-tight">Módulos</h2>
-          <span id="modules-count-badge" class="text-[10px] font-extrabold text-slate-500 bg-white px-2 py-0.5 rounded-full border border-slate-200/80 shadow-2xs">0</span>
+          <h2 class="text-[16px] font-black text-slate-900 tracking-tight">Módulos</h2>
+          <span id="modules-count-badge" class="text-[10px] font-black text-slate-500 bg-white px-2 py-0.5 rounded-full border border-slate-200/80 shadow-2xs">0</span>
         </div>
 
-        <!-- Alavanca de Modos de Visualização (Lista vs Grade 2 colunas) -->
-        <div class="bg-slate-200/60 p-0.5 rounded-xl border border-slate-200/80 flex items-center shadow-inner">
-          <button id="btn-view-list" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 transition-all" title="Visualização em Linhas">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        <!-- Minimalist Controls: + Módulo Button & View Switcher (Mesmo estilo compacto) -->
+        <div class="flex items-center gap-1.5">
+          <!-- Botão Minimalista Novo Módulo -->
+          <button id="btn-open-create-module" class="h-8 px-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-[11px] shadow-xs active:scale-95 transition-all flex items-center gap-1 border border-slate-900" title="Criar Novo Módulo">
+            <span class="text-sm font-bold leading-none">＋</span>
+            <span>Módulo</span>
           </button>
-          <button id="btn-view-grid" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 transition-all" title="Visualização em 2 Colunas">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path></svg>
-          </button>
+
+          <!-- Alavanca de Modos de Visualização (Lista vs Grade 2 colunas) -->
+          <div class="bg-slate-200/70 p-0.5 rounded-xl border border-slate-300/60 flex items-center shadow-inner h-8">
+            <button id="btn-view-list" class="h-7 px-2 rounded-lg text-slate-400 hover:text-slate-700 transition-all flex items-center justify-center" title="Visualização em Linhas">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+            <button id="btn-view-grid" class="h-7 px-2 rounded-lg text-slate-400 hover:text-slate-700 transition-all flex items-center justify-center" title="Visualização em 2 Colunas">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path></svg>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -326,22 +323,14 @@
 
   </main>
 
-  <!-- ==================== BOTTOM NAVIGATION (ORGANIZADA & LIMPA) ==================== -->
-  <nav class="fixed bottom-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-xl border-t border-slate-200/80 px-3 pt-2 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
+  <!-- ==================== BOTTOM NAVIGATION (SIMÉTRICA, ELEGANTE & LIMPA) ==================== -->
+  <nav class="fixed bottom-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-xl border-t border-slate-200/80 px-4 pt-2 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
     <div class="flex items-center justify-between max-w-md mx-auto">
       
       <!-- Tab 1: Módulos -->
       <button data-tab="tab-modulos" class="nav-tab-btn flex-1 py-1 flex flex-col items-center justify-center text-brand-600 active:scale-90 transition-transform">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
         <span class="text-[10.5px] font-bold mt-1">Módulos</span>
-      </button>
-
-      <!-- Center Quick Action: + Aula (Accessible on every screen with 1 tap) -->
-      <button id="nav-btn-add-lesson" class="flex-1 py-1 flex flex-col items-center justify-center text-slate-700 hover:text-brand-600 active:scale-90 transition-transform">
-        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-500 text-white font-bold flex items-center justify-center shadow-md shadow-brand-500/20">
-          <span class="text-base leading-none">+</span>
-        </div>
-        <span class="text-[10.5px] font-bold mt-0.5 text-slate-800">Nova Aula</span>
       </button>
 
       <!-- Tab 2: Estudo & Revisões -->
@@ -697,9 +686,9 @@
   <!-- ==================== APPLICATION LOGIC ==================== -->
   <script>
     // --- APP VERSION & AUTO-UPDATE DETECTOR ---
-    const CURRENT_APP_VERSION = '1.4.0';
-    const CURRENT_BUILD_TIMESTAMP = '2026-09-25T16:50:00.000Z';
-    const CURRENT_BUILD_LABEL = '25/09/2026 às 13:50';
+    const CURRENT_APP_VERSION = '1.5.0';
+    const CURRENT_BUILD_TIMESTAMP = '2026-09-25T17:15:00.000Z';
+    const CURRENT_BUILD_LABEL = '25/09/2026 às 14:15';
 
     let pendingServerUpdate = null;
 
@@ -849,33 +838,43 @@
     const MEDICAL_ICONS = [
       { key: 'heart', label: 'Cardio', emoji: '🫀' },
       { key: 'brain', label: 'Neuro', emoji: '🧠' },
-      { key: 'lung', label: 'Pneumo', emoji: '🫁' },
+      { key: 'endocrino', label: 'Endócrino', emoji: '🦋' },
+      { key: 'reuma', label: 'Reumato', emoji: '🩻' },
+      { key: 'joint', label: 'Articular', emoji: '⚡' },
       { key: 'bone', label: 'Orto', emoji: '🦴' },
+      { key: 'lung', label: 'Pneumo', emoji: '🫁' },
+      { key: 'psiq', label: 'Psiquiatria', emoji: '🧘' },
+      { key: 'gastro', label: 'Gastro', emoji: '🫄' },
       { key: 'blood', label: 'Hemato', emoji: '🩸' },
-      { key: 'dna', label: 'Genética', emoji: '🧬' },
-      { key: 'stomach', label: 'Gastro', emoji: '🫀' },
       { key: 'kidney', label: 'Nefro', emoji: '💧' },
+      { key: 'virus', label: 'Infecto', emoji: '🦠' },
+      { key: 'baby', label: 'Pediatria', emoji: '👶' },
+      { key: 'scalpel', label: 'Cirurgia', emoji: '🔪' },
+      { key: 'gineco', label: 'Gineco/GO', emoji: '🌸' },
       { key: 'emergency', label: 'Emergência', emoji: '🚨' },
       { key: 'stethoscope', label: 'Clínica', emoji: '🩺' },
-      { key: 'scalpel', label: 'Cirurgia', emoji: '🔪' },
-      { key: 'baby', label: 'Pediatria', emoji: '👶' },
+      { key: 'dna', label: 'Genética', emoji: '🧬' },
       { key: 'pill', label: 'Farmaco', emoji: '💊' },
-      { key: 'virus', label: 'Infecto', emoji: '🦠' },
       { key: 'microscope', label: 'Patologia', emoji: '🔬' },
       { key: 'eye', label: 'Oftalmo', emoji: '👁️' },
       { key: 'ear', label: 'Otorrino', emoji: '👂' },
-      { key: 'skin', label: 'Dermato', emoji: '🧴' }
+      { key: 'skin', label: 'Dermato', emoji: '🧴' },
+      { key: 'onco', label: 'Oncologia', emoji: '🎗️' },
+      { key: 'geriatria', label: 'Geriatria', emoji: '👴' },
+      { key: 'anestesia', label: 'Anestesia', emoji: '💉' }
     ];
 
     const PALETTE_COLORS = [
-      { key: 'emerald', hex: '#059669', bg: '#ecfdf5', border: '#a7f3d0', text: '#065f46', label: 'Esmeralda' },
-      { key: 'blue', hex: '#2563eb', bg: '#eff6ff', border: '#bfdbfe', text: '#1e40af', label: 'Azul Real' },
-      { key: 'purple', hex: '#7c3aed', bg: '#f5f3ff', border: '#ddd6fe', text: '#5b21b6', label: 'Roxo' },
-      { key: 'rose', hex: '#e11d48', bg: '#fff1f2', border: '#fecdd3', text: '#9f1239', label: 'Rosa / Rubi' },
-      { key: 'crimson', hex: '#dc2626', bg: '#fef2f2', border: '#fecaca', text: '#991b1b', label: 'Vermelho' },
-      { key: 'amber', hex: '#d97706', bg: '#fffbeb', border: '#fde68a', text: '#92400e', label: 'Âmbar' },
-      { key: 'cyan', hex: '#0891b2', bg: '#ecfeff', border: '#a5f3fc', text: '#155e75', label: 'Ciano' },
-      { key: 'orange', hex: '#ea580c', bg: '#fff7ed', border: '#fed7aa', text: '#9a3412', label: 'Laranja' }
+      { key: 'emerald', hex: '#059669', bg: '#d1fae5', border: '#6ee7b7', text: '#065f46', label: 'Esmeralda' },
+      { key: 'blue', hex: '#2563eb', bg: '#dbeafe', border: '#93c5fd', text: '#1e40af', label: 'Azul Real' },
+      { key: 'purple', hex: '#7c3aed', bg: '#ede9fe', border: '#c4b5fd', text: '#5b21b6', label: 'Roxo' },
+      { key: 'rose', hex: '#e11d48', bg: '#ffe4e6', border: '#fda4af', text: '#9f1239', label: 'Rosa / Rubi' },
+      { key: 'crimson', hex: '#dc2626', bg: '#fee2e2', border: '#fca5a5', text: '#991b1b', label: 'Vermelho' },
+      { key: 'amber', hex: '#d97706', bg: '#fef3c7', border: '#fcd34d', text: '#92400e', label: 'Âmbar' },
+      { key: 'cyan', hex: '#0891b2', bg: '#cffafe', border: '#67e8f9', text: '#155e75', label: 'Ciano' },
+      { key: 'orange', hex: '#ea580c', bg: '#ffedd5', border: '#fdba74', text: '#9a3412', label: 'Laranja' },
+      { key: 'teal', hex: '#0d9488', bg: '#ccfbf1', border: '#5eead4', text: '#115e59', label: 'Teal' },
+      { key: 'indigo', hex: '#4f46e5', bg: '#e0e7ff', border: '#a5b4fc', text: '#3730a3', label: 'Índigo' }
     ];
 
     function getColorConfig(colorKey) {
@@ -1595,25 +1594,34 @@
             <div class="pt-1">
               <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-2.5">Especialidades Médicas</span>
               <div class="flex flex-wrap items-center justify-center gap-1.5 max-w-xs mx-auto">
-                <button onclick="createQuickModule('Cardiologia', 'heart', 'crimson')" class="px-3 py-1.5 rounded-xl bg-red-50/80 hover:bg-red-100 border border-red-200 text-xs font-bold text-red-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Cardiologia', 'heart', 'crimson')" class="px-3 py-1.5 rounded-xl bg-red-50/90 hover:bg-red-100 border border-red-200 text-xs font-bold text-red-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span>🫀</span><span>Cardio</span>
                 </button>
-                <button onclick="createQuickModule('Neurologia', 'brain', 'purple')" class="px-3 py-1.5 rounded-xl bg-purple-50/80 hover:bg-purple-100 border border-purple-200 text-xs font-bold text-purple-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Endocrinologia', 'endocrino', 'amber')" class="px-3 py-1.5 rounded-xl bg-amber-50/90 hover:bg-amber-100 border border-amber-200 text-xs font-bold text-amber-800 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                  <span>🦋</span><span>Endócrino</span>
+                </button>
+                <button onclick="createQuickModule('Reumatologia', 'reuma', 'purple')" class="px-3 py-1.5 rounded-xl bg-purple-50/90 hover:bg-purple-100 border border-purple-200 text-xs font-bold text-purple-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                  <span>🩻</span><span>Reumato</span>
+                </button>
+                <button onclick="createQuickModule('Neurologia', 'brain', 'purple')" class="px-3 py-1.5 rounded-xl bg-purple-50/90 hover:bg-purple-100 border border-purple-200 text-xs font-bold text-purple-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span>🧠</span><span>Neuro</span>
                 </button>
-                <button onclick="createQuickModule('Ortopedia', 'bone', 'emerald')" class="px-3 py-1.5 rounded-xl bg-emerald-50/80 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold text-emerald-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Ortopedia', 'bone', 'emerald')" class="px-3 py-1.5 rounded-xl bg-emerald-50/90 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold text-emerald-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span>🦴</span><span>Orto</span>
                 </button>
-                <button onclick="createQuickModule('Pneumologia', 'lung', 'blue')" class="px-3 py-1.5 rounded-xl bg-blue-50/80 hover:bg-blue-100 border border-blue-200 text-xs font-bold text-blue-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Pneumologia', 'lung', 'blue')" class="px-3 py-1.5 rounded-xl bg-blue-50/90 hover:bg-blue-100 border border-blue-200 text-xs font-bold text-blue-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span>🫁</span><span>Pneumo</span>
                 </button>
-                <button onclick="createQuickModule('Pediatria', 'baby', 'amber')" class="px-3 py-1.5 rounded-xl bg-amber-50/80 hover:bg-amber-100 border border-amber-200 text-xs font-bold text-amber-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Pediatria', 'baby', 'amber')" class="px-3 py-1.5 rounded-xl bg-amber-50/90 hover:bg-amber-100 border border-amber-200 text-xs font-bold text-amber-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span>👶</span><span>Pediatria</span>
                 </button>
-                <button onclick="createQuickModule('Cirurgia Geral', 'scalpel', 'rose')" class="px-3 py-1.5 rounded-xl bg-rose-50/80 hover:bg-rose-100 border border-rose-200 text-xs font-bold text-rose-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Cirurgia Geral', 'scalpel', 'rose')" class="px-3 py-1.5 rounded-xl bg-rose-50/90 hover:bg-rose-100 border border-rose-200 text-xs font-bold text-rose-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span>🔪</span><span>Cirurgia</span>
                 </button>
-                <button onclick="createQuickModule('Nefrologia', 'kidney', 'cyan')" class="px-3 py-1.5 rounded-xl bg-cyan-50/80 hover:bg-cyan-100 border border-cyan-200 text-xs font-bold text-cyan-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Gastroenterologia', 'gastro', 'orange')" class="px-3 py-1.5 rounded-xl bg-orange-50/90 hover:bg-orange-100 border border-orange-200 text-xs font-bold text-orange-800 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                  <span>🫄</span><span>Gastro</span>
+                </button>
+                <button onclick="createQuickModule('Nefrologia', 'kidney', 'cyan')" class="px-3 py-1.5 rounded-xl bg-cyan-50/90 hover:bg-cyan-100 border border-cyan-200 text-xs font-bold text-cyan-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span>💧</span><span>Nefro</span>
                 </button>
               </div>
@@ -1647,42 +1655,54 @@
           const colorObj = getColorConfig(mod.colorKey);
 
           return `
-            <div onclick="openModuleDetail('${mod.id}')" class="bg-white border border-slate-200/80 hover:border-slate-300 rounded-[26px] p-3.5 space-y-2.5 shadow-[0_2px_12px_rgba(15,23,42,0.03)] active:scale-[0.97] transition-all cursor-pointer flex flex-col justify-between">
-              <!-- Top: Icon & Percent -->
-              <div class="flex items-center justify-between">
-                <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-xl shrink-0 border shadow-2xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border};">
+            <div onclick="openModuleDetail('${mod.id}')" class="group relative bg-white border border-slate-200/90 hover:border-slate-300 rounded-[26px] p-3.5 space-y-3 shadow-[0_4px_16px_rgba(15,23,42,0.04)] active:scale-[0.98] transition-all cursor-pointer flex flex-col justify-between overflow-hidden">
+              <!-- Colored Top Accent Line -->
+              <div class="absolute top-0 left-0 right-0 h-1" style="background-color: ${colorObj.hex};"></div>
+
+              <!-- Top: Icon, Quick + Button & Percent -->
+              <div class="flex items-center justify-between pt-0.5">
+                <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl shrink-0 border shadow-xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border};">
                   ${iconObj.emoji}
                 </div>
-                <span class="text-[11px] font-extrabold px-2 py-0.5 rounded-full border shadow-2xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
-                  ${percent}%
-                </span>
+                
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <button type="button" onclick="event.stopPropagation(); openLessonSheet('${mod.id}')" class="w-7 h-7 rounded-xl bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 border border-slate-200 hover:border-emerald-600 flex items-center justify-center text-sm font-black active:scale-90 transition-all shadow-2xs" title="Adicionar Aula neste Módulo">
+                    ＋
+                  </button>
+                  <span class="text-[11px] font-black px-2 py-0.5 rounded-full border shadow-2xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
+                    ${percent}%
+                  </span>
+                </div>
               </div>
 
               <!-- Middle: Name & Count -->
-              <div class="min-w-0 pt-0.5">
-                <h3 class="text-xs font-bold text-slate-900 truncate leading-snug">${mod.name}</h3>
-                <p class="text-[10.5px] text-slate-400 font-medium">${totalCount} aula${totalCount === 1 ? '' : 's'}</p>
+              <div class="min-w-0">
+                <h3 class="text-[13.5px] font-black text-slate-900 truncate leading-snug tracking-tight">${mod.name}</h3>
+                <p class="text-[11px] text-slate-500 font-bold">${totalCount} aula${totalCount === 1 ? '' : 's'}</p>
               </div>
 
-              <!-- Bottom: Mini-Squares & Progress bar -->
-              <div class="space-y-1.5 pt-1.5 border-t border-slate-100">
+              <!-- Bottom: High-Contrast Mini-Squares & Progress bar -->
+              <div class="space-y-2 pt-2 border-t border-slate-100">
                 <div class="flex items-center justify-between gap-1">
-                  <div class="px-1.5 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1 border ${
-                    pendingStudy > 0 ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-slate-50 text-slate-400 border-slate-200'
-                  }" title="${pendingStudy} a estudar">
-                    <span>📖</span>
+                  <!-- Aulas a Estudar (Contraste Alto) -->
+                  <div class="px-2 py-0.5 rounded-lg text-[11px] font-black flex items-center gap-1.5 border ${
+                    pendingStudy > 0 ? 'bg-amber-100 text-amber-950 border-amber-300 shadow-2xs' : 'bg-slate-100 text-slate-400 border-slate-200'
+                  }" title="${pendingStudy} aula(s) a estudar">
+                    <span class="text-xs">📖</span>
                     <span>${pendingStudy}</span>
                   </div>
 
-                  <div class="px-1.5 py-0.5 rounded-lg text-[10px] font-bold flex items-center gap-1 border ${
-                    pendingReviews > 0 ? 'bg-rose-50 text-rose-700 border-rose-200 animate-soft-pulse' : 'bg-slate-50 text-slate-400 border-slate-200'
-                  }" title="${pendingReviews} a revisar">
-                    <span>🔁</span>
+                  <!-- Revisões Pendentes (Contraste Alto) -->
+                  <div class="px-2 py-0.5 rounded-lg text-[11px] font-black flex items-center gap-1.5 border ${
+                    pendingReviews > 0 ? 'bg-rose-100 text-rose-950 border-rose-300 shadow-2xs animate-soft-pulse' : 'bg-slate-100 text-slate-400 border-slate-200'
+                  }" title="${pendingReviews} revisão(ões) pendente(s)">
+                    <span class="text-xs">🔁</span>
                     <span>${pendingReviews}</span>
                   </div>
                 </div>
 
-                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                <!-- Barra de Progresso com mais destaque -->
+                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden shadow-inner">
                   <div class="h-full rounded-full transition-all duration-500" style="width: ${percent}%; background-color: ${colorObj.hex};"></div>
                 </div>
               </div>
@@ -1705,38 +1725,47 @@
           const colorObj = getColorConfig(mod.colorKey);
 
           return `
-            <div onclick="openModuleDetail('${mod.id}')" class="bg-white border border-slate-200/80 hover:border-slate-300 rounded-[24px] p-3.5 space-y-2.5 shadow-[0_2px_12px_rgba(15,23,42,0.03)] active:bg-slate-50 transition-all cursor-pointer">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2.5 min-w-0">
-                  <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-xl shrink-0 border shadow-2xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border};">
+            <div onclick="openModuleDetail('${mod.id}')" class="group relative bg-white border border-slate-200/90 hover:border-slate-300 rounded-[26px] p-3.5 space-y-2.5 shadow-[0_4px_16px_rgba(15,23,42,0.04)] active:bg-slate-50 transition-all cursor-pointer overflow-hidden">
+              <!-- Colored Top Accent Line -->
+              <div class="absolute top-0 left-0 right-0 h-1" style="background-color: ${colorObj.hex};"></div>
+
+              <div class="flex items-center justify-between pt-0.5">
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl shrink-0 border shadow-xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border};">
                     ${iconObj.emoji}
                   </div>
                   <div class="min-w-0">
-                    <h3 class="text-sm font-bold text-slate-900 truncate">${mod.name}</h3>
-                    <p class="text-[11px] text-slate-500">${totalCount} aula${totalCount === 1 ? '' : 's'}</p>
+                    <h3 class="text-[14.5px] font-black text-slate-900 truncate leading-snug tracking-tight">${mod.name}</h3>
+                    <p class="text-[11px] text-slate-500 font-bold">${totalCount} aula${totalCount === 1 ? '' : 's'}</p>
                   </div>
                 </div>
 
                 <div class="flex items-center gap-1.5 shrink-0">
-                  <div class="px-2 py-1 rounded-xl text-xs font-bold flex items-center gap-1 border shadow-2xs ${
-                    pendingStudy > 0 ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-slate-50 text-slate-400 border-slate-200'
+                  <div class="px-2 py-1 rounded-lg text-[11px] font-black flex items-center gap-1 border ${
+                    pendingStudy > 0 ? 'bg-amber-100 text-amber-950 border-amber-300 shadow-2xs' : 'bg-slate-100 text-slate-400 border-slate-200'
                   }" title="${pendingStudy} aula(s) a estudar">
-                    <span class="text-[11px]">📖</span>
+                    <span class="text-xs">📖</span>
                     <span>${pendingStudy}</span>
                   </div>
 
-                  <div class="px-2 py-1 rounded-xl text-xs font-bold flex items-center gap-1 border shadow-2xs ${
-                    pendingReviews > 0 ? 'bg-rose-50 text-rose-700 border-rose-200 animate-soft-pulse' : 'bg-slate-50 text-slate-400 border-slate-200'
+                  <div class="px-2 py-1 rounded-lg text-[11px] font-black flex items-center gap-1 border ${
+                    pendingReviews > 0 ? 'bg-rose-100 text-rose-950 border-rose-300 shadow-2xs animate-soft-pulse' : 'bg-slate-100 text-slate-400 border-slate-200'
                   }" title="${pendingReviews} revisão(ões) pendente(s)">
-                    <span class="text-[11px]">🔁</span>
+                    <span class="text-xs">🔁</span>
                     <span>${pendingReviews}</span>
                   </div>
 
-                  <span class="text-xs font-extrabold px-1.5 py-0.5 rounded text-slate-700 ml-0.5">${percent}%</span>
+                  <span class="text-[11px] font-black px-2 py-0.5 rounded-full border shadow-2xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
+                    ${percent}%
+                  </span>
+
+                  <button type="button" onclick="event.stopPropagation(); openLessonSheet('${mod.id}')" class="w-7 h-7 rounded-xl bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 border border-slate-200 hover:border-emerald-600 flex items-center justify-center text-sm font-black active:scale-90 transition-all shadow-2xs" title="Adicionar Aula neste Módulo">
+                    ＋
+                  </button>
                 </div>
               </div>
 
-              <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+              <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden shadow-inner">
                 <div class="h-full rounded-full transition-all duration-500" style="width: ${percent}%; background-color: ${colorObj.hex};"></div>
               </div>
             </div>
@@ -1786,14 +1815,14 @@
           </div>
 
           <div class="flex items-center gap-1.5">
-            <div class="px-2 py-1 rounded-xl text-xs font-bold flex items-center gap-1 border shadow-2xs ${
-              pendingStudy > 0 ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-slate-50 text-slate-400 border-slate-200'
+            <div class="px-2 py-1 rounded-xl text-xs font-black flex items-center gap-1 border ${
+              pendingStudy > 0 ? 'bg-amber-100 text-amber-950 border-amber-300 shadow-2xs' : 'bg-slate-100 text-slate-400 border-slate-200'
             }" title="Aulas a estudar">
               <span>📖</span>
               <span>${pendingStudy}</span>
             </div>
-            <div class="px-2 py-1 rounded-xl text-xs font-bold flex items-center gap-1 border shadow-2xs ${
-              pendingReviews > 0 ? 'bg-rose-50 text-rose-700 border-rose-200' : 'bg-slate-50 text-slate-400 border-slate-200'
+            <div class="px-2 py-1 rounded-xl text-xs font-black flex items-center gap-1 border ${
+              pendingReviews > 0 ? 'bg-rose-100 text-rose-950 border-rose-300 shadow-2xs animate-soft-pulse' : 'bg-slate-100 text-slate-400 border-slate-200'
             }" title="Revisões pendentes">
               <span>🔁</span>
               <span>${pendingReviews}</span>
@@ -2309,13 +2338,7 @@
       checkboxes.forEach(cb => cb.checked = !allChecked);
     });
 
-    // Navigation & Buttons
-    document.getElementById('btn-quick-new-lesson-home').addEventListener('click', () => {
-      openLessonSheet(AppState.currentModuleId);
-    });
-    document.getElementById('nav-btn-add-lesson').addEventListener('click', () => {
-      openLessonSheet(AppState.currentModuleId);
-    });
+    // Navigation & Modals
 
     document.getElementById('btn-close-sheet-lesson').addEventListener('click', closeLessonSheet);
     document.getElementById('sheet-lesson-overlay').addEventListener('click', closeLessonSheet);
