@@ -1,0 +1,2255 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+  <title>Meu Estudo • Caderno Médico</title>
+  
+  <!-- PWA & Mobile Meta Tags -->
+  <meta name="theme-color" content="#090d16">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Meu Estudo">
+  <meta name="application-name" content="Meu Estudo">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="apple-touch-icon" href="./icon.svg">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+            },
+            dark: {
+              base: '#090d16',
+              card: '#111827',
+              surface: '#172033',
+              border: '#1f293d',
+              borderLight: '#2b374f',
+              muted: '#94a3b8'
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    /* Mobile-first resets & optimizations for Samsung Galaxy A54 */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      box-sizing: border-box;
+    }
+    input, textarea, [contenteditable="true"] {
+      user-select: text;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #090d16;
+      color: #f1f5f9;
+      overscroll-behavior-y: contain;
+      font-size: 14.5px;
+      line-height: 1.4;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    /* Safe Area insets */
+    .pt-safe {
+      padding-top: max(12px, env(safe-area-inset-top));
+    }
+    .pb-safe {
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+    .pb-nav {
+      padding-bottom: calc(max(16px, env(safe-area-inset-bottom)) + 74px);
+    }
+
+    /* Smooth bottom sheet animation */
+    .sheet-overlay {
+      transition: opacity 0.25s ease-out;
+    }
+    .sheet-drawer {
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(100%);
+      max-height: 92vh;
+    }
+    .sheet-open .sheet-overlay {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .sheet-open .sheet-drawer {
+      transform: translateY(0);
+    }
+
+    /* Scrollbar minimalist styling */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+
+    /* Clinical Note Highlights */
+    .tag-red {
+      background-color: rgba(239, 68, 68, 0.18);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-weight: 600;
+    }
+    .tag-yellow {
+      background-color: rgba(234, 179, 8, 0.18);
+      color: #fde047;
+      border: 1px solid rgba(234, 179, 8, 0.35);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-weight: 600;
+    }
+    .tag-green {
+      background-color: rgba(16, 185, 129, 0.18);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-weight: 600;
+    }
+    .tag-blue {
+      background-color: rgba(59, 130, 246, 0.18);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-weight: 600;
+    }
+
+    /* Pulse effect */
+    @keyframes subtlePulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.55; }
+    }
+    .animate-subtle-pulse {
+      animation: subtlePulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="bg-dark-base text-slate-100 flex flex-col h-full overflow-hidden select-none">
+
+  <!-- ==================== HEADER (COMPACT & CLEAN) ==================== -->
+  <header class="pt-safe px-4 pb-2.5 bg-dark-base/90 backdrop-blur-md border-b border-dark-border/80 flex items-center justify-between shrink-0 z-20">
+    <div class="flex items-center gap-2.5">
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-500 flex items-center justify-center shadow-sm shadow-brand-500/20 text-white font-bold text-base">
+        ✚
+      </div>
+      <div>
+        <div class="flex items-center gap-1.5">
+          <h1 class="font-bold text-[15px] tracking-tight text-white leading-none">Meu Estudo</h1>
+          <span class="text-[9.5px] px-1.5 py-0.5 rounded bg-brand-500/15 text-brand-400 font-semibold border border-brand-500/30">Med</span>
+        </div>
+        <p id="header-date" class="text-[11px] text-slate-400 mt-0.5 leading-none">Carregando data...</p>
+      </div>
+    </div>
+
+    <!-- Quick Actions (Backup & Config) -->
+    <div class="flex items-center gap-1.5">
+      <button id="btn-open-settings" class="w-8 h-8 rounded-xl bg-dark-surface hover:bg-dark-border border border-dark-border flex items-center justify-center text-slate-300 active:scale-95 transition-transform" title="Configurações e Backup">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><circle cx="12" cy="12" r="3" stroke-width="2"></circle></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT (TABS) ==================== -->
+  <main id="main-content" class="flex-1 overflow-y-auto pb-nav px-3.5 pt-3">
+    
+    <!-- ==================== ABA 1: REVISÕES ==================== -->
+    <section id="tab-revisoes" class="tab-pane space-y-3">
+      <!-- Status Banner -->
+      <div id="revisoes-summary" class="bg-dark-card border border-dark-border rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
+        <div>
+          <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Ciclos Espaçados</span>
+          <h2 id="revisoes-counter-title" class="text-base font-bold text-white mt-0.5">Carregando...</h2>
+          <p id="revisoes-counter-sub" class="text-[12px] text-slate-400">D+1, D+7 e D+30 automáticos</p>
+        </div>
+        <div id="revisoes-badge" class="w-11 h-11 rounded-2xl bg-brand-500/10 border border-brand-500/30 text-brand-400 font-bold flex flex-col items-center justify-center text-xs">
+          <span id="revisoes-badge-num" class="text-sm font-extrabold leading-none">0</span>
+          <span class="text-[9px] uppercase tracking-tighter mt-0.5">Hoje</span>
+        </div>
+      </div>
+
+      <!-- Filters (Atrasadas / Hoje / Próximas) -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        <button data-filter="hoje" class="rev-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-500 text-white shadow-sm transition-all active:scale-95">
+          Para Hoje (<span id="count-hoje">0</span>)
+        </button>
+        <button data-filter="atrasadas" class="rev-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-dark-card border border-dark-border text-slate-300 hover:text-white transition-all active:scale-95">
+          Atrasadas (<span id="count-atrasadas">0</span>)
+        </button>
+        <button data-filter="proximas" class="rev-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-dark-card border border-dark-border text-slate-300 hover:text-white transition-all active:scale-95">
+          Próximas (<span id="count-proximas">0</span>)
+        </button>
+        <button data-filter="feitas" class="rev-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-dark-card border border-dark-border text-slate-400 hover:text-white transition-all active:scale-95">
+          Concluídas
+        </button>
+      </div>
+
+      <!-- List Container -->
+      <div id="revisoes-list" class="space-y-2.5">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- ==================== ABA 2: MÓDULOS (EIXOS) ==================== -->
+    <section id="tab-modulos" class="tab-pane hidden space-y-3">
+      <!-- Section Title & Add Action -->
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-[16px] font-bold text-white tracking-tight">Eixos Médicos</h2>
+          <p class="text-[11px] text-slate-400">Grandes áreas clínicas e matérias</p>
+        </div>
+        <button id="btn-open-create-module" class="px-3 py-1.5 rounded-xl bg-dark-card hover:bg-dark-surface border border-dark-border text-xs font-semibold text-brand-400 flex items-center gap-1.5 active:scale-95 transition-transform">
+          <span class="text-sm font-bold">+</span> Novo Eixo
+        </button>
+      </div>
+
+      <!-- Modules Grid / List -->
+      <div id="modulos-list" class="space-y-2.5">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- ==================== ABA 2.1: DETALHE DO MÓDULO (AULAS DO EIXO) ==================== -->
+    <section id="tab-modulo-detail" class="tab-pane hidden space-y-3">
+      <!-- Detail Header / Breadcrumb -->
+      <div class="flex items-center justify-between">
+        <button id="btn-back-to-modules" class="flex items-center gap-1 text-xs font-semibold text-slate-400 hover:text-white active:scale-95 transition-transform py-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M15 19l-7-7 7-7"></path></svg>
+          Eixos Médicos
+        </button>
+        <div class="flex items-center gap-1.5">
+          <button id="btn-edit-current-module" class="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-dark-surface" title="Editar Eixo">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+          </button>
+          <button id="btn-delete-current-module" class="p-1.5 text-rose-400 hover:text-rose-300 rounded-lg hover:bg-dark-surface" title="Excluir Eixo">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Module Summary Card -->
+      <div id="module-summary-card" class="bg-dark-card border border-dark-border rounded-2xl p-3.5 shadow-sm space-y-2">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Quick Action: Add Lesson inside this Module -->
+      <div class="flex items-center justify-between pt-1">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Aulas Cadastradas</h3>
+        <button id="btn-add-lesson-in-module" class="px-2.5 py-1 rounded-lg bg-brand-500/10 border border-brand-500/30 text-brand-400 text-xs font-semibold flex items-center gap-1 active:scale-95 transition-transform">
+          <span>+</span> Aula
+        </button>
+      </div>
+
+      <!-- Lessons list -->
+      <div id="module-lessons-list" class="space-y-2">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- ==================== ABA 3: PROVAS ==================== -->
+    <section id="tab-provas" class="tab-pane hidden space-y-3">
+      <!-- Section Header -->
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-[16px] font-bold text-white tracking-tight">Gestão de Provas</h2>
+          <p class="text-[11px] text-slate-400">Cronograma de exames e matérias cobradas</p>
+        </div>
+        <button id="btn-open-create-exam" class="px-3 py-1.5 rounded-xl bg-dark-card hover:bg-dark-surface border border-dark-border text-xs font-semibold text-brand-400 flex items-center gap-1.5 active:scale-95 transition-transform">
+          <span class="text-sm font-bold">+</span> Nova Prova
+        </button>
+      </div>
+
+      <!-- Exams List -->
+      <div id="provas-list" class="space-y-3">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== BOTTOM NAVIGATION (FIXED FOR GALAXY A54) ==================== -->
+  <nav class="fixed bottom-0 left-0 right-0 z-30 bg-dark-base/95 backdrop-blur-lg border-t border-dark-border px-3 pt-1.5 pb-safe">
+    <div class="flex items-center justify-between max-w-md mx-auto">
+      
+      <!-- Tab 1: Revisões -->
+      <button data-tab="tab-revisoes" class="nav-tab-btn flex-1 py-1 flex flex-col items-center justify-center text-brand-400 active:scale-90 transition-transform">
+        <div class="relative">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span id="nav-rev-dot" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-dark-base animate-subtle-pulse"></span>
+        </div>
+        <span class="text-[10.5px] font-semibold mt-1">Revisões</span>
+      </button>
+
+      <!-- Tab 2: Módulos -->
+      <button data-tab="tab-modulos" class="nav-tab-btn flex-1 py-1 flex flex-col items-center justify-center text-slate-400 hover:text-slate-200 active:scale-90 transition-transform">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+        <span class="text-[10.5px] font-medium mt-1">Módulos</span>
+      </button>
+
+      <!-- Center Action: + Aula Floating Button -->
+      <div class="flex-none px-2">
+        <button id="btn-quick-add-lesson" class="w-12 h-12 -mt-4 rounded-2xl bg-gradient-to-tr from-brand-600 via-brand-500 to-cyan-500 text-white font-bold flex items-center justify-center shadow-lg shadow-brand-500/25 active:scale-95 active:shadow-sm transition-all border border-brand-400/30" title="Cadastrar Nova Aula">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+        </button>
+      </div>
+
+      <!-- Tab 3: Provas -->
+      <button data-tab="tab-provas" class="nav-tab-btn flex-1 py-1 flex flex-col items-center justify-center text-slate-400 hover:text-slate-200 active:scale-90 transition-transform">
+        <div class="relative">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+          <span id="nav-provas-badge" class="hidden absolute -top-1 -right-1.5 px-1 py-0.2 bg-amber-500 text-slate-950 font-bold text-[8.5px] rounded-full">!</span>
+        </div>
+        <span class="text-[10.5px] font-medium mt-1">Provas</span>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- ==================== BOTTOM SHEET: CADASTRO RÁPIDO DE AULA ==================== -->
+  <div id="sheet-lesson" class="fixed inset-0 z-50 pointer-events-none">
+    <!-- Backdrop overlay -->
+    <div id="sheet-lesson-overlay" class="sheet-overlay absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 cursor-pointer pointer-events-none"></div>
+
+    <!-- Slide drawer -->
+    <div class="sheet-drawer absolute bottom-0 left-0 right-0 bg-dark-card border-t border-dark-borderLight rounded-t-3xl shadow-2xl flex flex-col pointer-events-auto pb-safe">
+      <!-- Drag handle -->
+      <div class="pt-3 pb-1 flex justify-center cursor-grab">
+        <div class="w-12 h-1 bg-slate-600 rounded-full"></div>
+      </div>
+
+      <!-- Sheet Header -->
+      <div class="px-4 py-2 flex items-center justify-between border-b border-dark-border/60">
+        <div class="flex items-center gap-2">
+          <span class="text-base font-bold text-white tracking-tight" id="lesson-modal-title">Nova Aula</span>
+          <span id="lesson-module-tag" class="text-[10.5px] px-2 py-0.5 rounded-full font-semibold bg-dark-surface text-slate-300 border border-dark-border">
+            Selecione o Eixo
+          </span>
+        </div>
+        <button id="btn-close-sheet-lesson" class="w-7 h-7 rounded-full bg-dark-surface text-slate-400 hover:text-white flex items-center justify-center text-xs active:scale-90">
+          ✕
+        </button>
+      </div>
+
+      <!-- Form Body (Scrollable) -->
+      <form id="form-lesson" class="px-4 py-3 space-y-3.5 overflow-y-auto max-h-[78vh]">
+        <input type="hidden" id="lesson-id-input">
+
+        <!-- 1. Seletor de Eixo Clínico -->
+        <div>
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+            1. Eixo Médico
+          </label>
+          <div id="lesson-modules-selector" class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- 2. Numeração Inteligente + Stepper Tátil -->
+        <div class="bg-dark-surface/60 border border-dark-border rounded-xl p-2.5 flex items-center justify-between">
+          <div>
+            <label class="block text-[10.5px] font-semibold text-slate-400 uppercase tracking-wider">
+              Número da Aula
+            </label>
+            <span id="lesson-number-preview" class="text-sm font-bold text-white">Aula 01</span>
+          </div>
+
+          <div class="flex items-center gap-1.5 bg-dark-card border border-dark-border rounded-lg p-1">
+            <button type="button" id="btn-lesson-num-minus" class="w-8 h-8 rounded-md bg-dark-surface hover:bg-dark-border text-slate-200 font-bold text-lg flex items-center justify-center active:scale-90 transition-transform">
+              –
+            </button>
+            <input type="number" id="lesson-number-input" min="1" max="999" value="1" class="w-10 text-center font-bold text-white bg-transparent outline-none text-sm">
+            <button type="button" id="btn-lesson-num-plus" class="w-8 h-8 rounded-md bg-dark-surface hover:bg-dark-border text-slate-200 font-bold text-lg flex items-center justify-center active:scale-90 transition-transform">
+              +
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. Tema / Título da Aula -->
+        <div>
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+            2. Tema / Título da Aula
+          </label>
+          <input type="text" id="lesson-title-input" required placeholder="Ex: Insuficiência Cardíaca Perfil B" class="w-full bg-dark-surface border border-dark-border focus:border-brand-500 rounded-xl px-3 py-2.5 text-sm text-white placeholder-slate-500 outline-none transition-colors">
+        </div>
+
+        <!-- 4. Vínculo com Prova (Opcional) -->
+        <div>
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+            3. Vincular a uma Prova <span class="text-slate-500 font-normal lowercase">(opcional)</span>
+          </label>
+          <select id="lesson-exam-select" class="w-full bg-dark-surface border border-dark-border rounded-xl px-3 py-2 text-xs text-slate-200 outline-none">
+            <option value="">Nenhuma prova vinculada</option>
+            <!-- Rendered dynamically -->
+          </select>
+        </div>
+
+        <!-- 5. Editor de Anotações Ágil com Barra de Ferramentas -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              4. Anotações Rápidas
+            </label>
+            <span class="text-[10px] text-slate-500">Destaques com 1 toque</span>
+          </div>
+
+          <!-- Direct Toolbar above textarea -->
+          <div class="bg-dark-surface border border-dark-border border-b-0 rounded-t-xl px-2 py-1.5 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
+            <button type="button" id="btn-format-bold" class="px-2 py-1 rounded bg-dark-card border border-dark-border text-xs font-bold text-slate-200 hover:text-white active:scale-90" title="Negrito">
+              B
+            </button>
+            <button type="button" id="btn-format-bullet" class="px-2 py-1 rounded bg-dark-card border border-dark-border text-xs font-bold text-slate-200 hover:text-white active:scale-90" title="Tópico">
+              • Lista
+            </button>
+
+            <!-- Quick Medical Tags -->
+            <div class="h-4 w-[1px] bg-dark-border mx-0.5"></div>
+            <button type="button" data-tag="red" class="btn-insert-tag px-2 py-0.5 rounded text-[10.5px] font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/30 active:scale-90">
+              🔴 Alerta
+            </button>
+            <button type="button" data-tag="yellow" class="btn-insert-tag px-2 py-0.5 rounded text-[10.5px] font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30 active:scale-90">
+              🟡 Fisiopato
+            </button>
+            <button type="button" data-tag="green" class="btn-insert-tag px-2 py-0.5 rounded text-[10.5px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 active:scale-90">
+              🟢 Padrão-Ouro
+            </button>
+            <button type="button" data-tag="blue" class="btn-insert-tag px-2 py-0.5 rounded text-[10.5px] font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30 active:scale-90">
+              🔵 Conceito
+            </button>
+          </div>
+
+          <textarea id="lesson-notes-input" rows="4" placeholder="Insira palavras-chave, critérios clínicos e condutas..." class="w-full bg-dark-surface border border-dark-border focus:border-brand-500 rounded-b-xl px-3 py-2 text-xs text-white placeholder-slate-500 outline-none resize-none font-sans leading-relaxed"></textarea>
+        </div>
+
+        <!-- 6. Toggle de Estudo Inicial -->
+        <div class="bg-dark-surface/50 border border-dark-border rounded-xl p-3 flex items-center justify-between">
+          <div>
+            <span class="block text-xs font-bold text-white">Marcar como Estudada Hoje</span>
+            <span class="text-[11px] text-slate-400">Inicia ciclos automáticos (D+1, D+7, D+30)</span>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="lesson-studied-toggle" class="sr-only peer" checked>
+            <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-500"></div>
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-1">
+          <button type="submit" id="btn-save-lesson" class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white font-bold text-sm shadow-md shadow-brand-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+            <span>Salvar Aula</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: CRIAR / EDITAR EIXO (MÓDULO) ==================== -->
+  <dialog id="modal-module" class="bg-transparent p-0 w-full max-w-sm m-auto backdrop:bg-black/70 backdrop:backdrop-blur-sm" closedby="any">
+    <div class="bg-dark-card border border-dark-borderLight rounded-3xl p-4 shadow-2xl space-y-3.5 mx-3">
+      <div class="flex items-center justify-between pb-1 border-b border-dark-border/60">
+        <h3 id="modal-module-title" class="text-base font-bold text-white">Novo Eixo Clínico</h3>
+        <button type="button" id="btn-close-modal-module" class="w-7 h-7 rounded-full bg-dark-surface text-slate-400 flex items-center justify-center text-xs">✕</button>
+      </div>
+
+      <form id="form-module" class="space-y-3">
+        <input type="hidden" id="module-id-input">
+
+        <div>
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Nome do Eixo</label>
+          <input type="text" id="module-name-input" required placeholder="Ex: Cardiologia, Neurologia, Pediatria" class="w-full bg-dark-surface border border-dark-border focus:border-brand-500 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 outline-none">
+        </div>
+
+        <!-- Medical Icon Picker -->
+        <div>
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Ícone Médico</label>
+          <div id="module-icon-grid" class="grid grid-cols-6 gap-2 max-h-36 overflow-y-auto p-1 bg-dark-surface/50 border border-dark-border rounded-xl">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Color Picker -->
+        <div>
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Cor de Destaque</label>
+          <div id="module-color-row" class="flex items-center gap-2 overflow-x-auto pb-1">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <button type="submit" class="w-full py-2.5 rounded-xl bg-brand-500 text-white font-bold text-xs shadow-md shadow-brand-500/20 active:scale-95 transition-transform">
+            Salvar Eixo
+          </button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- ==================== MODAL: CRIAR / EDITAR PROVA ==================== -->
+  <dialog id="modal-exam" class="bg-transparent p-0 w-full max-w-sm m-auto backdrop:bg-black/70 backdrop:backdrop-blur-sm" closedby="any">
+    <div class="bg-dark-card border border-dark-borderLight rounded-3xl p-4 shadow-2xl space-y-3 mx-3 max-h-[88vh] flex flex-col">
+      <div class="flex items-center justify-between pb-1 border-b border-dark-border/60 shrink-0">
+        <h3 id="modal-exam-title" class="text-base font-bold text-white">Cadastrar Prova</h3>
+        <button type="button" id="btn-close-modal-exam" class="w-7 h-7 rounded-full bg-dark-surface text-slate-400 flex items-center justify-center text-xs">✕</button>
+      </div>
+
+      <form id="form-exam" class="space-y-3 overflow-y-auto flex-1 pr-0.5">
+        <input type="hidden" id="exam-id-input">
+
+        <div>
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Nome da Prova</label>
+          <input type="text" id="exam-name-input" required placeholder="Ex: P1 Clínica Médica, Simulado R1" class="w-full bg-dark-surface border border-dark-border focus:border-brand-500 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Data do Exame</label>
+          <input type="date" id="exam-date-input" required class="w-full bg-dark-surface border border-dark-border focus:border-brand-500 rounded-xl px-3 py-2 text-xs text-white outline-none">
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Eixo Principal</label>
+          <select id="exam-module-select" required class="w-full bg-dark-surface border border-dark-border rounded-xl px-3 py-2 text-xs text-white outline-none">
+            <option value="">Selecione o Eixo</option>
+            <!-- Rendered dynamically -->
+          </select>
+        </div>
+
+        <!-- Aulas Cobradas Checklist -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Conteúdo Cobrado</label>
+            <span class="text-[10px] text-brand-400 font-semibold cursor-pointer" id="btn-exam-select-all">Selecionar Todas</span>
+          </div>
+          <div id="exam-lessons-checklist" class="space-y-1.5 max-h-40 overflow-y-auto p-2 bg-dark-surface/50 border border-dark-border rounded-xl text-xs">
+            <p class="text-slate-500 text-center py-2">Selecione um eixo acima para ver as aulas disponíveis.</p>
+          </div>
+        </div>
+
+        <div class="pt-2 shrink-0">
+          <button type="submit" class="w-full py-2.5 rounded-xl bg-brand-500 text-white font-bold text-xs shadow-md shadow-brand-500/20 active:scale-95 transition-transform">
+            Salvar Prova
+          </button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- ==================== MODAL: DETALHES DA AULA / LEITOR DE ANOTAÇÕES ==================== -->
+  <dialog id="modal-view-lesson" class="bg-transparent p-0 w-full max-w-sm m-auto backdrop:bg-black/70 backdrop:backdrop-blur-sm" closedby="any">
+    <div class="bg-dark-card border border-dark-borderLight rounded-3xl p-4 shadow-2xl space-y-3.5 mx-3 max-h-[88vh] flex flex-col">
+      <div class="flex items-center justify-between pb-1 border-b border-dark-border/60 shrink-0">
+        <div class="flex items-center gap-2">
+          <span id="view-lesson-badge" class="text-[10.5px] px-2 py-0.5 rounded-md font-bold bg-dark-surface text-brand-400 border border-dark-border">
+            Aula 01
+          </span>
+          <span id="view-lesson-module-tag" class="text-[10.5px] text-slate-400"></span>
+        </div>
+        <button type="button" id="btn-close-view-lesson" class="w-7 h-7 rounded-full bg-dark-surface text-slate-400 flex items-center justify-center text-xs">✕</button>
+      </div>
+
+      <div class="overflow-y-auto flex-1 space-y-3">
+        <h3 id="view-lesson-title" class="text-base font-bold text-white leading-tight"></h3>
+        
+        <!-- Status Switch & Spaced Intervals -->
+        <div class="bg-dark-surface/70 border border-dark-border rounded-xl p-2.5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-300">Estado de Estudo:</span>
+            <button id="view-lesson-toggle-status" class="px-2.5 py-1 rounded-lg text-xs font-bold active:scale-95 transition-all">
+              Carregando...
+            </button>
+          </div>
+
+          <!-- Repetition Schedule Steps -->
+          <div class="pt-1 border-t border-dark-border/50">
+            <span class="text-[10.5px] font-bold uppercase tracking-wider text-slate-400 block mb-1.5">Ciclos de Revisão</span>
+            <div id="view-lesson-schedule-grid" class="grid grid-cols-3 gap-1.5 text-center text-xs">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Clinical Notes View -->
+        <div>
+          <span class="text-[10.5px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Anotações Clínicas</span>
+          <div id="view-lesson-notes-content" class="bg-dark-surface/50 border border-dark-border rounded-xl p-3 text-xs leading-relaxed text-slate-200 min-h-[70px]">
+            <!-- Rendered with HTML formatting -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions Footer -->
+      <div class="flex items-center gap-2 pt-2 border-t border-dark-border/60 shrink-0">
+        <button id="btn-edit-lesson-trigger" class="flex-1 py-2 rounded-xl bg-dark-surface hover:bg-dark-border border border-dark-border text-xs font-semibold text-slate-200 active:scale-95 transition-transform flex items-center justify-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+          Editar Aula
+        </button>
+        <button id="btn-delete-lesson-trigger" class="px-3 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 text-xs font-semibold active:scale-95 transition-transform">
+          Excluir
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ==================== MODAL: CONFIGURAÇÕES & BACKUP ==================== -->
+  <dialog id="modal-settings" class="bg-transparent p-0 w-full max-w-sm m-auto backdrop:bg-black/70 backdrop:backdrop-blur-sm" closedby="any">
+    <div class="bg-dark-card border border-dark-borderLight rounded-3xl p-4 shadow-2xl space-y-3.5 mx-3">
+      <div class="flex items-center justify-between pb-1 border-b border-dark-border/60">
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-lg bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs font-bold">⚙</div>
+          <h3 class="text-base font-bold text-white">Configurações & Backup</h3>
+        </div>
+        <button type="button" id="btn-close-modal-settings" class="w-7 h-7 rounded-full bg-dark-surface text-slate-400 flex items-center justify-center text-xs">✕</button>
+      </div>
+
+      <!-- Quick Metrics -->
+      <div class="grid grid-cols-3 gap-2 bg-dark-surface/60 border border-dark-border rounded-xl p-2.5 text-center">
+        <div>
+          <span class="text-[10px] text-slate-400 uppercase tracking-tight block">Módulos</span>
+          <span id="stat-total-modules" class="text-sm font-bold text-white">0</span>
+        </div>
+        <div>
+          <span class="text-[10px] text-slate-400 uppercase tracking-tight block">Aulas</span>
+          <span id="stat-total-lessons" class="text-sm font-bold text-brand-400">0</span>
+        </div>
+        <div>
+          <span class="text-[10px] text-slate-400 uppercase tracking-tight block">Provas</span>
+          <span id="stat-total-exams" class="text-sm font-bold text-cyan-400">0</span>
+        </div>
+      </div>
+
+      <!-- Backup Actions -->
+      <div class="space-y-2">
+        <span class="text-[10.5px] font-bold uppercase tracking-wider text-slate-400 block">Segurança de Dados</span>
+
+        <button id="btn-export-backup" class="w-full py-2.5 px-3 rounded-xl bg-dark-surface hover:bg-dark-border border border-dark-border text-xs font-semibold text-slate-200 flex items-center justify-between active:scale-95 transition-transform">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            <span>Exportar Backup (JSON)</span>
+          </div>
+          <span class="text-[10px] text-slate-400">Baixar</span>
+        </button>
+
+        <label class="w-full py-2.5 px-3 rounded-xl bg-dark-surface hover:bg-dark-border border border-dark-border text-xs font-semibold text-slate-200 flex items-center justify-between cursor-pointer active:scale-95 transition-transform">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+            <span>Restaurar Backup (JSON)</span>
+          </div>
+          <span class="text-[10px] text-slate-400">Carregar</span>
+          <input type="file" id="input-import-backup" accept=".json" class="hidden">
+        </label>
+      </div>
+
+      <!-- App Info -->
+      <div class="pt-1 border-t border-dark-border/60 text-center">
+        <p class="text-[11px] text-slate-400 font-medium">Caderno de Estudos Médicos • Lauro</p>
+        <p class="text-[9.5px] text-slate-500 mt-0.5">Otimizado para Samsung Galaxy A54 • V1.0</p>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ==================== TOAST NOTIFICATION CONTAINER ==================== -->
+  <div id="toast-container" class="fixed top-12 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 transform -translate-y-2">
+    <div id="toast-content" class="bg-dark-card border border-dark-borderLight text-white px-3.5 py-2 rounded-2xl shadow-xl text-xs font-semibold flex items-center gap-2">
+      <span id="toast-icon">✓</span>
+      <span id="toast-msg">Operação realizada</span>
+    </div>
+  </div>
+
+  <!-- ==================== APPLICATION LOGIC ==================== -->
+  <script>
+    // --- HAPTIC VIBRATION HELPER ---
+    function vibrate(ms = 12) {
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        try { navigator.vibrate(ms); } catch (e) {}
+      }
+    }
+
+    // --- TOAST HELPER ---
+    function showToast(msg, icon = '✓', isError = false) {
+      const container = document.getElementById('toast-container');
+      const msgEl = document.getElementById('toast-msg');
+      const iconEl = document.getElementById('toast-icon');
+      const contentEl = document.getElementById('toast-content');
+
+      msgEl.textContent = msg;
+      iconEl.textContent = icon;
+      contentEl.className = isError
+        ? "bg-rose-950/90 border border-rose-500/50 text-rose-200 px-3.5 py-2 rounded-2xl shadow-xl text-xs font-semibold flex items-center gap-2"
+        : "bg-dark-card/95 border border-brand-500/40 text-slate-100 px-3.5 py-2 rounded-2xl shadow-xl text-xs font-semibold flex items-center gap-2";
+
+      container.classList.remove('opacity-0', '-translate-y-2');
+      container.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(window.__toastTimeout);
+      window.__toastTimeout = setTimeout(() => {
+        container.classList.remove('opacity-100', 'translate-y-0');
+        container.classList.add('opacity-0', '-translate-y-2');
+      }, 2400);
+    }
+
+    // --- CELEBRATION CONFETTI ---
+    function triggerCelebration() {
+      vibrate([20, 40, 20]);
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.8 },
+          colors: ['#10b981', '#06b6d4', '#38bdf8', '#818cf8']
+        });
+      }
+    }
+
+    // --- DATE UTILS (LOCAL SAFE) ---
+    function getTodayStr() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function addDays(dateStr, days) {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      date.setDate(date.getDate() + days);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function formatDateDisplay(dateStr) {
+      if (!dateStr) return '';
+      const [y, m, d] = dateStr.split('-').map(Number);
+      return `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}`;
+    }
+
+    function formatDateFull(dateStr) {
+      if (!dateStr) return '';
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+      return `${d} de ${months[m - 1]}`;
+    }
+
+    function daysDiff(targetDateStr, baseDateStr = getTodayStr()) {
+      const [y1, m1, d1] = targetDateStr.split('-').map(Number);
+      const [y2, m2, d2] = baseDateStr.split('-').map(Number);
+      const t1 = new Date(y1, m1 - 1, d1).getTime();
+      const t2 = new Date(y2, m2 - 1, d2).getTime();
+      return Math.round((t1 - t2) / (1000 * 60 * 60 * 24));
+    }
+
+    // --- MEDICAL ICONS & COLORS PALETTE ---
+    const MEDICAL_ICONS = [
+      { key: 'heart', label: 'Cardio', emoji: '🫀' },
+      { key: 'brain', label: 'Neuro', emoji: '🧠' },
+      { key: 'lung', label: 'Pneumo', emoji: '🫁' },
+      { key: 'bone', label: 'Orto', emoji: '🦴' },
+      { key: 'blood', label: 'Hemato', emoji: '🩸' },
+      { key: 'dna', label: 'Genética', emoji: '🧬' },
+      { key: 'stomach', label: 'Gastro', emoji: '🥗' },
+      { key: 'kidney', label: 'Nefro', emoji: '🫘' },
+      { key: 'microscope', label: 'Patologia', emoji: '🔬' },
+      { key: 'baby', label: 'Pediatria', emoji: '👶' },
+      { key: 'stethoscope', label: 'Clínica', emoji: '🩺' },
+      { key: 'scalpel', label: 'Cirurgia', emoji: '🔪' },
+      { key: 'pill', label: 'Farmaco', emoji: '💊' },
+      { key: 'virus', label: 'Infecto', emoji: '🦠' },
+      { key: 'eye', label: 'Oftalmo', emoji: '👁️' },
+      { key: 'ear', label: 'Otorrino', emoji: '👂' },
+      { key: 'bandage', label: 'Emergência', emoji: '🩹' },
+      { key: 'skin', label: 'Dermato', emoji: '🧴' }
+    ];
+
+    const PALETTE_COLORS = [
+      { key: 'blue', hex: '#3b82f6', label: 'Azul' },
+      { key: 'indigo', hex: '#6366f1', label: 'Índigo' },
+      { key: 'emerald', hex: '#10b981', label: 'Esmeralda' },
+      { key: 'rose', hex: '#f43f5e', label: 'Rosa' },
+      { key: 'amber', hex: '#f59e0b', label: 'Âmbar' },
+      { key: 'purple', hex: '#a855f7', label: 'Roxo' },
+      { key: 'cyan', hex: '#06b6d4', label: 'Ciano' },
+      { key: 'orange', hex: '#f97316', label: 'Laranja' }
+    ];
+
+    // --- APPLICATION STATE (PERSISTENT CLEAN SLATE) ---
+    const STORAGE_KEY = 'meu_estudo_data_v1';
+
+    let AppState = {
+      modules: [], // { id, name, iconKey, colorKey, createdAt }
+      lessons: [], // { id, moduleId, number, title, notes, isStudied, studiedAt, examId, reviews: { d1: { dueDate, done, doneAt }, d7: { ... }, d30: { ... } }, createdAt }
+      exams: [],   // { id, name, date, moduleId, lessonIds, createdAt }
+      currentModuleId: null,
+      activeTab: 'tab-revisoes',
+      reviewFilter: 'hoje'
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          AppState.modules = Array.isArray(parsed.modules) ? parsed.modules : [];
+          AppState.lessons = Array.isArray(parsed.lessons) ? parsed.lessons : [];
+          AppState.exams = Array.isArray(parsed.exams) ? parsed.exams : [];
+        }
+      } catch (e) {
+        console.error("Erro ao carregar localStorage:", e);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          version: 1,
+          updatedAt: new Date().toISOString(),
+          modules: AppState.modules,
+          lessons: AppState.lessons,
+          exams: AppState.exams
+        }));
+      } catch (e) {
+        console.error("Erro ao salvar localStorage:", e);
+        showToast("Erro ao gravar dados no armazenamento.", "⚠️", true);
+      }
+      updateUI();
+    }
+
+    // --- DATA HELPERS ---
+    function getModule(id) {
+      return AppState.modules.find(m => m.id === id);
+    }
+
+    function getExam(id) {
+      return AppState.exams.find(e => e.id === id);
+    }
+
+    function getLessonsForModule(moduleId) {
+      return AppState.lessons
+        .filter(l => l.moduleId === moduleId)
+        .sort((a, b) => a.number - b.number);
+    }
+
+    function getNextLessonNumber(moduleId) {
+      if (!moduleId) return 1;
+      const lessons = getLessonsForModule(moduleId);
+      if (lessons.length === 0) return 1;
+      const maxNum = Math.max(...lessons.map(l => Number(l.number) || 0));
+      return maxNum + 1;
+    }
+
+    function createSpacedReviews(studiedDateStr) {
+      return {
+        d1: { dueDate: addDays(studiedDateStr, 1), done: false, doneAt: null },
+        d7: { dueDate: addDays(studiedDateStr, 7), done: false, doneAt: null },
+        d30: { dueDate: addDays(studiedDateStr, 30), done: false, doneAt: null }
+      };
+    }
+
+    // --- TEXT FORMATTING HELPER (HTML ESCAPED WITH CLINICAL HIGHLIGHTS) ---
+    function formatNotesHTML(text) {
+      if (!text) return '<span class="text-slate-500 italic">Nenhuma anotação registrada.</span>';
+      
+      let safe = text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+      // Replace bold **text**
+      safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-white">$1</strong>');
+
+      // Replace custom clinical tags: [Alerta: ...], [Fisiopato: ...], [Padrão-Ouro: ...], [Conceito: ...]
+      safe = safe.replace(/\[Alerta:\s*(.*?)\]/gi, '<span class="tag-red">Alerta: $1</span>');
+      safe = safe.replace(/\[Fisiopato:\s*(.*?)\]/gi, '<span class="tag-yellow">Fisiopato: $1</span>');
+      safe = safe.replace(/\[Padrão-Ouro:\s*(.*?)\]/gi, '<span class="tag-green">Padrão-Ouro: $1</span>');
+      safe = safe.replace(/\[Diagnóstico:\s*(.*?)\]/gi, '<span class="tag-green">Diagnóstico: $1</span>');
+      safe = safe.replace(/\[Conceito:\s*(.*?)\]/gi, '<span class="tag-blue">Conceito: $1</span>');
+
+      // Bullets
+      safe = safe.replace(/^•\s*(.*)$/gm, '<li class="ml-4 list-disc text-slate-300">$1</li>');
+
+      // Line breaks
+      safe = safe.replace(/\n/g, '<br>');
+
+      return safe;
+    }
+
+    // --- UI NAVIGATION & TAB SWITCHING ---
+    function switchTab(tabId) {
+      vibrate(10);
+      AppState.activeTab = tabId;
+
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      const activeEl = document.getElementById(tabId);
+      if (activeEl) activeEl.classList.remove('hidden');
+
+      // Update Nav buttons styling
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+        const target = btn.getAttribute('data-tab');
+        if (target === tabId || (tabId === 'tab-modulo-detail' && target === 'tab-modulos')) {
+          btn.classList.add('text-brand-400');
+          btn.classList.remove('text-slate-400');
+        } else {
+          btn.classList.remove('text-brand-400');
+          btn.classList.add('text-slate-400');
+        }
+      });
+
+      // Scroll to top
+      document.getElementById('main-content').scrollTop = 0;
+    }
+
+    // --- BOTTOM SHEET CONTROLS ---
+    function openLessonSheet(preselectedModuleId = null, editLessonId = null) {
+      vibrate(15);
+      const sheet = document.getElementById('sheet-lesson');
+      const form = document.getElementById('form-lesson');
+      const titleModal = document.getElementById('lesson-modal-title');
+      const lessonIdInput = document.getElementById('lesson-id-input');
+      const titleInput = document.getElementById('lesson-title-input');
+      const notesInput = document.getElementById('lesson-notes-input');
+      const numInput = document.getElementById('lesson-number-input');
+      const studiedToggle = document.getElementById('lesson-studied-toggle');
+      const examSelect = document.getElementById('lesson-exam-select');
+
+      form.reset();
+      populateExamSelect(examSelect);
+
+      if (AppState.modules.length === 0) {
+        showToast("Crie um Eixo Médico antes de cadastrar aulas.", "ℹ️");
+        openModuleModal();
+        return;
+      }
+
+      let activeModuleId = preselectedModuleId || AppState.currentModuleId || AppState.modules[0].id;
+
+      if (editLessonId) {
+        const lesson = AppState.lessons.find(l => l.id === editLessonId);
+        if (lesson) {
+          titleModal.textContent = "Editar Aula";
+          lessonIdInput.value = lesson.id;
+          activeModuleId = lesson.moduleId;
+          numInput.value = lesson.number;
+          titleInput.value = lesson.title;
+          notesInput.value = lesson.notes || '';
+          studiedToggle.checked = !!lesson.isStudied;
+          examSelect.value = lesson.examId || '';
+        }
+      } else {
+        titleModal.textContent = "Nova Aula";
+        lessonIdInput.value = "";
+        const nextNum = getNextLessonNumber(activeModuleId);
+        numInput.value = nextNum;
+        studiedToggle.checked = true;
+      }
+
+      renderModuleSelectorChips(activeModuleId);
+      updateLessonNumberDisplay();
+
+      sheet.classList.add('sheet-open');
+      setTimeout(() => {
+        titleInput.focus();
+      }, 250);
+    }
+
+    function closeLessonSheet() {
+      vibrate(8);
+      document.getElementById('sheet-lesson').classList.remove('sheet-open');
+    }
+
+    function renderModuleSelectorChips(selectedModuleId) {
+      const container = document.getElementById('lesson-modules-selector');
+      const tag = document.getElementById('lesson-module-tag');
+
+      container.innerHTML = AppState.modules.map(mod => {
+        const isSelected = mod.id === selectedModuleId;
+        const iconObj = MEDICAL_ICONS.find(i => i.key === mod.iconKey) || MEDICAL_ICONS[0];
+        const colorObj = PALETTE_COLORS.find(c => c.key === mod.colorKey) || PALETTE_COLORS[0];
+
+        return `
+          <button type="button" data-id="${mod.id}" class="chip-module-select shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${
+            isSelected
+              ? 'bg-brand-500 text-white shadow-sm ring-2 ring-brand-400/40'
+              : 'bg-dark-surface border border-dark-border text-slate-300 hover:text-white'
+          }">
+            <span>${iconObj.emoji}</span>
+            <span>${mod.name}</span>
+          </button>
+        `;
+      }).join('');
+
+      const selMod = getModule(selectedModuleId);
+      if (selMod) {
+        tag.textContent = selMod.name;
+        tag.style.borderColor = (PALETTE_COLORS.find(c => c.key === selMod.colorKey) || PALETTE_COLORS[0]).hex + '55';
+      }
+
+      container.querySelectorAll('.chip-module-select').forEach(btn => {
+        btn.addEventListener('click', () => {
+          vibrate(10);
+          const newId = btn.getAttribute('data-id');
+          renderModuleSelectorChips(newId);
+          // Auto update number if creating new lesson
+          const lessonId = document.getElementById('lesson-id-input').value;
+          if (!lessonId) {
+            const nextNum = getNextLessonNumber(newId);
+            document.getElementById('lesson-number-input').value = nextNum;
+            updateLessonNumberDisplay();
+          }
+        });
+      });
+    }
+
+    function updateLessonNumberDisplay() {
+      const numInput = document.getElementById('lesson-number-input');
+      const val = parseInt(numInput.value, 10) || 1;
+      const preview = document.getElementById('lesson-number-preview');
+      preview.textContent = `Aula ${String(val).padStart(2, '0')}`;
+    }
+
+    function populateExamSelect(selectEl, selectedId = "") {
+      const activeExams = AppState.exams.filter(e => e.date >= getTodayStr());
+      selectEl.innerHTML = `
+        <option value="">Nenhuma prova vinculada</option>
+        ${activeExams.map(e => `
+          <option value="${e.id}" ${e.id === selectedId ? 'selected' : ''}>
+            ${e.name} (${formatDateDisplay(e.date)})
+          </option>
+        `).join('')}
+      `;
+    }
+
+    // --- MODAL CONTROLS: EIXOS (MÓDULOS) ---
+    let selectedModuleIcon = 'heart';
+    let selectedModuleColor = 'blue';
+
+    function openModuleModal(moduleId = null) {
+      vibrate(15);
+      const modal = document.getElementById('modal-module');
+      const title = document.getElementById('modal-module-title');
+      const idInput = document.getElementById('module-id-input');
+      const nameInput = document.getElementById('module-name-input');
+
+      if (moduleId) {
+        const mod = getModule(moduleId);
+        if (mod) {
+          title.textContent = "Editar Eixo Clínico";
+          idInput.value = mod.id;
+          nameInput.value = mod.name;
+          selectedModuleIcon = mod.iconKey;
+          selectedModuleColor = mod.colorKey;
+        }
+      } else {
+        title.textContent = "Novo Eixo Clínico";
+        idInput.value = "";
+        nameInput.value = "";
+        selectedModuleIcon = 'heart';
+        selectedModuleColor = 'blue';
+      }
+
+      renderIconPicker();
+      renderColorPicker();
+
+      modal.showModal();
+      setTimeout(() => nameInput.focus(), 150);
+    }
+
+    function renderIconPicker() {
+      const grid = document.getElementById('module-icon-grid');
+      grid.innerHTML = MEDICAL_ICONS.map(i => `
+        <button type="button" data-icon="${i.key}" class="icon-picker-btn p-2 rounded-xl flex flex-col items-center justify-center transition-all ${
+          selectedModuleIcon === i.key
+            ? 'bg-brand-500/25 border-2 border-brand-400 text-white shadow-sm'
+            : 'bg-dark-card hover:bg-dark-border border border-dark-border text-slate-300'
+        }">
+          <span class="text-xl leading-none">${i.emoji}</span>
+          <span class="text-[9px] mt-1 font-medium truncate w-full text-center">${i.label}</span>
+        </button>
+      `).join('');
+
+      grid.querySelectorAll('.icon-picker-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          vibrate(8);
+          selectedModuleIcon = btn.getAttribute('data-icon');
+          renderIconPicker();
+        });
+      });
+    }
+
+    function renderColorPicker() {
+      const row = document.getElementById('module-color-row');
+      row.innerHTML = PALETTE_COLORS.map(c => `
+        <button type="button" data-color="${c.key}" class="color-picker-btn shrink-0 w-8 h-8 rounded-full border-2 transition-transform ${
+          selectedModuleColor === c.key
+            ? 'scale-110 border-white ring-2 ring-brand-400/50'
+            : 'border-transparent opacity-80 hover:opacity-100'
+        }" style="background-color: ${c.hex};" title="${c.label}"></button>
+      `).join('');
+
+      row.querySelectorAll('.color-picker-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          vibrate(8);
+          selectedModuleColor = btn.getAttribute('data-color');
+          renderColorPicker();
+        });
+      });
+    }
+
+    // --- MODAL CONTROLS: PROVAS ---
+    function openExamModal(examId = null) {
+      vibrate(15);
+      const modal = document.getElementById('modal-exam');
+      const title = document.getElementById('modal-exam-title');
+      const idInput = document.getElementById('exam-id-input');
+      const nameInput = document.getElementById('exam-name-input');
+      const dateInput = document.getElementById('exam-date-input');
+      const moduleSelect = document.getElementById('exam-module-select');
+
+      if (AppState.modules.length === 0) {
+        showToast("Cadastre ao menos um Eixo antes de criar provas.", "ℹ️");
+        openModuleModal();
+        return;
+      }
+
+      // Populate module options
+      moduleSelect.innerHTML = `
+        <option value="">Selecione o Eixo</option>
+        ${AppState.modules.map(m => `
+          <option value="${m.id}">${m.name}</option>
+        `).join('')}
+      `;
+
+      if (examId) {
+        const exam = getExam(examId);
+        if (exam) {
+          title.textContent = "Editar Prova";
+          idInput.value = exam.id;
+          nameInput.value = exam.name;
+          dateInput.value = exam.date;
+          moduleSelect.value = exam.moduleId;
+          renderExamLessonsChecklist(exam.moduleId, exam.lessonIds);
+        }
+      } else {
+        title.textContent = "Cadastrar Prova";
+        idInput.value = "";
+        nameInput.value = "";
+        dateInput.value = addDays(getTodayStr(), 14); // 2 weeks default
+        moduleSelect.value = AppState.modules[0].id;
+        renderExamLessonsChecklist(AppState.modules[0].id, []);
+      }
+
+      modal.showModal();
+    }
+
+    function renderExamLessonsChecklist(moduleId, selectedLessonIds = []) {
+      const container = document.getElementById('exam-lessons-checklist');
+      if (!moduleId) {
+        container.innerHTML = '<p class="text-slate-500 text-center py-2">Selecione um eixo acima.</p>';
+        return;
+      }
+
+      const lessons = getLessonsForModule(moduleId);
+      if (lessons.length === 0) {
+        container.innerHTML = '<p class="text-slate-500 text-center py-2">Nenhuma aula cadastrada neste eixo.</p>';
+        return;
+      }
+
+      container.innerHTML = lessons.map(l => {
+        const isChecked = selectedLessonIds.includes(l.id);
+        return `
+          <label class="flex items-center gap-2 p-1.5 rounded-lg bg-dark-card border border-dark-border cursor-pointer hover:border-slate-600 transition-colors">
+            <input type="checkbox" name="exam-lesson-check" value="${l.id}" ${isChecked ? 'checked' : ''} class="rounded border-slate-700 text-brand-500 focus:ring-0">
+            <span class="font-bold text-slate-300">Aula ${String(l.number).padStart(2, '0')}:</span>
+            <span class="text-slate-200 truncate flex-1">${l.title}</span>
+            ${l.isStudied ? '<span class="text-[9.5px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-semibold">Estudada</span>' : '<span class="text-[9.5px] px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 font-semibold">Pendente</span>'}
+          </label>
+        `;
+      }).join('');
+    }
+
+    // --- MODAL CONTROLS: DETALHES / LEITOR DA AULA ---
+    let currentViewingLessonId = null;
+
+    function openViewLessonModal(lessonId) {
+      vibrate(12);
+      const lesson = AppState.lessons.find(l => l.id === lessonId);
+      if (!lesson) return;
+      currentViewingLessonId = lesson.id;
+
+      const mod = getModule(lesson.moduleId);
+      const modal = document.getElementById('modal-view-lesson');
+
+      document.getElementById('view-lesson-badge').textContent = `Aula ${String(lesson.number).padStart(2, '0')}`;
+      document.getElementById('view-lesson-module-tag').textContent = mod ? mod.name : '';
+      document.getElementById('view-lesson-title').textContent = lesson.title;
+      document.getElementById('view-lesson-notes-content').innerHTML = formatNotesHTML(lesson.notes);
+
+      // Render study button
+      const toggleBtn = document.getElementById('view-lesson-toggle-status');
+      if (lesson.isStudied) {
+        toggleBtn.className = "px-2.5 py-1 rounded-lg text-xs font-bold bg-brand-500/20 text-brand-400 border border-brand-500/30 active:scale-95";
+        toggleBtn.textContent = `✓ Estudada (${formatDateDisplay(lesson.studiedAt)})`;
+      } else {
+        toggleBtn.className = "px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 active:scale-95";
+        toggleBtn.textContent = "⏳ Pendente (Toque para marcar)";
+      }
+
+      // Render Spaced Repetition Timeline
+      const scheduleGrid = document.getElementById('view-lesson-schedule-grid');
+      if (lesson.isStudied && lesson.reviews) {
+        const stages = [
+          { key: 'd1', label: 'D+1', data: lesson.reviews.d1 },
+          { key: 'd7', label: 'D+7', data: lesson.reviews.d7 },
+          { key: 'd30', label: 'D+30', data: lesson.reviews.d30 }
+        ];
+
+        scheduleGrid.innerHTML = stages.map(s => {
+          const isDone = s.data.done;
+          const isOverdue = !isDone && s.data.dueDate < getTodayStr();
+          const isToday = !isDone && s.data.dueDate === getTodayStr();
+
+          let statusBg = "bg-dark-card border-dark-border text-slate-400";
+          if (isDone) statusBg = "bg-brand-500/15 border-brand-500/40 text-brand-400 font-bold";
+          else if (isToday) statusBg = "bg-cyan-500/15 border-cyan-500/40 text-cyan-300 font-bold animate-subtle-pulse";
+          else if (isOverdue) statusBg = "bg-rose-500/15 border-rose-500/40 text-rose-300 font-bold";
+
+          return `
+            <div class="border rounded-xl p-2 ${statusBg}">
+              <div class="font-extrabold text-[11px]">${s.label}</div>
+              <div class="text-[10px] mt-0.5">${formatDateDisplay(s.data.dueDate)}</div>
+              <div class="text-[9px] mt-1 uppercase font-semibold">
+                ${isDone ? '✓ Feita' : (isToday ? 'Hoje' : (isOverdue ? 'Atrasada' : 'Agendada'))}
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else {
+        scheduleGrid.innerHTML = `
+          <div class="col-span-3 text-slate-500 text-xs py-2">
+            Marque como estudada para agendar revisões automáticas D+1, D+7 e D+30.
+          </div>
+        `;
+      }
+
+      modal.showModal();
+    }
+
+    // Toggle study state for current viewing lesson
+    document.getElementById('view-lesson-toggle-status').addEventListener('click', () => {
+      if (!currentViewingLessonId) return;
+      toggleLessonStudied(currentViewingLessonId);
+      openViewLessonModal(currentViewingLessonId);
+    });
+
+    document.getElementById('btn-edit-lesson-trigger').addEventListener('click', () => {
+      document.getElementById('modal-view-lesson').close();
+      if (currentViewingLessonId) {
+        openLessonSheet(null, currentViewingLessonId);
+      }
+    });
+
+    document.getElementById('btn-delete-lesson-trigger').addEventListener('click', () => {
+      if (!currentViewingLessonId) return;
+      if (confirm("Deseja realmente excluir esta aula?")) {
+        deleteLesson(currentViewingLessonId);
+        document.getElementById('modal-view-lesson').close();
+      }
+    });
+
+    // --- ACTIONS: TOGGLE STUDY & REVIEWS ---
+    function toggleLessonStudied(lessonId) {
+      vibrate(15);
+      const lesson = AppState.lessons.find(l => l.id === lessonId);
+      if (!lesson) return;
+
+      if (!lesson.isStudied) {
+        // Mark studied today
+        lesson.isStudied = true;
+        lesson.studiedAt = getTodayStr();
+        lesson.reviews = createSpacedReviews(lesson.studiedAt);
+        showToast("Aula marcada como estudada! Revisões agendadas.", "🧠");
+        triggerCelebration();
+      } else {
+        // Unmark
+        lesson.isStudied = false;
+        lesson.studiedAt = null;
+        lesson.reviews = null;
+        showToast("Aula retornada para Pendente.", "↩");
+      }
+      saveState();
+    }
+
+    function checkReviewDone(lessonId, stageKey) {
+      vibrate([15, 25]);
+      const lesson = AppState.lessons.find(l => l.id === lessonId);
+      if (!lesson || !lesson.reviews || !lesson.reviews[stageKey]) return;
+
+      lesson.reviews[stageKey].done = true;
+      lesson.reviews[stageKey].doneAt = getTodayStr();
+      saveState();
+
+      showToast(`Revisão ${stageKey.toUpperCase()} concluída!`, "🎯");
+
+      // Check if all today's reviews are now completed
+      const remainingToday = getReviewsDueToday().length;
+      if (remainingToday === 0) {
+        triggerCelebration();
+        showToast("Parabéns! Todas as revisões de hoje foram concluídas! 🎉", "🌟");
+      }
+    }
+
+    function deleteLesson(lessonId) {
+      vibrate(20);
+      AppState.lessons = AppState.lessons.filter(l => l.id !== lessonId);
+      // Remove from exams
+      AppState.exams.forEach(e => {
+        if (e.lessonIds) {
+          e.lessonIds = e.lessonIds.filter(id => id !== lessonId);
+        }
+      });
+      saveState();
+      showToast("Aula excluída com sucesso.");
+    }
+
+    function deleteModule(moduleId) {
+      const lessons = getLessonsForModule(moduleId);
+      const confirmMsg = lessons.length > 0
+        ? `Excluir este eixo apagará também ${lessons.length} aula(s) cadastrada(s) nele. Continuar?`
+        : "Deseja realmente excluir este eixo?";
+
+      if (confirm(confirmMsg)) {
+        vibrate(25);
+        AppState.modules = AppState.modules.filter(m => m.id !== moduleId);
+        AppState.lessons = AppState.lessons.filter(l => l.moduleId !== moduleId);
+        AppState.exams = AppState.exams.filter(e => e.moduleId !== moduleId);
+
+        if (AppState.currentModuleId === moduleId) {
+          AppState.currentModuleId = null;
+          switchTab('tab-modulos');
+        }
+        saveState();
+        showToast("Eixo excluído.");
+      }
+    }
+
+    function deleteExam(examId) {
+      if (confirm("Deseja realmente excluir esta prova?")) {
+        vibrate(20);
+        AppState.exams = AppState.exams.filter(e => e.id !== examId);
+        saveState();
+        showToast("Prova excluída.");
+      }
+    }
+
+    // --- REVIEWS COMPUTATION ---
+    function getReviewsDueToday() {
+      const todayStr = getTodayStr();
+      const list = [];
+      AppState.lessons.forEach(lesson => {
+        if (lesson.isStudied && lesson.reviews) {
+          ['d1', 'd7', 'd30'].forEach(stage => {
+            const rev = lesson.reviews[stage];
+            if (rev && !rev.done && rev.dueDate === todayStr) {
+              list.push({ lesson, stage, dueDate: rev.dueDate, status: 'hoje' });
+            }
+          });
+        }
+      });
+      return list;
+    }
+
+    function getReviewsOverdue() {
+      const todayStr = getTodayStr();
+      const list = [];
+      AppState.lessons.forEach(lesson => {
+        if (lesson.isStudied && lesson.reviews) {
+          ['d1', 'd7', 'd30'].forEach(stage => {
+            const rev = lesson.reviews[stage];
+            if (rev && !rev.done && rev.dueDate < todayStr) {
+              list.push({ lesson, stage, dueDate: rev.dueDate, status: 'atrasada' });
+            }
+          });
+        }
+      });
+      return list;
+    }
+
+    function getReviewsUpcoming() {
+      const todayStr = getTodayStr();
+      const nextWeekStr = addDays(todayStr, 7);
+      const list = [];
+      AppState.lessons.forEach(lesson => {
+        if (lesson.isStudied && lesson.reviews) {
+          ['d1', 'd7', 'd30'].forEach(stage => {
+            const rev = lesson.reviews[stage];
+            if (rev && !rev.done && rev.dueDate > todayStr && rev.dueDate <= nextWeekStr) {
+              list.push({ lesson, stage, dueDate: rev.dueDate, status: 'proxima' });
+            }
+          });
+        }
+      });
+      return list.sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+    }
+
+    function getReviewsCompletedToday() {
+      const todayStr = getTodayStr();
+      const list = [];
+      AppState.lessons.forEach(lesson => {
+        if (lesson.isStudied && lesson.reviews) {
+          ['d1', 'd7', 'd30'].forEach(stage => {
+            const rev = lesson.reviews[stage];
+            if (rev && rev.done && rev.doneAt === todayStr) {
+              list.push({ lesson, stage, dueDate: rev.dueDate, status: 'concluida' });
+            }
+          });
+        }
+      });
+      return list;
+    }
+
+    // --- RENDER FUNCTIONS ---
+    function updateUI() {
+      renderDateHeader();
+      renderRevisoesTab();
+      renderModulosTab();
+      if (AppState.currentModuleId) {
+        renderModuloDetailTab(AppState.currentModuleId);
+      }
+      renderProvasTab();
+      updateBadges();
+    }
+
+    function renderDateHeader() {
+      const now = new Date();
+      const options = { weekday: 'short', day: 'numeric', month: 'short' };
+      const formatted = now.toLocaleDateString('pt-BR', options);
+      // Capitalize first letter
+      document.getElementById('header-date').textContent = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+    }
+
+    function updateBadges() {
+      const overdue = getReviewsOverdue();
+      const today = getReviewsDueToday();
+      const pendingCount = overdue.length + today.length;
+
+      const navDot = document.getElementById('nav-rev-dot');
+      if (pendingCount > 0) {
+        navDot.classList.remove('hidden');
+      } else {
+        navDot.classList.add('hidden');
+      }
+
+      // Next exam badge
+      const todayStr = getTodayStr();
+      const upcomingExams = AppState.exams
+        .filter(e => e.date >= todayStr)
+        .sort((a, b) => a.date.localeCompare(b.date));
+
+      const examBadge = document.getElementById('nav-provas-badge');
+      if (upcomingExams.length > 0) {
+        const days = daysDiff(upcomingExams[0].date);
+        examBadge.textContent = days <= 3 ? `${days}d` : '!';
+        examBadge.classList.remove('hidden');
+      } else {
+        examBadge.classList.add('hidden');
+      }
+
+      // Update settings metrics
+      document.getElementById('stat-total-modules').textContent = AppState.modules.length;
+      document.getElementById('stat-total-lessons').textContent = AppState.lessons.length;
+      document.getElementById('stat-total-exams').textContent = AppState.exams.length;
+    }
+
+    // --- RENDER ABA 1: REVISÕES ---
+    function renderRevisoesTab() {
+      const listEl = document.getElementById('revisoes-list');
+      const overdue = getReviewsOverdue();
+      const today = getReviewsDueToday();
+      const upcoming = getReviewsUpcoming();
+      const completed = getReviewsCompletedToday();
+
+      document.getElementById('count-hoje').textContent = today.length;
+      document.getElementById('count-atrasadas').textContent = overdue.length;
+      document.getElementById('count-proximas').textContent = upcoming.length;
+
+      const badgeNum = document.getElementById('revisoes-badge-num');
+      badgeNum.textContent = today.length;
+
+      const counterTitle = document.getElementById('revisoes-counter-title');
+      if (today.length === 0 && overdue.length === 0) {
+        counterTitle.textContent = "Tudo em dia! ✨";
+      } else {
+        const totalPending = today.length + overdue.length;
+        counterTitle.textContent = `${totalPending} aula${totalPending > 1 ? 's' : ''} a revisar`;
+      }
+
+      let activeList = [];
+      let emptyMsg = "";
+
+      if (AppState.reviewFilter === 'hoje') {
+        activeList = today;
+        emptyMsg = overdue.length > 0 
+          ? "Nenhuma revisão agendada estritamente para hoje, mas você tem matérias atrasadas." 
+          : "Nenhuma revisão pendente para hoje! Você está em dia com seus estudos.";
+      } else if (AppState.reviewFilter === 'atrasadas') {
+        activeList = overdue;
+        emptyMsg = "Excelente! Nenhuma revisão atrasada no momento.";
+      } else if (AppState.reviewFilter === 'proximas') {
+        activeList = upcoming;
+        emptyMsg = "Nenhuma revisão agendada para os próximos 7 dias.";
+      } else if (AppState.reviewFilter === 'feitas') {
+        activeList = completed;
+        emptyMsg = "Você ainda não concluiu revisões hoje. Dê check nas pendências acima!";
+      }
+
+      // Empty State
+      if (activeList.length === 0) {
+        listEl.innerHTML = `
+          <div class="bg-dark-card border border-dark-border rounded-2xl p-6 text-center space-y-3 shadow-sm">
+            <div class="w-12 h-12 rounded-2xl bg-brand-500/10 text-brand-400 border border-brand-500/20 mx-auto flex items-center justify-center text-2xl">
+              ${AppState.reviewFilter === 'feitas' ? '🎯' : '🌱'}
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white">Mente em Dia</h3>
+              <p class="text-xs text-slate-400 mt-1 max-w-xs mx-auto leading-relaxed">${emptyMsg}</p>
+            </div>
+            ${AppState.lessons.length === 0 ? `
+              <button onclick="openModuleModal()" class="px-3.5 py-2 rounded-xl bg-brand-500 text-white font-bold text-xs shadow-md shadow-brand-500/20 active:scale-95 transition-transform inline-flex items-center gap-1.5">
+                <span>+</span> Criar Primeiro Módulo
+              </button>
+            ` : `
+              <button onclick="openLessonSheet()" class="px-3.5 py-2 rounded-xl bg-dark-surface border border-dark-border text-brand-400 font-bold text-xs active:scale-95 transition-transform inline-flex items-center gap-1.5">
+                <span>+</span> Adicionar Nova Aula
+              </button>
+            `}
+          </div>
+        `;
+        return;
+      }
+
+      // Render Cards
+      listEl.innerHTML = activeList.map(item => {
+        const { lesson, stage, dueDate, status } = item;
+        const mod = getModule(lesson.moduleId) || { name: 'Geral', iconKey: 'stethoscope', colorKey: 'blue' };
+        const iconObj = MEDICAL_ICONS.find(i => i.key === mod.iconKey) || MEDICAL_ICONS[0];
+        const colorObj = PALETTE_COLORS.find(c => c.key === mod.colorKey) || PALETTE_COLORS[0];
+
+        const stageLabel = stage.toUpperCase(); // D+1, D+7, D+30
+        const isDone = lesson.reviews && lesson.reviews[stage] && lesson.reviews[stage].done;
+
+        return `
+          <div class="bg-dark-card border border-dark-border hover:border-slate-700 rounded-2xl p-3 flex items-center justify-between gap-3 shadow-sm active:bg-dark-surface/80 transition-colors">
+            <!-- Icon Badge & Details -->
+            <div class="flex items-center gap-2.5 flex-1 min-w-0 cursor-pointer" onclick="openViewLessonModal('${lesson.id}')">
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg shrink-0 border" style="background-color: ${colorObj.hex}18; border-color: ${colorObj.hex}40;">
+                ${iconObj.emoji}
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="text-[10px] font-extrabold px-1.5 py-0.2 rounded bg-dark-surface border border-dark-border text-slate-300">
+                    Aula ${String(lesson.number).padStart(2, '0')}
+                  </span>
+                  <span class="text-[10px] font-bold px-1.5 py-0.2 rounded ${
+                    status === 'atrasada'
+                      ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                      : (status === 'hoje' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'bg-slate-700/40 text-slate-300')
+                  }">
+                    ${stageLabel} • ${formatDateDisplay(dueDate)}
+                  </span>
+                </div>
+                <h4 class="text-xs font-bold text-white truncate mt-0.5">${lesson.title}</h4>
+                <p class="text-[10.5px] text-slate-400 truncate">${mod.name}</p>
+              </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="shrink-0">
+              ${isDone ? `
+                <span class="w-9 h-9 rounded-xl bg-brand-500/20 border border-brand-500/30 text-brand-400 font-bold flex items-center justify-center text-sm">
+                  ✓
+                </span>
+              ` : `
+                <button onclick="checkReviewDone('${lesson.id}', '${stage}')" class="w-9 h-9 rounded-xl bg-dark-surface hover:bg-brand-500/20 border border-dark-border hover:border-brand-500/50 text-slate-300 hover:text-brand-400 flex items-center justify-center text-base font-bold active:scale-85 transition-all" title="Marcar como revisada">
+                  ✓
+                </button>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Filter Buttons Click
+    document.querySelectorAll('.rev-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        vibrate(8);
+        AppState.reviewFilter = btn.getAttribute('data-filter');
+        document.querySelectorAll('.rev-filter-btn').forEach(b => {
+          b.className = "rev-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-dark-card border border-dark-border text-slate-400 hover:text-white transition-all active:scale-95";
+        });
+        btn.className = "rev-filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-500 text-white shadow-sm transition-all active:scale-95";
+        renderRevisoesTab();
+      });
+    });
+
+    // --- RENDER ABA 2: MÓDULOS (EIXOS) ---
+    function renderModulosTab() {
+      const container = document.getElementById('modulos-list');
+
+      // Empty State
+      if (AppState.modules.length === 0) {
+        container.innerHTML = `
+          <div class="bg-dark-card border border-dark-border rounded-2xl p-6 text-center space-y-3 shadow-sm">
+            <div class="w-12 h-12 rounded-2xl bg-brand-500/10 text-brand-400 border border-brand-500/20 mx-auto flex items-center justify-center text-2xl">
+              🩺
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white">Nenhum Eixo Cadastrado</h3>
+              <p class="text-xs text-slate-400 mt-1 max-w-xs mx-auto leading-relaxed">
+                Organize seus estudos por grandes áreas clínicas (ex: Cardiologia, Neurologia, Pediatria).
+              </p>
+            </div>
+            <button onclick="openModuleModal()" class="px-4 py-2.5 rounded-xl bg-brand-500 text-white font-bold text-xs shadow-md shadow-brand-500/20 active:scale-95 transition-transform inline-flex items-center gap-1.5">
+              <span>+</span> Criar Primeiro Eixo
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      // List of Modules
+      container.innerHTML = AppState.modules.map(mod => {
+        const lessons = getLessonsForModule(mod.id);
+        const studiedCount = lessons.filter(l => l.isStudied).length;
+        const totalCount = lessons.length;
+        const percent = totalCount > 0 ? Math.round((studiedCount / totalCount) * 100) : 0;
+
+        const iconObj = MEDICAL_ICONS.find(i => i.key === mod.iconKey) || MEDICAL_ICONS[0];
+        const colorObj = PALETTE_COLORS.find(c => c.key === mod.colorKey) || PALETTE_COLORS[0];
+
+        return `
+          <div onclick="openModuleDetail('${mod.id}')" class="bg-dark-card border border-dark-border hover:border-slate-700 rounded-2xl p-3.5 space-y-2.5 shadow-sm active:bg-dark-surface/80 transition-all cursor-pointer">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg border" style="background-color: ${colorObj.hex}18; border-color: ${colorObj.hex}40;">
+                  ${iconObj.emoji}
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-white tracking-tight">${mod.name}</h3>
+                  <p class="text-[11px] text-slate-400">${totalCount} aula${totalCount === 1 ? '' : 's'} cadastrada${totalCount === 1 ? '' : 's'}</p>
+                </div>
+              </div>
+
+              <div class="text-right">
+                <span class="text-xs font-bold ${percent === 100 ? 'text-brand-400' : 'text-slate-300'}">${percent}%</span>
+                <span class="text-[10px] text-slate-500 block">${studiedCount}/${totalCount} estudadas</span>
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-dark-surface rounded-full h-1.5 overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-500" style="width: ${percent}%; background-color: ${colorObj.hex};"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openModuleDetail(moduleId) {
+      vibrate(10);
+      AppState.currentModuleId = moduleId;
+      renderModuloDetailTab(moduleId);
+      switchTab('tab-modulo-detail');
+    }
+
+    // --- RENDER ABA 2.1: DETALHE DO EIXO (AULAS) ---
+    function renderModuloDetailTab(moduleId) {
+      const mod = getModule(moduleId);
+      if (!mod) {
+        switchTab('tab-modulos');
+        return;
+      }
+
+      const summaryCard = document.getElementById('module-summary-card');
+      const lessonsList = document.getElementById('module-lessons-list');
+      const lessons = getLessonsForModule(moduleId);
+
+      const studiedCount = lessons.filter(l => l.isStudied).length;
+      const totalCount = lessons.length;
+      const percent = totalCount > 0 ? Math.round((studiedCount / totalCount) * 100) : 0;
+
+      const iconObj = MEDICAL_ICONS.find(i => i.key === mod.iconKey) || MEDICAL_ICONS[0];
+      const colorObj = PALETTE_COLORS.find(c => c.key === mod.colorKey) || PALETTE_COLORS[0];
+
+      // Summary Card
+      summaryCard.innerHTML = `
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-xl border" style="background-color: ${colorObj.hex}18; border-color: ${colorObj.hex}40;">
+              ${iconObj.emoji}
+            </div>
+            <div>
+              <h2 class="text-base font-bold text-white tracking-tight">${mod.name}</h2>
+              <p class="text-[11px] text-slate-400">${studiedCount} de ${totalCount} aulas estudadas (${percent}%)</p>
+            </div>
+          </div>
+        </div>
+        <div class="w-full bg-dark-surface rounded-full h-2 overflow-hidden mt-1">
+          <div class="h-full rounded-full transition-all duration-500" style="width: ${percent}%; background-color: ${colorObj.hex};"></div>
+        </div>
+      `;
+
+      // Lessons List
+      if (lessons.length === 0) {
+        lessonsList.innerHTML = `
+          <div class="bg-dark-card border border-dark-border rounded-2xl p-5 text-center space-y-2">
+            <p class="text-xs text-slate-400">Nenhuma aula cadastrada neste eixo.</p>
+            <button onclick="openLessonSheet('${mod.id}')" class="px-3 py-1.5 rounded-xl bg-brand-500 text-white font-bold text-xs active:scale-95 transition-transform inline-flex items-center gap-1">
+              <span>+</span> Cadastrar Aula 01
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      lessonsList.innerHTML = lessons.map(lesson => {
+        return `
+          <div class="bg-dark-card border border-dark-border hover:border-slate-700 rounded-2xl p-3 flex items-center justify-between gap-2.5 shadow-sm active:bg-dark-surface/80 transition-colors">
+            <div class="flex items-center gap-2.5 flex-1 min-w-0 cursor-pointer" onclick="openViewLessonModal('${lesson.id}')">
+              <span class="w-8 h-8 rounded-xl bg-dark-surface border border-dark-border text-slate-200 font-bold text-xs flex items-center justify-center shrink-0">
+                ${String(lesson.number).padStart(2, '0')}
+              </span>
+              <div class="min-w-0 flex-1">
+                <h4 class="text-xs font-bold text-white truncate">${lesson.title}</h4>
+                <div class="flex items-center gap-2 mt-0.5">
+                  <span class="text-[10px] text-slate-400">
+                    ${lesson.isStudied ? `Estudada em ${formatDateDisplay(lesson.studiedAt)}` : 'Pendente de estudo'}
+                  </span>
+                  ${lesson.examId && getExam(lesson.examId) ? `
+                    <span class="text-[9px] px-1.5 py-0.2 rounded bg-cyan-500/15 text-cyan-300 font-semibold truncate max-w-[100px]">
+                      ${getExam(lesson.examId).name}
+                    </span>
+                  ` : ''}
+                </div>
+              </div>
+            </div>
+
+            <!-- Toggle Studied Button -->
+            <button onclick="toggleLessonStudied('${lesson.id}')" class="shrink-0 px-2.5 py-1 rounded-xl text-[11px] font-bold active:scale-95 transition-all ${
+              lesson.isStudied
+                ? 'bg-brand-500/20 text-brand-400 border border-brand-500/40'
+                : 'bg-dark-surface text-amber-300 border border-amber-500/30'
+            }">
+              ${lesson.isStudied ? '✓ Estudada' : 'Pendente'}
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Breadcrumb back
+    document.getElementById('btn-back-to-modules').addEventListener('click', () => {
+      AppState.currentModuleId = null;
+      switchTab('tab-modulos');
+    });
+
+    document.getElementById('btn-edit-current-module').addEventListener('click', () => {
+      if (AppState.currentModuleId) openModuleModal(AppState.currentModuleId);
+    });
+
+    document.getElementById('btn-delete-current-module').addEventListener('click', () => {
+      if (AppState.currentModuleId) deleteModule(AppState.currentModuleId);
+    });
+
+    document.getElementById('btn-add-lesson-in-module').addEventListener('click', () => {
+      if (AppState.currentModuleId) openLessonSheet(AppState.currentModuleId);
+    });
+
+    // --- RENDER ABA 3: PROVAS ---
+    function renderProvasTab() {
+      const container = document.getElementById('provas-list');
+
+      if (AppState.exams.length === 0) {
+        container.innerHTML = `
+          <div class="bg-dark-card border border-dark-border rounded-2xl p-6 text-center space-y-3 shadow-sm">
+            <div class="w-12 h-12 rounded-2xl bg-brand-500/10 text-brand-400 border border-brand-500/20 mx-auto flex items-center justify-center text-2xl">
+              📋
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white">Nenhuma Prova Cadastrada</h3>
+              <p class="text-xs text-slate-400 mt-1 max-w-xs mx-auto leading-relaxed">
+                Cadastre datas de provas (P1, P2, Simulados) para acompanhar a contagem regressiva e a cobertura de aulas estudadas.
+              </p>
+            </div>
+            <button onclick="openExamModal()" class="px-4 py-2.5 rounded-xl bg-brand-500 text-white font-bold text-xs shadow-md shadow-brand-500/20 active:scale-95 transition-transform inline-flex items-center gap-1.5">
+              <span>+</span> Cadastrar Prova
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      // Sort exams by date ascending
+      const sortedExams = [...AppState.exams].sort((a, b) => a.date.localeCompare(b.date));
+
+      container.innerHTML = sortedExams.map(exam => {
+        const mod = getModule(exam.moduleId);
+        const days = daysDiff(exam.date);
+        const linkedLessons = AppState.lessons.filter(l => (exam.lessonIds || []).includes(l.id));
+        const studiedLinked = linkedLessons.filter(l => l.isStudied).length;
+        const totalLinked = linkedLessons.length;
+        const percent = totalLinked > 0 ? Math.round((studiedLinked / totalLinked) * 100) : 0;
+
+        let badgeText = "";
+        let badgeColor = "bg-slate-800 text-slate-300";
+
+        if (days < 0) {
+          badgeText = "Realizada";
+          badgeColor = "bg-slate-800 text-slate-400";
+        } else if (days === 0) {
+          badgeText = "É HOJE! 🎯";
+          badgeColor = "bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-subtle-pulse font-extrabold";
+        } else if (days === 1) {
+          badgeText = "Amanhã! ⚠️";
+          badgeColor = "bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold";
+        } else {
+          badgeText = `Faltam ${days} dias`;
+          badgeColor = "bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 font-semibold";
+        }
+
+        return `
+          <div class="bg-dark-card border border-dark-border rounded-2xl p-3.5 space-y-3 shadow-sm">
+            <div class="flex items-start justify-between">
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full font-bold ${badgeColor}">
+                    ${badgeText}
+                  </span>
+                  <span class="text-[10px] text-slate-400 font-medium">
+                    ${formatDateFull(exam.date)}
+                  </span>
+                </div>
+                <h3 class="text-sm font-bold text-white mt-1">${exam.name}</h3>
+                <p class="text-[11px] text-slate-400">${mod ? mod.name : 'Geral'}</p>
+              </div>
+
+              <div class="flex items-center gap-1">
+                <button onclick="openExamModal('${exam.id}')" class="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-dark-surface" title="Editar">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                </button>
+                <button onclick="deleteExam('${exam.id}')" class="p-1.5 text-rose-400 hover:text-rose-300 rounded-lg hover:bg-dark-surface" title="Excluir">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Syllabus Progress -->
+            <div>
+              <div class="flex items-center justify-between text-xs mb-1">
+                <span class="text-slate-400 text-[11px]">Conteúdo Estudado</span>
+                <span class="font-bold ${percent === 100 ? 'text-brand-400' : 'text-slate-200'}">
+                  ${studiedLinked}/${totalLinked} aulas (${percent}%)
+                </span>
+              </div>
+              <div class="w-full bg-dark-surface rounded-full h-1.5 overflow-hidden">
+                <div class="h-full rounded-full bg-brand-500 transition-all duration-500" style="width: ${percent}%;"></div>
+              </div>
+            </div>
+
+            <!-- Collapsible Syllabus list -->
+            ${totalLinked > 0 ? `
+              <details class="text-xs text-slate-300 pt-1 border-t border-dark-border/50">
+                <summary class="cursor-pointer text-[10.5px] font-semibold text-slate-400 hover:text-slate-200 py-1">
+                  Ver ${totalLinked} aulas desta prova
+                </summary>
+                <div class="space-y-1.5 pt-1.5 max-h-36 overflow-y-auto">
+                  ${linkedLessons.map(l => `
+                    <div class="flex items-center justify-between p-1.5 rounded-lg bg-dark-surface border border-dark-border text-[11px]">
+                      <span class="truncate flex-1 font-medium">Aula ${String(l.number).padStart(2, '0')}: ${l.title}</span>
+                      <button onclick="toggleLessonStudied('${l.id}')" class="px-2 py-0.5 rounded text-[10px] font-bold ${l.isStudied ? 'bg-brand-500/20 text-brand-400' : 'bg-amber-500/20 text-amber-300'}">
+                        ${l.isStudied ? '✓ Feita' : 'Pendente'}
+                      </button>
+                    </div>
+                  `).join('')}
+                </div>
+              </details>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // --- FORM HANDLERS ---
+    // Form Lesson
+    document.getElementById('form-lesson').addEventListener('submit', (e) => {
+      e.preventDefault();
+      vibrate(20);
+
+      const lessonId = document.getElementById('lesson-id-input').value;
+      const title = document.getElementById('lesson-title-input').value.trim();
+      const notes = document.getElementById('lesson-notes-input').value.trim();
+      const number = parseInt(document.getElementById('lesson-number-input').value, 10) || 1;
+      const isStudied = document.getElementById('lesson-studied-toggle').checked;
+      const examId = document.getElementById('lesson-exam-select').value || null;
+
+      // Find selected module
+      const selectedChip = document.querySelector('.chip-module-select.bg-brand-500');
+      const moduleId = selectedChip ? selectedChip.getAttribute('data-id') : AppState.modules[0].id;
+
+      if (!title) {
+        showToast("Insira o tema da aula.", "⚠️", true);
+        return;
+      }
+
+      if (lessonId) {
+        // Edit existing
+        const lesson = AppState.lessons.find(l => l.id === lessonId);
+        if (lesson) {
+          lesson.title = title;
+          lesson.notes = notes;
+          lesson.number = number;
+          lesson.moduleId = moduleId;
+          lesson.examId = examId;
+          if (isStudied && !lesson.isStudied) {
+            lesson.isStudied = true;
+            lesson.studiedAt = getTodayStr();
+            lesson.reviews = createSpacedReviews(lesson.studiedAt);
+          } else if (!isStudied && lesson.isStudied) {
+            lesson.isStudied = false;
+            lesson.studiedAt = null;
+            lesson.reviews = null;
+          }
+        }
+        showToast("Aula atualizada com sucesso!");
+      } else {
+        // Create new
+        const newLesson = {
+          id: 'l_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+          moduleId: moduleId,
+          number: number,
+          title: title,
+          notes: notes,
+          isStudied: isStudied,
+          studiedAt: isStudied ? getTodayStr() : null,
+          reviews: isStudied ? createSpacedReviews(getTodayStr()) : null,
+          examId: examId,
+          createdAt: Date.now()
+        };
+        AppState.lessons.push(newLesson);
+
+        // Also link to exam if chosen
+        if (examId) {
+          const ex = getExam(examId);
+          if (ex) {
+            if (!ex.lessonIds) ex.lessonIds = [];
+            if (!ex.lessonIds.includes(newLesson.id)) ex.lessonIds.push(newLesson.id);
+          }
+        }
+
+        showToast("Aula cadastrada com sucesso!", "✨");
+        if (isStudied) triggerCelebration();
+      }
+
+      saveState();
+      closeLessonSheet();
+    });
+
+    // Form Module
+    document.getElementById('form-module').addEventListener('submit', (e) => {
+      e.preventDefault();
+      vibrate(20);
+
+      const id = document.getElementById('module-id-input').value;
+      const name = document.getElementById('module-name-input').value.trim();
+
+      if (!name) return;
+
+      if (id) {
+        const mod = getModule(id);
+        if (mod) {
+          mod.name = name;
+          mod.iconKey = selectedModuleIcon;
+          mod.colorKey = selectedModuleColor;
+        }
+        showToast("Eixo atualizado!");
+      } else {
+        const newMod = {
+          id: 'm_' + Date.now(),
+          name: name,
+          iconKey: selectedModuleIcon,
+          colorKey: selectedModuleColor,
+          createdAt: Date.now()
+        };
+        AppState.modules.push(newMod);
+        showToast("Eixo criado com sucesso!", "🩺");
+      }
+
+      saveState();
+      document.getElementById('modal-module').close();
+    });
+
+    // Form Exam
+    document.getElementById('form-exam').addEventListener('submit', (e) => {
+      e.preventDefault();
+      vibrate(20);
+
+      const id = document.getElementById('exam-id-input').value;
+      const name = document.getElementById('exam-name-input').value.trim();
+      const date = document.getElementById('exam-date-input').value;
+      const moduleId = document.getElementById('exam-module-select').value;
+
+      const checkedLessons = Array.from(document.querySelectorAll('input[name="exam-lesson-check"]:checked'))
+        .map(cb => cb.value);
+
+      if (!name || !date || !moduleId) {
+        showToast("Preencha todos os campos obrigatórios.", "⚠️", true);
+        return;
+      }
+
+      if (id) {
+        const exam = getExam(id);
+        if (exam) {
+          exam.name = name;
+          exam.date = date;
+          exam.moduleId = moduleId;
+          exam.lessonIds = checkedLessons;
+        }
+        showToast("Prova atualizada!");
+      } else {
+        const newExam = {
+          id: 'e_' + Date.now(),
+          name: name,
+          date: date,
+          moduleId: moduleId,
+          lessonIds: checkedLessons,
+          createdAt: Date.now()
+        };
+        AppState.exams.push(newExam);
+        showToast("Prova cadastrada com sucesso!", "📅");
+      }
+
+      saveState();
+      document.getElementById('modal-exam').close();
+    });
+
+    // --- STEPPER BUTTONS FOR LESSON NUMBER ---
+    document.getElementById('btn-lesson-num-plus').addEventListener('click', () => {
+      vibrate(8);
+      const input = document.getElementById('lesson-number-input');
+      input.value = (parseInt(input.value, 10) || 0) + 1;
+      updateLessonNumberDisplay();
+    });
+
+    document.getElementById('btn-lesson-num-minus').addEventListener('click', () => {
+      vibrate(8);
+      const input = document.getElementById('lesson-number-input');
+      const cur = parseInt(input.value, 10) || 1;
+      if (cur > 1) {
+        input.value = cur - 1;
+        updateLessonNumberDisplay();
+      }
+    });
+
+    document.getElementById('lesson-number-input').addEventListener('input', updateLessonNumberDisplay);
+
+    // --- NOTES EDITOR TOOLBAR BUTTONS ---
+    document.getElementById('btn-format-bold').addEventListener('click', () => {
+      vibrate(8);
+      insertTextAtCursor(document.getElementById('lesson-notes-input'), '**', '**');
+    });
+
+    document.getElementById('btn-format-bullet').addEventListener('click', () => {
+      vibrate(8);
+      insertTextAtCursor(document.getElementById('lesson-notes-input'), '\n• ', '');
+    });
+
+    document.querySelectorAll('.btn-insert-tag').forEach(btn => {
+      btn.addEventListener('click', () => {
+        vibrate(8);
+        const tagType = btn.getAttribute('data-tag');
+        const labels = {
+          red: '[Alerta: ',
+          yellow: '[Fisiopato: ',
+          green: '[Diagnóstico: ',
+          blue: '[Conceito: '
+        };
+        insertTextAtCursor(document.getElementById('lesson-notes-input'), labels[tagType] || '[Destaque: ', ']');
+      });
+    });
+
+    function insertTextAtCursor(textarea, prefix, suffix = '') {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const val = textarea.value;
+      const sel = val.substring(start, end);
+      const replacement = prefix + (sel || '') + suffix;
+
+      textarea.value = val.substring(0, start) + replacement + val.substring(end);
+      textarea.focus();
+      const newPos = start + prefix.length + (sel ? sel.length : 0);
+      textarea.setSelectionRange(newPos, newPos);
+    }
+
+    // Exam module change -> refresh syllabus checklist
+    document.getElementById('exam-module-select').addEventListener('change', (e) => {
+      renderExamLessonsChecklist(e.target.value, []);
+    });
+
+    document.getElementById('btn-exam-select-all').addEventListener('click', () => {
+      vibrate(8);
+      const checkboxes = document.querySelectorAll('input[name="exam-lesson-check"]');
+      const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+      checkboxes.forEach(cb => cb.checked = !allChecked);
+    });
+
+    // --- BUTTON BINDINGS ---
+    document.getElementById('btn-quick-add-lesson').addEventListener('click', () => {
+      openLessonSheet(AppState.currentModuleId);
+    });
+
+    document.getElementById('btn-close-sheet-lesson').addEventListener('click', closeLessonSheet);
+    document.getElementById('sheet-lesson-overlay').addEventListener('click', closeLessonSheet);
+
+    document.getElementById('btn-open-create-module').addEventListener('click', () => openModuleModal());
+    document.getElementById('btn-close-modal-module').addEventListener('click', () => document.getElementById('modal-module').close());
+
+    document.getElementById('btn-open-create-exam').addEventListener('click', () => openExamModal());
+    document.getElementById('btn-close-modal-exam').addEventListener('click', () => document.getElementById('modal-exam').close());
+
+    document.getElementById('btn-close-view-lesson').addEventListener('click', () => document.getElementById('modal-view-lesson').close());
+
+    document.getElementById('btn-open-settings').addEventListener('click', () => {
+      vibrate(10);
+      document.getElementById('modal-settings').showModal();
+    });
+    document.getElementById('btn-close-modal-settings').addEventListener('click', () => document.getElementById('modal-settings').close());
+
+    // Navigation Tabs
+    document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.getAttribute('data-tab');
+        if (tab) switchTab(tab);
+      });
+    });
+
+    // --- BACKUP EXPORT & IMPORT ---
+    document.getElementById('btn-export-backup').addEventListener('click', () => {
+      vibrate(15);
+      const data = {
+        app: "MeuEstudo",
+        user: "Lauro",
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        modules: AppState.modules,
+        lessons: AppState.lessons,
+        exams: AppState.exams
+      };
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `MeuEstudo_Backup_${getTodayStr()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast("Backup exportado com sucesso!", "📥");
+    });
+
+    document.getElementById('input-import-backup').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const parsed = JSON.parse(event.target.result);
+          if (Array.isArray(parsed.modules) && Array.isArray(parsed.lessons)) {
+            if (confirm(`Restaurar ${parsed.modules.length} módulo(s), ${parsed.lessons.length} aula(s) e ${(parsed.exams || []).length} prova(s)? Os dados atuais serão substituídos.`)) {
+              vibrate(25);
+              AppState.modules = parsed.modules;
+              AppState.lessons = parsed.lessons;
+              AppState.exams = Array.isArray(parsed.exams) ? parsed.exams : [];
+              saveState();
+              document.getElementById('modal-settings').close();
+              showToast("Backup restaurado com sucesso!", "🎉");
+              triggerCelebration();
+            }
+          } else {
+            showToast("Arquivo de backup inválido.", "⚠️", true);
+          }
+        } catch (err) {
+          console.error("Erro ao ler JSON:", err);
+          showToast("Erro ao processar arquivo.", "⚠️", true);
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = "";
+    });
+
+    // --- DIALOG BACKDROP DISMISS FALLBACK (MODERN WEB GUIDANCE) ---
+    document.querySelectorAll('dialog').forEach(dlg => {
+      if (!('closedBy' in HTMLDialogElement.prototype)) {
+        dlg.addEventListener('click', (event) => {
+          if (event.target !== dlg) return;
+          const rect = dlg.getBoundingClientRect();
+          const isInside = (
+            rect.top <= event.clientY &&
+            event.clientY <= rect.top + rect.height &&
+            rect.left <= event.clientX &&
+            event.clientX <= rect.left + rect.width
+          );
+          if (!isInside) dlg.close();
+        });
+      }
+    });
+
+    // --- REGISTER SERVICE WORKER ---
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Service Worker registrado:', reg.scope))
+          .catch(err => console.log('Service Worker falhou:', err));
+      });
+    }
+
+    // --- INITIALIZE APPLICATION ---
+    document.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      updateUI();
+      switchTab('tab-revisoes');
+    });
+  </script>
+</body>
+</html>
