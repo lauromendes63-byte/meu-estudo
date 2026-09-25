@@ -1,6 +1,6 @@
 {
-  "version": "1.6.0",
-  "buildTime": "2026-09-25T17:30:00.000Z",
-  "buildLabel": "25/09/2026 às 14:30",
-  "releaseNotes": "Navegação nativa do botão voltar do celular (sem fechar app), animações ultra-suaves de 120Hz e suporte offline completo."
+  "version": "1.7.0",
+  "buildTime": "2026-09-25T17:50:00.000Z",
+  "buildLabel": "25/09/2026 às 14:50",
+  "releaseNotes": "Ícones médicos científicos em SVG anatômico: Gastro (Estômago), Endócrino (Tireoide), Reumato (Articulação), Cirurgia (Bisturi), Nefro (Rim), Gineco/GO (Gestante), Dermato e Psiquiatria."
 }

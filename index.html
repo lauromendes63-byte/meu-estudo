@@ -735,9 +735,9 @@
   <!-- ==================== APPLICATION LOGIC ==================== -->
   <script>
     // --- APP VERSION & AUTO-UPDATE DETECTOR ---
-    const CURRENT_APP_VERSION = '1.6.0';
-    const CURRENT_BUILD_TIMESTAMP = '2026-09-25T17:30:00.000Z';
-    const CURRENT_BUILD_LABEL = '25/09/2026 às 14:30';
+    const CURRENT_APP_VERSION = '1.7.0';
+    const CURRENT_BUILD_TIMESTAMP = '2026-09-25T17:50:00.000Z';
+    const CURRENT_BUILD_LABEL = '25/09/2026 às 14:50';
 
     let pendingServerUpdate = null;
 
@@ -884,35 +884,85 @@
       return Math.round((t1 - t2) / (1000 * 60 * 60 * 24));
     }
 
-    // --- ACCURATE MEDICAL ICONS ---
+    // --- ACCURATE MEDICAL ICONS (CIENTÍFICOS & ANATÔMICOS) ---
     const MEDICAL_ICONS = [
       { key: 'heart', label: 'Cardio', emoji: '🫀' },
       { key: 'brain', label: 'Neuro', emoji: '🧠' },
-      { key: 'endocrino', label: 'Endócrino', emoji: '🦋' },
-      { key: 'reuma', label: 'Reumato', emoji: '🩻' },
-      { key: 'joint', label: 'Articular', emoji: '⚡' },
+      { 
+        key: 'endocrino', 
+        label: 'Endócrino', 
+        emoji: '🔬',
+        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="13.5" y="4" width="5" height="24" rx="2.5" fill="#e2e8f0"/><line x1="13.5" y1="7" x2="18.5" y2="7" stroke="#94a3b8" stroke-width="1.5"/><line x1="13.5" y1="10" x2="18.5" y2="10" stroke="#94a3b8" stroke-width="1.5"/><line x1="13.5" y1="22" x2="18.5" y2="22" stroke="#94a3b8" stroke-width="1.5"/><line x1="13.5" y1="25" x2="18.5" y2="25" stroke="#94a3b8" stroke-width="1.5"/><path d="M12 5h8l-1.5 3h-5z" fill="#cbd5e1" stroke="#64748b" stroke-width="1"/><path d="M16 17c-2 0-3.5-1-4.5-3-2.5-4-4.5-5-6.5-3.5-2.5 1.8-3 6.5-1 10.5 2 3.5 5 4.5 7.5 1.5 1-1.2 2.5-2 4.5-2s3.5 0.8 4.5 2c2.5 3 5.5 2 7.5-1.5 2-4 1.5-8.7-1-10.5-2-1.5-4 0.5-6.5 3.5-1 2-2.5 3-4.5 3z" fill="#fed7aa" stroke="#c2410c" stroke-width="2" stroke-linejoin="round"/><path d="M13.5 17h5" stroke="#ea580c" stroke-width="2.2" stroke-linecap="round"/></svg>`
+      },
+      { 
+        key: 'gastro', 
+        label: 'Gastro', 
+        emoji: '🩺',
+        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 3v5c0 2 1 3.5 3 4.5" stroke="#e11d48" stroke-width="2.2" stroke-linecap="round"/><path d="M14 9c-2.5-3-7-2-9 1.5-2.5 4.5-1.5 11.5 2.5 15 4 3.5 10 3.5 13.5 0.5 3-2.5 3.5-6.5 2.5-10.5-1-4-5.5-6-7.5-4.5-2 1.5-3 0.5-4-1.5z" fill="#fecdd3" stroke="#be123c" stroke-width="2" stroke-linejoin="round"/><path d="M10 16c1.2 2 3.2 3.8 5.2 4.5M12.5 13c1 1.8 2.2 3.2 4 3.8" stroke="#f43f5e" stroke-width="1.8" stroke-linecap="round"/><path d="M21 21c2 2 4.5 2.5 7 1" stroke="#e11d48" stroke-width="2.2" stroke-linecap="round"/></svg>`
+      },
+      { 
+        key: 'reuma', 
+        label: 'Reumato', 
+        emoji: '🦴',
+        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 3h4v7c0 1.5-1 2-2 2s-2-0.5-2-2V3z" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/><path d="M9 11c1.5-1.5 4.5-1.5 7-0.5s5.5-1 7 0.5c1.5 1.5 0.5 3.5-1.5 4.5-2.5 1.2-7 1.2-9.5 0S7.5 12.5 9 11z" fill="#e2e8f0" stroke="#475569" stroke-width="1.8"/><path d="M10.5 14.5c2.5 0.8 8.5 0.8 11 0" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round"/><path d="M7 16c1-2 4.5-2.5 9-2.5s8 0.5 9 2.5c0.8 1.8-1.5 3-9 3s-9.8-1.2-9-3z" fill="#fee2e2" stroke="#dc2626" stroke-width="1.8"/><circle cx="7.5" cy="16" r="2.2" fill="#ef4444"/><circle cx="24.5" cy="16" r="2.2" fill="#ef4444"/><path d="M10.5 17.5c2.5-0.8 8.5-0.8 11 0" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round"/><path d="M9 21c1.5 1.5 4.5 1.5 7 0.5s5.5 1 7-0.5c1.5-1.5 0.5-3.5-1.5-4.5-2.5-1.2-7-1.2-9.5 0S7.5 19.5 9 21z" fill="#e2e8f0" stroke="#475569" stroke-width="1.8"/><path d="M14 29h4v-7c0-1.5-1-2-2-2s-2 0.5-2 2v7z" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/></svg>`
+      },
       { key: 'bone', label: 'Orto', emoji: '🦴' },
       { key: 'lung', label: 'Pneumo', emoji: '🫁' },
-      { key: 'psiq', label: 'Psiquiatria', emoji: '🧘' },
-      { key: 'gastro', label: 'Gastro', emoji: '🫄' },
-      { key: 'blood', label: 'Hemato', emoji: '🩸' },
-      { key: 'kidney', label: 'Nefro', emoji: '💧' },
-      { key: 'virus', label: 'Infecto', emoji: '🦠' },
+      { 
+        key: 'kidney', 
+        label: 'Nefro', 
+        emoji: '🩺',
+        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 4c-5.5 0-10 4.5-10 12s4.5 12 10 12c7 0 10-4.5 10-12 0-3.5-1.2-5.5-3.2-6.5-2.2-1.1-3.3 0.8-3.3 3 0 2.2-1.2 3.5-3.5 3.5-2 0-3.2-1.2-3.2-3.2 0-2.2 1.2-4.2 3.2-5.3 0-2-1.2-3.5-3.2-3.5z" fill="#fca5a5" stroke="#991b1b" stroke-width="2" stroke-linejoin="round"/><path d="M17 17.5c2.2 2 3.2 6.5 2 10.5" stroke="#d97706" stroke-width="2.2" stroke-linecap="round"/><circle cx="18" cy="14" r="1.6" fill="#ef4444"/><circle cx="19.5" cy="17" r="1.6" fill="#2563eb"/></svg>`
+      },
+      { 
+        key: 'scalpel', 
+        label: 'Cirurgia', 
+        emoji: '✂️',
+        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 27l8.5-8.5c1-1 3-0.8 4 0.2l-2.5 3.8-6 6c-2 2-4 0.5-4-1.5z" fill="#e2e8f0" stroke="#334155" stroke-width="1.8" stroke-linejoin="round"/><path d="M6.5 25.5c1.8-1 3.8-3 5.5-4.8" stroke="#94a3b8" stroke-width="1.2"/><path d="M14 17.5L25.5 6c1.2-1.2 3.2-1.2 4.4 0s1.2 3.2 0 4.4L18.5 22l-4.5-4.5z" fill="#94a3b8" stroke="#1e293b" stroke-width="2" stroke-linejoin="round"/><line x1="18.5" y1="13.5" x2="20.5" y2="11.5" stroke="#f8fafc" stroke-width="1.6"/><line x1="21.5" y1="10.5" x2="23.5" y2="8.5" stroke="#f8fafc" stroke-width="1.6"/></svg>`
+      },
+      { key: 'gineco', label: 'Gineco/GO', emoji: '🤰' },
       { key: 'baby', label: 'Pediatria', emoji: '👶' },
-      { key: 'scalpel', label: 'Cirurgia', emoji: '🔪' },
-      { key: 'gineco', label: 'Gineco/GO', emoji: '🌸' },
-      { key: 'emergency', label: 'Emergência', emoji: '🚨' },
+      { key: 'blood', label: 'Hemato', emoji: '🩸' },
+      { key: 'virus', label: 'Infecto', emoji: '🦠' },
+      { 
+        key: 'psiq', 
+        label: 'Psiquiatria', 
+        emoji: '🧠',
+        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 28v-3c0-3.5 2.2-5.5 5.5-5.5h1c1 0 1.8-0.8 1.8-1.8v-1c-3.2-1-5.3-4-5.3-8.2 0-5.5 4.5-7.5 9.5-7.5s9.5 3 9.5 8c0 4.2-2.2 6.5-4.5 7.5v1.2c0 1 0.8 1.8 1.8 1.8h1c3.2 0 5.5 2 5.5 5.5v3" stroke="#4f46e5" stroke-width="2" stroke-linecap="round"/><circle cx="19" cy="11.5" r="2.2" fill="#6366f1"/><circle cx="14" cy="9.5" r="1.6" fill="#818cf8"/><circle cx="21.5" cy="7.5" r="1.6" fill="#a5b4fc"/><path d="M14 9.5l5 2 2.5-4" stroke="#6366f1" stroke-width="1.6" stroke-linecap="round"/></svg>`
+      },
+      { 
+        key: 'skin', 
+        label: 'Dermato', 
+        emoji: '🩺',
+        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 14c3-1.2 6 1 12 0s9-1.2 12 0v4.5H4V14z" fill="#fed7aa" stroke="#ea580c" stroke-width="1.8"/><path d="M16 5c1 3.5 1 7-0.5 11.5" stroke="#78350f" stroke-width="2" stroke-linecap="round"/><path d="M4 18.5h24v5H4v-5z" fill="#fbcfe8" stroke="#db2777" stroke-width="1.6"/><path d="M4 23.5h24v4.5H4v-4.5z" fill="#fef08a" stroke="#ca8a04" stroke-width="1.6"/><circle cx="9" cy="25.8" r="1.2" fill="#eab308"/><circle cx="16" cy="25.8" r="1.2" fill="#eab308"/><circle cx="23" cy="25.8" r="1.2" fill="#eab308"/></svg>`
+      },
+      { 
+        key: 'uro', 
+        label: 'Urologia', 
+        emoji: '🩺',
+        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 5c1 4 3 8 4 10.5M23 5c-1 4-3 8-4 10.5" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round"/><path d="M13 14.5h6c4.5 0 7.5 4 7.5 8 0 4-4.5 6.5-10.5 6.5S5.5 26.5 5.5 22.5c0-4 3-8 7.5-8z" fill="#fef3c7" stroke="#b45309" stroke-width="2" stroke-linejoin="round"/><path d="M16 29v2.5" stroke="#b45309" stroke-width="2.5" stroke-linecap="round"/></svg>`
+      },
       { key: 'stethoscope', label: 'Clínica', emoji: '🩺' },
+      { key: 'emergency', label: 'Emergência', emoji: '🚨' },
       { key: 'dna', label: 'Genética', emoji: '🧬' },
       { key: 'pill', label: 'Farmaco', emoji: '💊' },
       { key: 'microscope', label: 'Patologia', emoji: '🔬' },
       { key: 'eye', label: 'Oftalmo', emoji: '👁️' },
       { key: 'ear', label: 'Otorrino', emoji: '👂' },
-      { key: 'skin', label: 'Dermato', emoji: '🧴' },
       { key: 'onco', label: 'Oncologia', emoji: '🎗️' },
       { key: 'geriatria', label: 'Geriatria', emoji: '👴' },
       { key: 'anestesia', label: 'Anestesia', emoji: '💉' }
     ];
+
+    function getMedicalIconHTML(iconKey, sizeClasses = "w-6 h-6") {
+      if (iconKey === 'joint') iconKey = 'reuma';
+      const iconObj = MEDICAL_ICONS.find(i => i.key === iconKey) || MEDICAL_ICONS[0];
+      if (!iconObj) return '🩺';
+      if (iconObj.svg) {
+        return `<span class="inline-flex items-center justify-center shrink-0 ${sizeClasses}">${iconObj.svg}</span>`;
+      }
+      return `<span class="inline-flex items-center justify-center shrink-0 leading-none ${sizeClasses}">${iconObj.emoji || '🩺'}</span>`;
+    }
 
     const PALETTE_COLORS = [
       { key: 'emerald', hex: '#059669', bg: '#d1fae5', border: '#6ee7b7', text: '#065f46', label: 'Esmeralda' },
@@ -953,6 +1003,10 @@
           AppState.modules = Array.isArray(parsed.modules) ? parsed.modules : [];
           AppState.lessons = Array.isArray(parsed.lessons) ? parsed.lessons : [];
           AppState.exams = Array.isArray(parsed.exams) ? parsed.exams : [];
+
+          AppState.modules.forEach(m => {
+            if (m.iconKey === 'joint') m.iconKey = 'reuma';
+          });
         }
       } catch (e) {
         console.error("Erro ao carregar localStorage:", e);
@@ -1190,7 +1244,7 @@
               ? 'bg-slate-900 text-white shadow-sm ring-2 ring-slate-400 font-bold'
               : 'bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50'
           }">
-            <span class="text-sm">${iconObj.emoji}</span>
+            ${getMedicalIconHTML(mod.iconKey, 'w-4 h-4 text-xs')}
             <span>${mod.name}</span>
           </button>
         `;
@@ -1275,7 +1329,7 @@
               ? 'bg-slate-900 text-white shadow-sm ring-2 ring-slate-400 font-bold'
               : 'bg-white hover:bg-slate-100 border border-slate-200 text-slate-800'
           }">
-            <span class="text-xl leading-none">${i.emoji}</span>
+            <span class="w-6 h-6 shrink-0 flex items-center justify-center text-xl leading-none">${getMedicalIconHTML(i.key, 'w-6 h-6 text-xl')}</span>
             <span class="text-xs font-semibold leading-tight text-left truncate">${i.label}</span>
           </button>
         `;
@@ -1648,34 +1702,37 @@
               <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-2.5">Especialidades Médicas</span>
               <div class="flex flex-wrap items-center justify-center gap-1.5 max-w-xs mx-auto">
                 <button onclick="createQuickModule('Cardiologia', 'heart', 'crimson')" class="px-3 py-1.5 rounded-xl bg-red-50/90 hover:bg-red-100 border border-red-200 text-xs font-bold text-red-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
-                  <span>🫀</span><span>Cardio</span>
-                </button>
-                <button onclick="createQuickModule('Endocrinologia', 'endocrino', 'amber')" class="px-3 py-1.5 rounded-xl bg-amber-50/90 hover:bg-amber-100 border border-amber-200 text-xs font-bold text-amber-800 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
-                  <span>🦋</span><span>Endócrino</span>
-                </button>
-                <button onclick="createQuickModule('Reumatologia', 'reuma', 'purple')" class="px-3 py-1.5 rounded-xl bg-purple-50/90 hover:bg-purple-100 border border-purple-200 text-xs font-bold text-purple-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
-                  <span>🩻</span><span>Reumato</span>
-                </button>
-                <button onclick="createQuickModule('Neurologia', 'brain', 'purple')" class="px-3 py-1.5 rounded-xl bg-purple-50/90 hover:bg-purple-100 border border-purple-200 text-xs font-bold text-purple-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
-                  <span>🧠</span><span>Neuro</span>
-                </button>
-                <button onclick="createQuickModule('Ortopedia', 'bone', 'emerald')" class="px-3 py-1.5 rounded-xl bg-emerald-50/90 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold text-emerald-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
-                  <span>🦴</span><span>Orto</span>
-                </button>
-                <button onclick="createQuickModule('Pneumologia', 'lung', 'blue')" class="px-3 py-1.5 rounded-xl bg-blue-50/90 hover:bg-blue-100 border border-blue-200 text-xs font-bold text-blue-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
-                  <span>🫁</span><span>Pneumo</span>
-                </button>
-                <button onclick="createQuickModule('Pediatria', 'baby', 'amber')" class="px-3 py-1.5 rounded-xl bg-amber-50/90 hover:bg-amber-100 border border-amber-200 text-xs font-bold text-amber-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
-                  <span>👶</span><span>Pediatria</span>
-                </button>
-                <button onclick="createQuickModule('Cirurgia Geral', 'scalpel', 'rose')" class="px-3 py-1.5 rounded-xl bg-rose-50/90 hover:bg-rose-100 border border-rose-200 text-xs font-bold text-rose-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
-                  <span>🔪</span><span>Cirurgia</span>
+                  <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('heart', 'w-4 h-4')}</span><span>Cardio</span>
                 </button>
                 <button onclick="createQuickModule('Gastroenterologia', 'gastro', 'orange')" class="px-3 py-1.5 rounded-xl bg-orange-50/90 hover:bg-orange-100 border border-orange-200 text-xs font-bold text-orange-800 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
-                  <span>🫄</span><span>Gastro</span>
+                  <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('gastro', 'w-4 h-4')}</span><span>Gastro</span>
+                </button>
+                <button onclick="createQuickModule('Endocrinologia', 'endocrino', 'amber')" class="px-3 py-1.5 rounded-xl bg-amber-50/90 hover:bg-amber-100 border border-amber-200 text-xs font-bold text-amber-800 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                  <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('endocrino', 'w-4 h-4')}</span><span>Endócrino</span>
+                </button>
+                <button onclick="createQuickModule('Reumatologia', 'reuma', 'purple')" class="px-3 py-1.5 rounded-xl bg-purple-50/90 hover:bg-purple-100 border border-purple-200 text-xs font-bold text-purple-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                  <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('reuma', 'w-4 h-4')}</span><span>Reumato</span>
+                </button>
+                <button onclick="createQuickModule('Ginecologia / GO', 'gineco', 'rose')" class="px-3 py-1.5 rounded-xl bg-rose-50/90 hover:bg-rose-100 border border-rose-200 text-xs font-bold text-rose-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                  <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('gineco', 'w-4 h-4')}</span><span>Gineco/GO</span>
+                </button>
+                <button onclick="createQuickModule('Cirurgia Geral', 'scalpel', 'rose')" class="px-3 py-1.5 rounded-xl bg-slate-50/90 hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-800 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                  <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('scalpel', 'w-4 h-4')}</span><span>Cirurgia</span>
+                </button>
+                <button onclick="createQuickModule('Neurologia', 'brain', 'purple')" class="px-3 py-1.5 rounded-xl bg-purple-50/90 hover:bg-purple-100 border border-purple-200 text-xs font-bold text-purple-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                  <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('brain', 'w-4 h-4')}</span><span>Neuro</span>
+                </button>
+                <button onclick="createQuickModule('Ortopedia', 'bone', 'emerald')" class="px-3 py-1.5 rounded-xl bg-emerald-50/90 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold text-emerald-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                  <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('bone', 'w-4 h-4')}</span><span>Orto</span>
+                </button>
+                <button onclick="createQuickModule('Pneumologia', 'lung', 'blue')" class="px-3 py-1.5 rounded-xl bg-blue-50/90 hover:bg-blue-100 border border-blue-200 text-xs font-bold text-blue-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                  <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('lung', 'w-4 h-4')}</span><span>Pneumo</span>
+                </button>
+                <button onclick="createQuickModule('Pediatria', 'baby', 'amber')" class="px-3 py-1.5 rounded-xl bg-amber-50/90 hover:bg-amber-100 border border-amber-200 text-xs font-bold text-amber-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                  <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('baby', 'w-4 h-4')}</span><span>Pediatria</span>
                 </button>
                 <button onclick="createQuickModule('Nefrologia', 'kidney', 'cyan')" class="px-3 py-1.5 rounded-xl bg-cyan-50/90 hover:bg-cyan-100 border border-cyan-200 text-xs font-bold text-cyan-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
-                  <span>💧</span><span>Nefro</span>
+                  <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('kidney', 'w-4 h-4')}</span><span>Nefro</span>
                 </button>
               </div>
             </div>
@@ -1715,7 +1772,7 @@
               <!-- Top: Icon, Quick + Button & Percent -->
               <div class="flex items-center justify-between pt-0.5">
                 <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl shrink-0 border shadow-xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border};">
-                  ${iconObj.emoji}
+                  ${getMedicalIconHTML(mod.iconKey, 'w-7 h-7 text-2xl')}
                 </div>
                 
                 <div class="flex items-center gap-1.5 shrink-0">
@@ -1785,7 +1842,7 @@
               <div class="flex items-center justify-between pt-0.5">
                 <div class="flex items-center gap-3 min-w-0">
                   <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl shrink-0 border shadow-xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border};">
-                    ${iconObj.emoji}
+                    ${getMedicalIconHTML(mod.iconKey, 'w-7 h-7 text-2xl')}
                   </div>
                   <div class="min-w-0">
                     <h3 class="text-[14.5px] font-black text-slate-900 truncate leading-snug tracking-tight">${mod.name}</h3>
@@ -1859,7 +1916,7 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2.5">
             <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl border shadow-2xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border};">
-              ${iconObj.emoji}
+              ${getMedicalIconHTML(mod.iconKey, 'w-7 h-7 text-2xl')}
             </div>
             <div>
               <h2 class="text-base font-extrabold text-slate-900 tracking-tight">${mod.name}</h2>
@@ -1980,7 +2037,7 @@
             <div class="bg-white border border-slate-200/80 rounded-[24px] p-3 flex items-center justify-between gap-3 shadow-2xs active:bg-slate-50 transition-colors">
               <div class="flex items-center gap-2.5 flex-1 min-w-0 cursor-pointer" onclick="openViewLessonModal('${lesson.id}')">
                 <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-xl shrink-0 border" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border};">
-                  ${iconObj.emoji}
+                  ${getMedicalIconHTML(mod.iconKey, 'w-6 h-6 text-xl')}
                 </div>
                 <div class="min-w-0 flex-1">
                   <div class="flex items-center gap-1.5 flex-wrap">
@@ -2028,7 +2085,7 @@
             <div class="bg-white border border-slate-200/80 rounded-[24px] p-3 flex items-center justify-between gap-3 shadow-2xs active:bg-slate-50 transition-colors">
               <div class="flex items-center gap-2.5 flex-1 min-w-0 cursor-pointer" onclick="openViewLessonModal('${lesson.id}')">
                 <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-xl shrink-0 border" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border};">
-                  ${iconObj.emoji}
+                  ${getMedicalIconHTML(mod.iconKey, 'w-6 h-6 text-xl')}
                 </div>
                 <div class="min-w-0 flex-1">
                   <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-50 text-amber-800 border border-amber-200">

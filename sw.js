@@ -1,5 +1,5 @@
 // Service Worker - Meu Estudo Caderno Médico (Ultra-Fast Offline Support)
-const CACHE_NAME = 'meu-estudo-v1.6.0';
+const CACHE_NAME = 'meu-estudo-v1.7.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
