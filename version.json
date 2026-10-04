@@ -1,5 +1,5 @@
 {
-  "version": "2.1.0",
-  "buildTime": "2026-10-04T19:30:00.000Z",
-  "notes": "v2.1.0: Novas aulas iniciam como Pendente (não estudadas), ícones médicos 32x32 com mais contraste e detalhamento anatômico (Reumatologia em visão anterolateral 30° de joelho inflamado e Psiquiatria com ícone exclusivo)."
+  "version": "2.1.1",
+  "buildTime": "2026-10-04T19:55:00.000Z",
+  "notes": "v2.1.1: Novos ícones anatômicos limpos para Endócrino (tireoide borboleta sem sobreposição), Gastro (estômago em J clássico) e Nefro (rim em feijão com hilo e ureter), além de fixar o ícone de Reumatologia permanentemente no estilo escuro com ossos brancos e inflamação vermelha."
 }
