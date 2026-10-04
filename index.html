@@ -97,31 +97,48 @@
       transform: translate3d(0, 0, 0);
     }
 
-    /* Modal / Dialog Smooth Entrance & Backdrop Blur */
+    /* Modal / Dialog Smooth Entrance & Backdrop Blur (@starting-style) */
     dialog {
-      transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      transition:
+        display 0.24s,
+        overlay 0.24s,
+        opacity 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+      transition-behavior: allow-discrete;
       will-change: transform, opacity;
-      transform: scale(0.96) translateY(8px);
+      transform: scale(0.95) translate3d(0, 10px, 0);
       opacity: 0;
     }
     dialog[open] {
       opacity: 1;
-      transform: scale(1) translateY(0);
+      transform: scale(1) translate3d(0, 0, 0);
+    }
+    @starting-style {
+      dialog[open] {
+        opacity: 0;
+        transform: scale(0.95) translate3d(0, 10px, 0);
+      }
     }
     dialog::backdrop {
-      background: rgba(15, 23, 42, 0.45);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
+      background: rgba(15, 23, 42, 0.42);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
       opacity: 0;
-      transition: opacity 0.22s ease-out;
+      transition: display 0.24s, overlay 0.24s, opacity 0.24s ease-out;
+      transition-behavior: allow-discrete;
     }
     dialog[open]::backdrop {
       opacity: 1;
     }
+    @starting-style {
+      dialog[open]::backdrop {
+        opacity: 0;
+      }
+    }
 
-    /* Tab entrance smooth animation (GPU Accelerated) */
+    /* Tab entrance smooth animation (GPU Accelerated + @starting-style) */
     .tab-pane {
-      animation: tabEnter 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: tabEnter 0.24s cubic-bezier(0.22, 1, 0.36, 1) forwards;
       will-change: transform, opacity;
     }
     @keyframes tabEnter {
@@ -137,11 +154,18 @@
 
     /* Micro-interactions táteis e suaves sem consumo de CPU */
     .tap-smooth {
-      transition: transform 0.12s cubic-bezier(0.2, 0, 0, 1), background-color 0.15s ease;
+      transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.16s ease, background-color 0.16s ease;
       will-change: transform;
     }
     .tap-smooth:active {
       transform: scale3d(0.97, 0.97, 1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .tab-pane, dialog, .sheet-drawer, .tap-smooth {
+        animation-duration: 0.05s !important;
+        transition-duration: 0.05s !important;
+      }
     }
 
     /* Scrollbar ultra-sutil */
@@ -154,38 +178,54 @@
       border-radius: 9999px;
     }
 
-    /* Clinical Note Highlights in Light Mode */
+    /* Clinical Note Highlights in Light Mode (Soft Modern Pills) */
     .tag-red {
-      background-color: #fee2e2;
-      color: #991b1b;
-      border: 1px solid #fca5a5;
-      border-radius: 6px;
-      padding: 1px 7px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background-color: #ffe4e6;
+      color: #9f1239;
+      border: 1px solid #fecdd3;
+      border-radius: 8px;
+      padding: 1px 8px;
       font-weight: 700;
+      font-size: 11px;
     }
     .tag-yellow {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
       background-color: #fef3c7;
       color: #92400e;
-      border: 1px solid #fcd34d;
-      border-radius: 6px;
-      padding: 1px 7px;
+      border: 1px solid #fde68a;
+      border-radius: 8px;
+      padding: 1px 8px;
       font-weight: 700;
+      font-size: 11px;
     }
     .tag-green {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
       background-color: #d1fae5;
       color: #065f46;
-      border: 1px solid #6ee7b7;
-      border-radius: 6px;
-      padding: 1px 7px;
+      border: 1px solid #a7f3d0;
+      border-radius: 8px;
+      padding: 1px 8px;
       font-weight: 700;
+      font-size: 11px;
     }
     .tag-blue {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
       background-color: #dbeafe;
       color: #1e40af;
-      border: 1px solid #93c5fd;
-      border-radius: 6px;
-      padding: 1px 7px;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 1px 8px;
       font-weight: 700;
+      font-size: 11px;
     }
 
     /* Soft pulse ultra-leve (0% CPU no compositor GPU) */
@@ -458,28 +498,28 @@
           </div>
 
           <div class="bg-slate-100/90 border border-slate-200/90 border-b-0 rounded-t-2xl px-2.5 py-1.5 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
-            <button type="button" id="btn-format-bold" class="px-2.5 py-0.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-800 shadow-2xs active:scale-90" title="Negrito">
+            <button type="button" id="btn-format-bold" class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-xs font-extrabold text-slate-800 shadow-2xs active:scale-90" title="Negrito">
               B
             </button>
-            <button type="button" id="btn-format-bullet" class="px-2.5 py-0.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-800 shadow-2xs active:scale-90" title="Tópico">
+            <button type="button" id="btn-format-bullet" class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-800 shadow-2xs active:scale-90" title="Tópico">
               • Lista
             </button>
-            <div class="h-4 w-[1px] bg-slate-300 mx-0.5"></div>
-            <button type="button" data-tag="red" class="btn-insert-tag px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-red-100 text-red-700 border border-red-200 active:scale-90">
-              🔴 Alerta
+            <div class="h-4 w-[1px] bg-slate-300 mx-0.5 shrink-0"></div>
+            <button type="button" data-tag="red" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-rose-50 text-rose-800 border border-rose-200 flex items-center gap-1.5 active:scale-90">
+              <span class="w-2 h-2 rounded-full bg-rose-500"></span>Alerta
             </button>
-            <button type="button" data-tag="yellow" class="btn-insert-tag px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200 active:scale-90">
-              🟡 Fisiopato
+            <button type="button" data-tag="yellow" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-amber-50 text-amber-800 border border-amber-200 flex items-center gap-1.5 active:scale-90">
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>Fisiopato
             </button>
-            <button type="button" data-tag="green" class="btn-insert-tag px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 active:scale-90">
-              🟢 Padrão-Ouro
+            <button type="button" data-tag="green" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1.5 active:scale-90">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>Padrão-Ouro
             </button>
-            <button type="button" data-tag="blue" class="btn-insert-tag px-2.5 py-0.5 rounded-lg text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-200 active:scale-90">
-              🔵 Conceito
+            <button type="button" data-tag="blue" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-blue-50 text-blue-800 border border-blue-200 flex items-center gap-1.5 active:scale-90">
+              <span class="w-2 h-2 rounded-full bg-blue-500"></span>Conceito
             </button>
           </div>
 
-          <textarea id="lesson-notes-input" rows="3" placeholder="Critérios clínicos, condutas, o que o professor falou que vai cair na prova..." class="w-full bg-white border border-slate-200/90 focus:border-brand-500 rounded-b-2xl px-3.5 py-2 text-xs text-slate-800 placeholder-slate-400 outline-none resize-none font-sans leading-relaxed shadow-xs"></textarea>
+          <textarea id="lesson-notes-input" rows="3" placeholder="Critérios clínicos, condutas, o que vai cair na prova... (Enter continua listas automaticamente)" class="w-full bg-white border border-slate-200/90 focus:border-brand-500 rounded-b-2xl px-3.5 py-2.5 text-xs text-slate-800 placeholder-slate-400 outline-none resize-none font-sans leading-relaxed shadow-xs transition-all"></textarea>
         </div>
 
         <!-- Linha 5: Vínculo Opcional com Prova -->
@@ -502,9 +542,12 @@
           </label>
         </div>
 
-        <!-- Botão Salvar -->
-        <div class="pt-1">
-          <button type="submit" id="btn-save-lesson" class="w-full py-3 rounded-2xl bg-gradient-to-r from-brand-600 via-brand-500 to-emerald-500 hover:from-brand-500 hover:to-brand-400 text-white font-bold text-sm shadow-md shadow-brand-500/25 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+        <!-- Botões de Ação (Salvar & Salvar +1) -->
+        <div class="pt-1 flex items-center gap-2">
+          <button type="button" id="btn-save-and-next-lesson" class="px-4 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 border border-slate-200/90 text-slate-700 font-extrabold text-xs active:scale-95 transition-all shrink-0" title="Salvar aula atual e já abrir a próxima em sequência">
+            Salvar e +1
+          </button>
+          <button type="submit" id="btn-save-lesson" class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-brand-600 via-brand-500 to-emerald-500 hover:from-brand-500 hover:to-brand-400 text-white font-bold text-sm shadow-md shadow-brand-500/25 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
             Salvar Aula
           </button>
         </div>
@@ -525,12 +568,18 @@
 
         <div>
           <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Nome do Módulo</label>
-          <input type="text" id="module-name-input" required placeholder="Ex: Cardiologia, Neurologia, Ortopedia..." class="w-full bg-white border border-slate-200/90 focus:border-brand-500 rounded-2xl px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 outline-none shadow-xs">
+          <div class="flex items-center gap-2">
+            <div id="module-live-preview-icon" class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border transition-all"></div>
+            <input type="text" id="module-name-input" required placeholder="Ex: Cardiologia, Gastro, GO, Pediatria..." class="flex-1 bg-white border border-slate-200/90 focus:border-brand-500 rounded-2xl px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 outline-none shadow-xs">
+          </div>
         </div>
 
         <div>
-          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Ícone Médico</label>
-          <div id="module-icon-grid" class="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto p-1.5 bg-slate-50 border border-slate-200/80 rounded-2xl">
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500">Ícone Médico</label>
+            <span id="module-automatch-hint" class="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/70">✨ Auto-seleção ativa</span>
+          </div>
+          <div id="module-icon-grid" class="grid grid-cols-3 gap-2 max-h-52 overflow-y-auto p-1.5 bg-slate-50/80 border border-slate-200/80 rounded-2xl">
             <!-- Rendered dynamically -->
           </div>
         </div>
@@ -735,9 +784,9 @@
   <!-- ==================== APPLICATION LOGIC ==================== -->
   <script>
     // --- APP VERSION & AUTO-UPDATE DETECTOR ---
-    const CURRENT_APP_VERSION = '1.7.0';
-    const CURRENT_BUILD_TIMESTAMP = '2026-09-25T17:50:00.000Z';
-    const CURRENT_BUILD_LABEL = '25/09/2026 às 14:50';
+    const CURRENT_APP_VERSION = '2.0.0';
+    const CURRENT_BUILD_TIMESTAMP = '2026-10-04T18:35:00.000Z';
+    const CURRENT_BUILD_LABEL = '04/10/2026 às 15:35';
 
     let pendingServerUpdate = null;
 
@@ -761,7 +810,7 @@
         if (data && data.buildTime && data.buildTime !== CURRENT_BUILD_TIMESTAMP) {
           pendingServerUpdate = data;
           showUpdateBanner(data);
-          if (isManual) showToast(`Nova versão ${data.version} encontrada!`, "🚀");
+          if (isManual) showToast(`Nova versão ${data.version} encontrada!`, "✨");
         } else {
           if (isManual) showToast("Você já está na versão mais recente.", "✓");
         }
@@ -884,97 +933,217 @@
       return Math.round((t1 - t2) / (1000 * 60 * 60 * 24));
     }
 
-    // --- ACCURATE MEDICAL ICONS (CIENTÍFICOS & ANATÔMICOS) ---
+    // --- UI MICRO-ICONS (VETORIAIS, LIMPOS & MODERNOS) ---
+    const UI_ICONS = {
+      book: `<svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+      repeat: `<svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>`,
+      check: `<svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+      calendar: `<svg viewBox="0 0 24 24" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="4" fill="currentColor" fill-opacity="0.15"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`
+    };
+
+    // --- SOFT DUOTONE MEDICAL ICON PACK (ZERO EMOJIS CARICATOS) ---
     const MEDICAL_ICONS = [
-      { key: 'heart', label: 'Cardio', emoji: '🫀' },
-      { key: 'brain', label: 'Neuro', emoji: '🧠' },
-      { 
-        key: 'endocrino', 
-        label: 'Endócrino', 
-        emoji: '🔬',
-        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="13.5" y="4" width="5" height="24" rx="2.5" fill="#e2e8f0"/><line x1="13.5" y1="7" x2="18.5" y2="7" stroke="#94a3b8" stroke-width="1.5"/><line x1="13.5" y1="10" x2="18.5" y2="10" stroke="#94a3b8" stroke-width="1.5"/><line x1="13.5" y1="22" x2="18.5" y2="22" stroke="#94a3b8" stroke-width="1.5"/><line x1="13.5" y1="25" x2="18.5" y2="25" stroke="#94a3b8" stroke-width="1.5"/><path d="M12 5h8l-1.5 3h-5z" fill="#cbd5e1" stroke="#64748b" stroke-width="1"/><path d="M16 17c-2 0-3.5-1-4.5-3-2.5-4-4.5-5-6.5-3.5-2.5 1.8-3 6.5-1 10.5 2 3.5 5 4.5 7.5 1.5 1-1.2 2.5-2 4.5-2s3.5 0.8 4.5 2c2.5 3 5.5 2 7.5-1.5 2-4 1.5-8.7-1-10.5-2-1.5-4 0.5-6.5 3.5-1 2-2.5 3-4.5 3z" fill="#fed7aa" stroke="#c2410c" stroke-width="2" stroke-linejoin="round"/><path d="M13.5 17h5" stroke="#ea580c" stroke-width="2.2" stroke-linecap="round"/></svg>`
+      {
+        key: 'heart',
+        label: 'Cardio',
+        defaultColor: 'crimson',
+        keywords: ['cardio', 'coracao', 'coração', 'ecg', 'arritmia', 'hemodinamica', 'vascular'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 12h2l1.5 -3l2 6l1.5 -3h3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
       },
-      { 
-        key: 'gastro', 
-        label: 'Gastro', 
-        emoji: '🩺',
-        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 3v5c0 2 1 3.5 3 4.5" stroke="#e11d48" stroke-width="2.2" stroke-linecap="round"/><path d="M14 9c-2.5-3-7-2-9 1.5-2.5 4.5-1.5 11.5 2.5 15 4 3.5 10 3.5 13.5 0.5 3-2.5 3.5-6.5 2.5-10.5-1-4-5.5-6-7.5-4.5-2 1.5-3 0.5-4-1.5z" fill="#fecdd3" stroke="#be123c" stroke-width="2" stroke-linejoin="round"/><path d="M10 16c1.2 2 3.2 3.8 5.2 4.5M12.5 13c1 1.8 2.2 3.2 4 3.8" stroke="#f43f5e" stroke-width="1.8" stroke-linecap="round"/><path d="M21 21c2 2 4.5 2.5 7 1" stroke="#e11d48" stroke-width="2.2" stroke-linecap="round"/></svg>`
+      {
+        key: 'brain',
+        label: 'Neuro',
+        defaultColor: 'purple',
+        keywords: ['neuro', 'cerebro', 'cérebro', 'avc', 'cefaleia', 'epilepsia', 'snc'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5a3 3 0 1 0 -5.997 .125a4 4 0 0 0 -2.526 5.77a4 4 0 0 0 .556 6.588a4 4 0 1 0 7.967 0" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 5a3 3 0 1 1 5.997 .125a4 4 0 0 1 2.526 5.77a4 4 0 0 1 -.556 6.588a4 4 0 1 1 -7.967 0" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 5v14M9 9.5c1 .5 2 1.5 3 1.5s2 -1 3 -1.5M8.5 14.5c1 -.5 2 -1 3.5 -1s2.5 .5 3.5 1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`
       },
-      { 
-        key: 'reuma', 
-        label: 'Reumato', 
-        emoji: '🦴',
-        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 3h4v7c0 1.5-1 2-2 2s-2-0.5-2-2V3z" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/><path d="M9 11c1.5-1.5 4.5-1.5 7-0.5s5.5-1 7 0.5c1.5 1.5 0.5 3.5-1.5 4.5-2.5 1.2-7 1.2-9.5 0S7.5 12.5 9 11z" fill="#e2e8f0" stroke="#475569" stroke-width="1.8"/><path d="M10.5 14.5c2.5 0.8 8.5 0.8 11 0" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round"/><path d="M7 16c1-2 4.5-2.5 9-2.5s8 0.5 9 2.5c0.8 1.8-1.5 3-9 3s-9.8-1.2-9-3z" fill="#fee2e2" stroke="#dc2626" stroke-width="1.8"/><circle cx="7.5" cy="16" r="2.2" fill="#ef4444"/><circle cx="24.5" cy="16" r="2.2" fill="#ef4444"/><path d="M10.5 17.5c2.5-0.8 8.5-0.8 11 0" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round"/><path d="M9 21c1.5 1.5 4.5 1.5 7 0.5s5.5 1 7-0.5c1.5-1.5 0.5-3.5-1.5-4.5-2.5-1.2-7-1.2-9.5 0S7.5 19.5 9 21z" fill="#e2e8f0" stroke="#475569" stroke-width="1.8"/><path d="M14 29h4v-7c0-1.5-1-2-2-2s-2 0.5-2 2v7z" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/></svg>`
+      {
+        key: 'endocrino',
+        label: 'Endócrino',
+        defaultColor: 'amber',
+        keywords: ['endocrino', 'endócrino', 'tireoide', 'diabetes', 'hormonio', 'metabolismo', 'obesidade', 'adrenal'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 4v16M14 4v16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-opacity="0.45"/><path d="M12 12c-1.5 0 -2.5 -1 -3.5 -2.5c-1.2 -1.8 -3.5 -2 -4.5 -.5c-1.2 1.8 -1 5.5 .5 7.5c1.2 1.6 3.5 1.8 4.8 .2c.8 -1 1.7 -1.7 2.7 -1.7s1.9 .7 2.7 1.7c1.3 1.6 3.6 1.4 4.8 -.2c1.5 -2 1.7 -5.7 .5 -7.5c-1 -1.5 -3.3 -1.3 -4.5 .5c-1 1.5 -2 2.5 -3.5 2.5z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="7" cy="13" r="1" fill="currentColor"/><circle cx="17" cy="13" r="1" fill="currentColor"/></svg>`
       },
-      { key: 'bone', label: 'Orto', emoji: '🦴' },
-      { key: 'lung', label: 'Pneumo', emoji: '🫁' },
-      { 
-        key: 'kidney', 
-        label: 'Nefro', 
-        emoji: '🩺',
-        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 4c-5.5 0-10 4.5-10 12s4.5 12 10 12c7 0 10-4.5 10-12 0-3.5-1.2-5.5-3.2-6.5-2.2-1.1-3.3 0.8-3.3 3 0 2.2-1.2 3.5-3.5 3.5-2 0-3.2-1.2-3.2-3.2 0-2.2 1.2-4.2 3.2-5.3 0-2-1.2-3.5-3.2-3.5z" fill="#fca5a5" stroke="#991b1b" stroke-width="2" stroke-linejoin="round"/><path d="M17 17.5c2.2 2 3.2 6.5 2 10.5" stroke="#d97706" stroke-width="2.2" stroke-linecap="round"/><circle cx="18" cy="14" r="1.6" fill="#ef4444"/><circle cx="19.5" cy="17" r="1.6" fill="#2563eb"/></svg>`
+      {
+        key: 'gastro',
+        label: 'Gastro',
+        defaultColor: 'orange',
+        keywords: ['gastro', 'estomago', 'estômago', 'hepato', 'figado', 'fígado', 'intestino', 'digestivo', 'cirrose'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3v3.5c0 1.5 1 2.5 2.5 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M11 7.5c-2 -2 -5.5 -1.2 -7 1.5c-1.8 3.2 -1 8.5 2 11c3 2.5 7.5 2.5 10.5 0c2.2 -1.8 2.8 -5 2 -8c-.8 -3 -4 -4.5 -5.5 -3.2c-1.2 1 -2 .2 -2 -1.3z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 13.5c1 1.5 2.5 2.8 4 3.2M16.5 16.5c1.5 1.5 3.5 2 5 .8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`
       },
-      { 
-        key: 'scalpel', 
-        label: 'Cirurgia', 
-        emoji: '✂️',
-        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 27l8.5-8.5c1-1 3-0.8 4 0.2l-2.5 3.8-6 6c-2 2-4 0.5-4-1.5z" fill="#e2e8f0" stroke="#334155" stroke-width="1.8" stroke-linejoin="round"/><path d="M6.5 25.5c1.8-1 3.8-3 5.5-4.8" stroke="#94a3b8" stroke-width="1.2"/><path d="M14 17.5L25.5 6c1.2-1.2 3.2-1.2 4.4 0s1.2 3.2 0 4.4L18.5 22l-4.5-4.5z" fill="#94a3b8" stroke="#1e293b" stroke-width="2" stroke-linejoin="round"/><line x1="18.5" y1="13.5" x2="20.5" y2="11.5" stroke="#f8fafc" stroke-width="1.6"/><line x1="21.5" y1="10.5" x2="23.5" y2="8.5" stroke="#f8fafc" stroke-width="1.6"/></svg>`
+      {
+        key: 'reuma',
+        label: 'Reumato',
+        defaultColor: 'indigo',
+        keywords: ['reuma', 'lupus', 'lúpus', 'artrite', 'autoimune', 'espondilite', 'gota', 'vasculite'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3v3.5c-1.5 .5 -2.5 1.8 -2.5 3s1.2 2 2.5 2c1 0 1.5 -.4 2 -.4s1 .4 2 .4c1.3 0 2.5 -.8 2.5 -2s-1 -2.5 -2.5 -3V3" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 21v-3.5c-1.5 -.5 -2.5 -1.8 -2.5 -3s1.2 -2 2.5 -2c1 0 1.5 .4 2 .4s1 -.4 2 -.4c1.3 0 2.5 .8 2.5 2s-1 2.5 -2.5 3V21" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 9.5a5 5 0 0 0 0 5M19.5 9.5a5 5 0 0 1 0 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
       },
-      { key: 'gineco', label: 'Gineco/GO', emoji: '🤰' },
-      { key: 'baby', label: 'Pediatria', emoji: '👶' },
-      { key: 'blood', label: 'Hemato', emoji: '🩸' },
-      { key: 'virus', label: 'Infecto', emoji: '🦠' },
-      { 
-        key: 'psiq', 
-        label: 'Psiquiatria', 
-        emoji: '🧠',
-        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 28v-3c0-3.5 2.2-5.5 5.5-5.5h1c1 0 1.8-0.8 1.8-1.8v-1c-3.2-1-5.3-4-5.3-8.2 0-5.5 4.5-7.5 9.5-7.5s9.5 3 9.5 8c0 4.2-2.2 6.5-4.5 7.5v1.2c0 1 0.8 1.8 1.8 1.8h1c3.2 0 5.5 2 5.5 5.5v3" stroke="#4f46e5" stroke-width="2" stroke-linecap="round"/><circle cx="19" cy="11.5" r="2.2" fill="#6366f1"/><circle cx="14" cy="9.5" r="1.6" fill="#818cf8"/><circle cx="21.5" cy="7.5" r="1.6" fill="#a5b4fc"/><path d="M14 9.5l5 2 2.5-4" stroke="#6366f1" stroke-width="1.6" stroke-linecap="round"/></svg>`
+      {
+        key: 'bone',
+        label: 'Orto',
+        defaultColor: 'emerald',
+        keywords: ['orto', 'osso', 'fratura', 'trauma', 'coluna', 'joelho', 'ombro', 'musculoesqueletico'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 5a2.5 2.5 0 0 1 3.5 3.5a2.5 2.5 0 0 1 -1.5 4.2l-5.8 5.8a2.5 2.5 0 0 1 -4.2 1.5a2.5 2.5 0 0 1 -3.5 -3.5a2.5 2.5 0 0 1 1.5 -4.2l5.8 -5.8a2.5 2.5 0 0 1 4.2 -1.5z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
       },
-      { 
-        key: 'skin', 
-        label: 'Dermato', 
-        emoji: '🩺',
-        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 14c3-1.2 6 1 12 0s9-1.2 12 0v4.5H4V14z" fill="#fed7aa" stroke="#ea580c" stroke-width="1.8"/><path d="M16 5c1 3.5 1 7-0.5 11.5" stroke="#78350f" stroke-width="2" stroke-linecap="round"/><path d="M4 18.5h24v5H4v-5z" fill="#fbcfe8" stroke="#db2777" stroke-width="1.6"/><path d="M4 23.5h24v4.5H4v-4.5z" fill="#fef08a" stroke="#ca8a04" stroke-width="1.6"/><circle cx="9" cy="25.8" r="1.2" fill="#eab308"/><circle cx="16" cy="25.8" r="1.2" fill="#eab308"/><circle cx="23" cy="25.8" r="1.2" fill="#eab308"/></svg>`
+      {
+        key: 'lung',
+        label: 'Pneumo',
+        defaultColor: 'blue',
+        keywords: ['pneumo', 'pulmao', 'pulmão', 'asma', 'dpoc', 'torax', 'tórax', 'respiratorio'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v7M12 8l-3 2.5M12 8l3 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.5 6.5c-2.5 0 -5.5 3.5 -6 8.5c-.4 3.5 1.5 5 3.8 4.5c2 -.4 2.7 -2 2.7 -4v-6c0 -1.8 -.2 -3 -.5 -3z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14.5 6.5c2.5 0 5.5 3.5 6 8.5c.4 3.5 -1.5 5 -3.8 4.5c-2 -.4 -2.7 -2 -2.7 -4v-6c0 -1.8 .2 -3 .5 -3z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`
       },
-      { 
-        key: 'uro', 
-        label: 'Urologia', 
-        emoji: '🩺',
-        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 5c1 4 3 8 4 10.5M23 5c-1 4-3 8-4 10.5" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round"/><path d="M13 14.5h6c4.5 0 7.5 4 7.5 8 0 4-4.5 6.5-10.5 6.5S5.5 26.5 5.5 22.5c0-4 3-8 7.5-8z" fill="#fef3c7" stroke="#b45309" stroke-width="2" stroke-linejoin="round"/><path d="M16 29v2.5" stroke="#b45309" stroke-width="2.5" stroke-linecap="round"/></svg>`
+      {
+        key: 'kidney',
+        label: 'Nefro',
+        defaultColor: 'cyan',
+        keywords: ['nefro', 'rim', 'renal', 'dialise', 'diálise', 'glomerulo'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.5 4c-4.2 0 -7.5 3.5 -7.5 8.5s3.3 8.5 7.5 8.5c4.8 0 6.5 -3.5 6.5 -8.5c0 -2.5 -.8 -4 -2.2 -4.6c-1.5 -.6 -2.3 .6 -2.3 2.1c0 1.5 -.8 2.5 -2.5 2.5c-1.4 0 -2.2 -.8 -2.2 -2.2c0 -1.5 .8 -3 2.2 -3.8c0 -1.5 -.8 -2.5 -2.2 -2.5z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M13.5 13.5c1.8 1.5 2.5 4.5 1.8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
       },
-      { key: 'stethoscope', label: 'Clínica', emoji: '🩺' },
-      { key: 'emergency', label: 'Emergência', emoji: '🚨' },
-      { key: 'dna', label: 'Genética', emoji: '🧬' },
-      { key: 'pill', label: 'Farmaco', emoji: '💊' },
-      { key: 'microscope', label: 'Patologia', emoji: '🔬' },
-      { key: 'eye', label: 'Oftalmo', emoji: '👁️' },
-      { key: 'ear', label: 'Otorrino', emoji: '👂' },
-      { key: 'onco', label: 'Oncologia', emoji: '🎗️' },
-      { key: 'geriatria', label: 'Geriatria', emoji: '👴' },
-      { key: 'anestesia', label: 'Anestesia', emoji: '💉' }
+      {
+        key: 'scalpel',
+        label: 'Cirurgia',
+        defaultColor: 'teal',
+        keywords: ['cirurgia', 'cirurgica', 'cirúrgica', 'bisturi', 'operatoria', 'abdome agudo', 'hernia'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.5 4.5a2.12 2.12 0 0 1 0 3l-8.5 8.5l-3 -3l8.5 -8.5a2.12 2.12 0 0 1 3 0z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 13l-4.5 4.5c-.8 .8 -.5 2 1 2h4.5l2 -3.5z" fill="currentColor" fill-opacity="0.3" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14.5 6.5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`
+      },
+      {
+        key: 'gineco',
+        label: 'Gineco/GO',
+        defaultColor: 'rose',
+        keywords: ['gineco', 'obstetricia', 'obstetrícia', 'go', 'gestante', 'gravidez', 'parto', 'pre-natal', 'utero', 'útero', 'mama', 'mastologia'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="5.5" r="2.5" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2"/><path d="M8.5 11c0 -1.5 1.5 -2.5 3.5 -2.5s3.5 1 3.5 2.5c1.8 1.2 2.8 3.2 2.5 5.5c-.3 2.2 -2.2 4 -5 4h-2c-1.5 0 -2.5 -1 -2.5 -2.5v-7z" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 14.2a2 2 0 1 1 -2 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`
+      },
+      {
+        key: 'baby',
+        label: 'Pediatria',
+        defaultColor: 'amber',
+        keywords: ['pediatria', 'ped', 'bebe', 'bebê', 'crianca', 'criança', 'neonatologia', 'neo', 'puericultura'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12.5" r="8" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="2"/><path d="M12 4.5c0 -1.5 1.5 -2.2 2.5 -1.2s0 2.5 -1.5 2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9.5" cy="11.5" r="1" fill="currentColor"/><circle cx="14.5" cy="11.5" r="1" fill="currentColor"/><path d="M9.5 15a3.5 3.5 0 0 0 5 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
+      },
+      {
+        key: 'blood',
+        label: 'Hemato',
+        defaultColor: 'crimson',
+        keywords: ['hemato', 'sangue', 'anemia', 'leucemia', 'linfoma', 'coagulacao'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3l5.5 6.5a7.5 7.5 0 1 1 -11 0L12 3z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12v4M10 14h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
+      },
+      {
+        key: 'virus',
+        label: 'Infecto',
+        defaultColor: 'emerald',
+        keywords: ['infecto', 'virus', 'vírus', 'bacteria', 'bactéria', 'antibiotico', 'hiv', 'dengue', 'sepse', 'parasito'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="10.5" cy="11" r="1" fill="currentColor"/><circle cx="13.5" cy="13.5" r="1" fill="currentColor"/></svg>`
+      },
+      {
+        key: 'psiq',
+        label: 'Psiquiatria',
+        defaultColor: 'indigo',
+        keywords: ['psiq', 'mental', 'depressao', 'depressão', 'ansiedade', 'psicose', 'bipolar'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 20v-2.5c0 -2 1.5 -3.5 3.5 -3.5h.5c1 0 1.5 -.5 1.5 -1.5v-1c-2.5 -.8 -4 -3 -4 -6c0 -4 3.2 -6 7 -6s7 2.5 7 6.5c0 3 -1.5 4.8 -3.5 5.5v1c0 1 .5 1.5 1.5 1.5h.5" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="8.5" r="2" fill="currentColor" fill-opacity="0.3" stroke="currentColor" stroke-width="1.8"/></svg>`
+      },
+      {
+        key: 'skin',
+        label: 'Dermato',
+        defaultColor: 'orange',
+        keywords: ['dermato', 'pele', 'cutaneo', 'cutâneo', 'melanoma', 'acne', 'hanseniase'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="10" width="18" height="10" rx="3" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="2"/><path d="M3 15h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 4c1 2.5 1 5 0 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
+      },
+      {
+        key: 'uro',
+        label: 'Urologia',
+        defaultColor: 'cyan',
+        keywords: ['uro', 'bexiga', 'prostata', 'próstata', 'litiase', 'litíase', 'urinario'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 4c.8 3 2 5.5 3 7M17 4c-.8 3 -2 5.5 -3 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M9 10.5h6c3 0 5 2.5 5 5.5c0 3 -3 4.5 -8 4.5s-8 -1.5 -8 -4.5c0 -3 2 -5.5 5 -5.5z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 20.5v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
+      },
+      {
+        key: 'stethoscope',
+        label: 'Clínica',
+        defaultColor: 'emerald',
+        keywords: ['clinica', 'clínica', 'semiologia', 'propedeutica', 'medicina interna', 'preventiva', 'sus', 'saude coletiva'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 4h-1a2 2 0 0 0 -2 2v3.5a5.5 5.5 0 0 0 11 0V6a2 2 0 0 0 -2 -2h-1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 15a6 6 0 0 0 12 0v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="10" r="2" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="2"/></svg>`
+      },
+      {
+        key: 'emergency',
+        label: 'Emergência',
+        defaultColor: 'crimson',
+        keywords: ['emergencia', 'emergência', 'urgencia', 'urgência', 'uti', 'terapia intensiva', 'plantao', 'atls', 'acls'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="5" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="2"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>`
+      },
+      {
+        key: 'dna',
+        label: 'Genética',
+        defaultColor: 'purple',
+        keywords: ['genetica', 'genética', 'dna', 'biologia', 'molecular', 'imuno', 'imunologia'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 3c0 5 10 5 10 9s-10 4 -10 9M17 3c0 5 -10 5 -10 9s10 4 10 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8.5 6h7M8.5 18h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-opacity="0.6"/></svg>`
+      },
+      {
+        key: 'pill',
+        label: 'Farmaco',
+        defaultColor: 'blue',
+        keywords: ['farmaco', 'fármaco', 'medicamento', 'terapeutica', 'toxicologia'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 12.5l8 -8a4.95 4.95 0 1 1 7 7l-8 8a4.95 4.95 0 1 1 -7 -7z" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.5 8.5l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
+      },
+      {
+        key: 'microscope',
+        label: 'Patologia',
+        defaultColor: 'teal',
+        keywords: ['patologia', 'histologia', 'anatomia patologica', 'biopsia', 'laboratorio'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 21h14M6 18h2M7 18v3M9 11l3 3l6 -6l-3 -3z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 12.5l-1.5 1.5M17 3l3 3M12 21a6 6 0 0 0 3.7 -10.7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
+      },
+      {
+        key: 'eye',
+        label: 'Oftalmo',
+        defaultColor: 'cyan',
+        keywords: ['oftalmo', 'olho', 'visao', 'visão', 'retina', 'glaucoma', 'catarata'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 12c2.5 -5 6 -7.5 10 -7.5s7.5 2.5 10 7.5c-2.5 5 -6 7.5 -10 7.5s-7.5 -2.5 -10 -7.5z" fill="currentColor" fill-opacity="0.15" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="currentColor" fill-opacity="0.3" stroke="currentColor" stroke-width="2"/></svg>`
+      },
+      {
+        key: 'ear',
+        label: 'Otorrino',
+        defaultColor: 'amber',
+        keywords: ['otorrino', 'ouvido', 'nariz', 'garganta', 'laringe', 'sinusite', 'otite'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 10a6 6 0 1 1 11.3 2.8c-.8 1.6 -1.8 2.7 -2.3 4.2a3.5 3.5 0 0 1 -6.5 .5" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 10a2.5 2.5 0 0 1 4 2c0 1.5 -1.5 2 -2 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
+      },
+      {
+        key: 'onco',
+        label: 'Oncologia',
+        defaultColor: 'rose',
+        keywords: ['onco', 'cancer', 'câncer', 'tumor', 'neoplasia', 'quimioterapia'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 15l-4.5 6M12 15l4.5 6M12 15l-3.5 -4.5a4.5 4.5 0 1 1 7 0L12 15z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+      },
+      {
+        key: 'geriatria',
+        label: 'Geriatria',
+        defaultColor: 'teal',
+        keywords: ['geriatria', 'idoso', 'envelhecimento', 'demencia', 'paliativo'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.5 12.5l-7.5 7.5l-7.5 -7.5a5 5 0 1 1 7.5 -6.5a5 5 0 1 1 7.5 6.5z" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 9v4l2.5 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+      },
+      {
+        key: 'anestesia',
+        label: 'Anestesia',
+        defaultColor: 'indigo',
+        keywords: ['anestesia', 'anestesiologia', 'sedacao', 'bloqueio', 'dor'],
+        svg: `<svg viewBox="0 0 24 24" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 3l3 3M19.5 4.5l-1.5 1.5M14.5 6.5l3 3L9 18H6v-3l8.5 -8.5z" fill="currentColor" fill-opacity="0.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 18l-3 3M11.5 9.5l1.5 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
+      }
     ];
 
     function getMedicalIconHTML(iconKey, sizeClasses = "w-6 h-6") {
       if (iconKey === 'joint') iconKey = 'reuma';
       const iconObj = MEDICAL_ICONS.find(i => i.key === iconKey) || MEDICAL_ICONS[0];
-      if (!iconObj) return '🩺';
-      if (iconObj.svg) {
-        return `<span class="inline-flex items-center justify-center shrink-0 ${sizeClasses}">${iconObj.svg}</span>`;
-      }
-      return `<span class="inline-flex items-center justify-center shrink-0 leading-none ${sizeClasses}">${iconObj.emoji || '🩺'}</span>`;
+      return `<span class="inline-flex items-center justify-center shrink-0 ${sizeClasses}">${iconObj.svg}</span>`;
     }
 
     const PALETTE_COLORS = [
-      { key: 'emerald', hex: '#059669', bg: '#d1fae5', border: '#6ee7b7', text: '#065f46', label: 'Esmeralda' },
-      { key: 'blue', hex: '#2563eb', bg: '#dbeafe', border: '#93c5fd', text: '#1e40af', label: 'Azul Real' },
-      { key: 'purple', hex: '#7c3aed', bg: '#ede9fe', border: '#c4b5fd', text: '#5b21b6', label: 'Roxo' },
-      { key: 'rose', hex: '#e11d48', bg: '#ffe4e6', border: '#fda4af', text: '#9f1239', label: 'Rosa / Rubi' },
-      { key: 'crimson', hex: '#dc2626', bg: '#fee2e2', border: '#fca5a5', text: '#991b1b', label: 'Vermelho' },
-      { key: 'amber', hex: '#d97706', bg: '#fef3c7', border: '#fcd34d', text: '#92400e', label: 'Âmbar' },
-      { key: 'cyan', hex: '#0891b2', bg: '#cffafe', border: '#67e8f9', text: '#155e75', label: 'Ciano' },
-      { key: 'orange', hex: '#ea580c', bg: '#ffedd5', border: '#fdba74', text: '#9a3412', label: 'Laranja' },
-      { key: 'teal', hex: '#0d9488', bg: '#ccfbf1', border: '#5eead4', text: '#115e59', label: 'Teal' },
-      { key: 'indigo', hex: '#4f46e5', bg: '#e0e7ff', border: '#a5b4fc', text: '#3730a3', label: 'Índigo' }
+      { key: 'emerald', hex: '#059669', bg: '#ecfdf5', track: '#d1fae5', border: '#a7f3d0', text: '#065f46', label: 'Esmeralda' },
+      { key: 'blue', hex: '#2563eb', bg: '#eff6ff', track: '#dbeafe', border: '#bfdbfe', text: '#1e40af', label: 'Azul Real' },
+      { key: 'purple', hex: '#7c3aed', bg: '#f5f3ff', track: '#ede9fe', border: '#ddd6fe', text: '#5b21b6', label: 'Roxo' },
+      { key: 'rose', hex: '#e11d48', bg: '#fff1f2', track: '#ffe4e6', border: '#fecdd3', text: '#9f1239', label: 'Rosa / Rubi' },
+      { key: 'crimson', hex: '#dc2626', bg: '#fef2f2', track: '#fee2e2', border: '#fecaca', text: '#991b1b', label: 'Vermelho' },
+      { key: 'amber', hex: '#d97706', bg: '#fffbeb', track: '#fef3c7', border: '#fde68a', text: '#92400e', label: 'Âmbar' },
+      { key: 'cyan', hex: '#0891b2', bg: '#ecfeff', track: '#cffafe', border: '#a5f3fc', text: '#155e75', label: 'Ciano' },
+      { key: 'orange', hex: '#ea580c', bg: '#fff7ed', track: '#ffedd5', border: '#fed7aa', text: '#9a3412', label: 'Laranja' },
+      { key: 'teal', hex: '#0d9488', bg: '#f0fdfa', track: '#ccfbf1', border: '#99f6e4', text: '#115e59', label: 'Teal' },
+      { key: 'indigo', hex: '#4f46e5', bg: '#eef2ff', track: '#e0e7ff', border: '#c7d2fe', text: '#3730a3', label: 'Índigo' }
     ];
 
     function getColorConfig(colorKey) {
@@ -1014,6 +1183,8 @@
     }
 
     function saveState() {
+      const mainEl = document.getElementById('main-content');
+      const prevScroll = mainEl ? mainEl.scrollTop : 0;
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
           version: 1,
@@ -1027,6 +1198,7 @@
         showToast("Erro ao gravar dados.", "⚠️", true);
       }
       updateUI();
+      if (mainEl) mainEl.scrollTop = prevScroll;
     }
 
     function getModule(id) {
@@ -1120,11 +1292,11 @@
         .replace(/>/g, "&gt;");
 
       safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-slate-900">$1</strong>');
-      safe = safe.replace(/\[Alerta:\s*(.*?)\]/gi, '<span class="tag-red">🔴 Alerta: $1</span>');
-      safe = safe.replace(/\[Fisiopato:\s*(.*?)\]/gi, '<span class="tag-yellow">🟡 Fisiopato: $1</span>');
-      safe = safe.replace(/\[Padrão-Ouro:\s*(.*?)\]/gi, '<span class="tag-green">🟢 Padrão-Ouro: $1</span>');
-      safe = safe.replace(/\[Diagnóstico:\s*(.*?)\]/gi, '<span class="tag-green">🟢 Diagnóstico: $1</span>');
-      safe = safe.replace(/\[Conceito:\s*(.*?)\]/gi, '<span class="tag-blue">🔵 Conceito: $1</span>');
+      safe = safe.replace(/\[Alerta:\s*(.*?)\]/gi, '<span class="tag-red"><span class="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"></span>Alerta: $1</span>');
+      safe = safe.replace(/\[Fisiopato:\s*(.*?)\]/gi, '<span class="tag-yellow"><span class="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>Fisiopato: $1</span>');
+      safe = safe.replace(/\[Padrão-Ouro:\s*(.*?)\]/gi, '<span class="tag-green"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>Padrão-Ouro: $1</span>');
+      safe = safe.replace(/\[Diagnóstico:\s*(.*?)\]/gi, '<span class="tag-green"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>Diagnóstico: $1</span>');
+      safe = safe.replace(/\[Conceito:\s*(.*?)\]/gi, '<span class="tag-blue"><span class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>Conceito: $1</span>');
       safe = safe.replace(/^•\s*(.*)$/gm, '<li class="ml-4 list-disc text-slate-700">$1</li>');
       safe = safe.replace(/\n/g, '<br>');
 
@@ -1165,9 +1337,16 @@
       };
       AppState.modules.push(newMod);
       saveState();
-      renderAll();
-      showToast(`Módulo ${name} criado!`, "🩺");
+      showToast(`Módulo ${name} criado!`, "✨");
       triggerCelebration();
+    }
+
+    function autoResizeNotesTextarea() {
+      const notesInput = document.getElementById('lesson-notes-input');
+      if (!notesInput) return;
+      notesInput.style.height = 'auto';
+      const nextHeight = Math.min(Math.max(notesInput.scrollHeight, 84), 220);
+      notesInput.style.height = nextHeight + 'px';
     }
 
     // --- BOTTOM SHEET CONTROLS ---
@@ -1182,6 +1361,7 @@
       const numInput = document.getElementById('lesson-number-input');
       const studiedToggle = document.getElementById('lesson-studied-toggle');
       const examSelect = document.getElementById('lesson-exam-select');
+      const btnSaveAndNext = document.getElementById('btn-save-and-next-lesson');
 
       form.reset();
       populateExamSelect(examSelect);
@@ -1206,16 +1386,19 @@
           studiedToggle.checked = !!lesson.isStudied;
           examSelect.value = lesson.examId || '';
         }
+        if (btnSaveAndNext) btnSaveAndNext.classList.add('hidden');
       } else {
         titleModal.textContent = "Nova Aula";
         lessonIdInput.value = "";
         const nextNum = getNextLessonNumber(activeModuleId);
         numInput.value = nextNum;
         studiedToggle.checked = true;
+        if (btnSaveAndNext) btnSaveAndNext.classList.remove('hidden');
       }
 
       renderModuleSelectorChips(activeModuleId);
       updateLessonNumberDisplay();
+      autoResizeNotesTextarea();
 
       sheet.classList.add('sheet-open');
       setTimeout(() => {
@@ -1236,15 +1419,17 @@
 
       container.innerHTML = AppState.modules.map(mod => {
         const isSelected = mod.id === selectedModuleId;
-        const iconObj = MEDICAL_ICONS.find(i => i.key === mod.iconKey) || MEDICAL_ICONS[0];
+        const colorObj = getColorConfig(mod.colorKey);
 
         return `
           <button type="button" data-id="${mod.id}" class="chip-module-select shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${
             isSelected
-              ? 'bg-slate-900 text-white shadow-sm ring-2 ring-slate-400 font-bold'
+              ? 'bg-slate-900 text-white shadow-sm ring-2 ring-slate-400/60 font-bold'
               : 'bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50'
           }">
-            ${getMedicalIconHTML(mod.iconKey, 'w-4 h-4 text-xs')}
+            <span class="w-4 h-4 flex items-center justify-center shrink-0" style="color: ${isSelected ? '#ffffff' : colorObj.hex};">
+              ${getMedicalIconHTML(mod.iconKey, 'w-4 h-4')}
+            </span>
             <span>${mod.name}</span>
           </button>
         `;
@@ -1284,9 +1469,25 @@
       `;
     }
 
-    // --- MODAL CONTROLS: MÓDULOS ---
+    // --- MODAL CONTROLS: MÓDULOS (COM AUTO-MATCH INTELIGENTE) ---
     let selectedModuleIcon = 'heart';
-    let selectedModuleColor = 'emerald';
+    let selectedModuleColor = 'crimson';
+    let userManuallyPickedIcon = false;
+    let userManuallyPickedColor = false;
+
+    function updateModuleLivePreview() {
+      const previewEl = document.getElementById('module-live-preview-icon');
+      if (!previewEl) return;
+      const colorObj = getColorConfig(selectedModuleColor);
+      previewEl.style.backgroundColor = colorObj.bg;
+      previewEl.style.borderColor = colorObj.border;
+      previewEl.style.color = colorObj.hex;
+      previewEl.innerHTML = getMedicalIconHTML(selectedModuleIcon, 'w-6 h-6');
+    }
+
+    function normalizeSearchStr(str) {
+      return (str || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+    }
 
     function openModuleModal(moduleId = null) {
       vibrate(15);
@@ -1294,6 +1495,9 @@
       const title = document.getElementById('modal-module-title');
       const idInput = document.getElementById('module-id-input');
       const nameInput = document.getElementById('module-name-input');
+      const autoHint = document.getElementById('module-automatch-hint');
+
+      if (autoHint) autoHint.classList.add('hidden');
 
       if (moduleId) {
         const mod = getModule(moduleId);
@@ -1303,17 +1507,22 @@
           nameInput.value = mod.name;
           selectedModuleIcon = mod.iconKey;
           selectedModuleColor = mod.colorKey;
+          userManuallyPickedIcon = true;
+          userManuallyPickedColor = true;
         }
       } else {
         title.textContent = "Novo Módulo";
         idInput.value = "";
         nameInput.value = "";
         selectedModuleIcon = 'heart';
-        selectedModuleColor = 'emerald';
+        selectedModuleColor = 'crimson';
+        userManuallyPickedIcon = false;
+        userManuallyPickedColor = false;
       }
 
       renderIconPicker();
       renderColorPicker();
+      updateModuleLivePreview();
 
       modal.showModal();
       setTimeout(() => nameInput.focus(), 150);
@@ -1323,13 +1532,16 @@
       const grid = document.getElementById('module-icon-grid');
       grid.innerHTML = MEDICAL_ICONS.map(i => {
         const isSelected = selectedModuleIcon === i.key;
+        const iconColor = getColorConfig(isSelected ? selectedModuleColor : (i.defaultColor || 'emerald'));
         return `
           <button type="button" data-icon="${i.key}" class="icon-picker-btn p-2 rounded-xl flex items-center gap-2 transition-all ${
             isSelected
-              ? 'bg-slate-900 text-white shadow-sm ring-2 ring-slate-400 font-bold'
-              : 'bg-white hover:bg-slate-100 border border-slate-200 text-slate-800'
+              ? 'bg-slate-900 text-white shadow-sm ring-2 ring-slate-400/70 font-bold'
+              : 'bg-white hover:bg-slate-100/90 border border-slate-200/90 text-slate-800'
           }">
-            <span class="w-6 h-6 shrink-0 flex items-center justify-center text-xl leading-none">${getMedicalIconHTML(i.key, 'w-6 h-6 text-xl')}</span>
+            <span class="w-7 h-7 rounded-lg shrink-0 flex items-center justify-center border" style="background-color: ${isSelected ? 'rgba(255,255,255,0.14)' : iconColor.bg}; border-color: ${isSelected ? 'rgba(255,255,255,0.22)' : iconColor.border}; color: ${isSelected ? '#ffffff' : iconColor.hex};">
+              ${getMedicalIconHTML(i.key, 'w-5 h-5')}
+            </span>
             <span class="text-xs font-semibold leading-tight text-left truncate">${i.label}</span>
           </button>
         `;
@@ -1338,8 +1550,15 @@
       grid.querySelectorAll('.icon-picker-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           vibrate(8);
+          userManuallyPickedIcon = true;
           selectedModuleIcon = btn.getAttribute('data-icon');
+          const iconObj = MEDICAL_ICONS.find(x => x.key === selectedModuleIcon);
+          if (iconObj && iconObj.defaultColor && !userManuallyPickedColor) {
+            selectedModuleColor = iconObj.defaultColor;
+            renderColorPicker();
+          }
           renderIconPicker();
+          updateModuleLivePreview();
         });
       });
     }
@@ -1357,8 +1576,11 @@
       row.querySelectorAll('.color-picker-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           vibrate(8);
+          userManuallyPickedColor = true;
           selectedModuleColor = btn.getAttribute('data-color');
           renderColorPicker();
+          renderIconPicker();
+          updateModuleLivePreview();
         });
       });
     }
@@ -1682,8 +1904,8 @@
             <!-- Ícone central com anéis concêntricos -->
             <div class="relative w-16 h-16 mx-auto flex items-center justify-center">
               <div class="absolute inset-0 rounded-3xl bg-emerald-500/15 animate-soft-pulse"></div>
-              <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-white flex items-center justify-center text-2xl shadow-lg shadow-emerald-500/25">
-                🩺
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-white flex items-center justify-center shadow-lg shadow-emerald-500/25">
+                ${getMedicalIconHTML('general', 'w-7 h-7')}
               </div>
             </div>
 
@@ -1701,37 +1923,37 @@
             <div class="pt-1">
               <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-2.5">Especialidades Médicas</span>
               <div class="flex flex-wrap items-center justify-center gap-1.5 max-w-xs mx-auto">
-                <button onclick="createQuickModule('Cardiologia', 'heart', 'crimson')" class="px-3 py-1.5 rounded-xl bg-red-50/90 hover:bg-red-100 border border-red-200 text-xs font-bold text-red-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Cardiologia', 'heart', 'crimson')" class="px-3 py-1.5 rounded-xl bg-red-50/90 hover:bg-red-100 border border-red-200/80 text-xs font-bold text-red-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('heart', 'w-4 h-4')}</span><span>Cardio</span>
                 </button>
-                <button onclick="createQuickModule('Gastroenterologia', 'gastro', 'orange')" class="px-3 py-1.5 rounded-xl bg-orange-50/90 hover:bg-orange-100 border border-orange-200 text-xs font-bold text-orange-800 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Gastroenterologia', 'gastro', 'orange')" class="px-3 py-1.5 rounded-xl bg-orange-50/90 hover:bg-orange-100 border border-orange-200/80 text-xs font-bold text-orange-800 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('gastro', 'w-4 h-4')}</span><span>Gastro</span>
                 </button>
-                <button onclick="createQuickModule('Endocrinologia', 'endocrino', 'amber')" class="px-3 py-1.5 rounded-xl bg-amber-50/90 hover:bg-amber-100 border border-amber-200 text-xs font-bold text-amber-800 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Endocrinologia', 'endocrino', 'amber')" class="px-3 py-1.5 rounded-xl bg-amber-50/90 hover:bg-amber-100 border border-amber-200/80 text-xs font-bold text-amber-800 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('endocrino', 'w-4 h-4')}</span><span>Endócrino</span>
                 </button>
-                <button onclick="createQuickModule('Reumatologia', 'reuma', 'purple')" class="px-3 py-1.5 rounded-xl bg-purple-50/90 hover:bg-purple-100 border border-purple-200 text-xs font-bold text-purple-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Reumatologia', 'reuma', 'purple')" class="px-3 py-1.5 rounded-xl bg-purple-50/90 hover:bg-purple-100 border border-purple-200/80 text-xs font-bold text-purple-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('reuma', 'w-4 h-4')}</span><span>Reumato</span>
                 </button>
-                <button onclick="createQuickModule('Ginecologia / GO', 'gineco', 'rose')" class="px-3 py-1.5 rounded-xl bg-rose-50/90 hover:bg-rose-100 border border-rose-200 text-xs font-bold text-rose-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Ginecologia / GO', 'gineco', 'rose')" class="px-3 py-1.5 rounded-xl bg-rose-50/90 hover:bg-rose-100 border border-rose-200/80 text-xs font-bold text-rose-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('gineco', 'w-4 h-4')}</span><span>Gineco/GO</span>
                 </button>
-                <button onclick="createQuickModule('Cirurgia Geral', 'scalpel', 'rose')" class="px-3 py-1.5 rounded-xl bg-slate-50/90 hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-800 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Cirurgia Geral', 'scalpel', 'teal')" class="px-3 py-1.5 rounded-xl bg-teal-50/90 hover:bg-teal-100 border border-teal-200/80 text-xs font-bold text-teal-800 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('scalpel', 'w-4 h-4')}</span><span>Cirurgia</span>
                 </button>
-                <button onclick="createQuickModule('Neurologia', 'brain', 'purple')" class="px-3 py-1.5 rounded-xl bg-purple-50/90 hover:bg-purple-100 border border-purple-200 text-xs font-bold text-purple-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Neurologia', 'brain', 'purple')" class="px-3 py-1.5 rounded-xl bg-purple-50/90 hover:bg-purple-100 border border-purple-200/80 text-xs font-bold text-purple-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('brain', 'w-4 h-4')}</span><span>Neuro</span>
                 </button>
-                <button onclick="createQuickModule('Ortopedia', 'bone', 'emerald')" class="px-3 py-1.5 rounded-xl bg-emerald-50/90 hover:bg-emerald-100 border border-emerald-200 text-xs font-bold text-emerald-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Ortopedia', 'bone', 'emerald')" class="px-3 py-1.5 rounded-xl bg-emerald-50/90 hover:bg-emerald-100 border border-emerald-200/80 text-xs font-bold text-emerald-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('bone', 'w-4 h-4')}</span><span>Orto</span>
                 </button>
-                <button onclick="createQuickModule('Pneumologia', 'lung', 'blue')" class="px-3 py-1.5 rounded-xl bg-blue-50/90 hover:bg-blue-100 border border-blue-200 text-xs font-bold text-blue-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Pneumologia', 'lung', 'blue')" class="px-3 py-1.5 rounded-xl bg-blue-50/90 hover:bg-blue-100 border border-blue-200/80 text-xs font-bold text-blue-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('lung', 'w-4 h-4')}</span><span>Pneumo</span>
                 </button>
-                <button onclick="createQuickModule('Pediatria', 'baby', 'amber')" class="px-3 py-1.5 rounded-xl bg-amber-50/90 hover:bg-amber-100 border border-amber-200 text-xs font-bold text-amber-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Pediatria', 'baby', 'amber')" class="px-3 py-1.5 rounded-xl bg-amber-50/90 hover:bg-amber-100 border border-amber-200/80 text-xs font-bold text-amber-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('baby', 'w-4 h-4')}</span><span>Pediatria</span>
                 </button>
-                <button onclick="createQuickModule('Nefrologia', 'kidney', 'cyan')" class="px-3 py-1.5 rounded-xl bg-cyan-50/90 hover:bg-cyan-100 border border-cyan-200 text-xs font-bold text-cyan-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Nefrologia', 'kidney', 'cyan')" class="px-3 py-1.5 rounded-xl bg-cyan-50/90 hover:bg-cyan-100 border border-cyan-200/80 text-xs font-bold text-cyan-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('kidney', 'w-4 h-4')}</span><span>Nefro</span>
                 </button>
               </div>
@@ -1761,58 +1983,58 @@
           const pendingStudy = getUnstudiedLessonsForModule(mod.id);
           const pendingReviews = getReviewsForModule(mod.id);
 
-          const iconObj = MEDICAL_ICONS.find(i => i.key === mod.iconKey) || MEDICAL_ICONS[0];
           const colorObj = getColorConfig(mod.colorKey);
 
           return `
-            <div onclick="openModuleDetail('${mod.id}')" class="group relative bg-white border border-slate-200/90 hover:border-slate-300 rounded-[26px] p-3.5 space-y-3 shadow-[0_4px_16px_rgba(15,23,42,0.04)] active:scale-[0.98] transition-all cursor-pointer flex flex-col justify-between overflow-hidden">
-              <!-- Colored Top Accent Line -->
-              <div class="absolute top-0 left-0 right-0 h-1" style="background-color: ${colorObj.hex};"></div>
-
-              <!-- Top: Icon, Quick + Button & Percent -->
-              <div class="flex items-center justify-between pt-0.5">
-                <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl shrink-0 border shadow-xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border};">
-                  ${getMedicalIconHTML(mod.iconKey, 'w-7 h-7 text-2xl')}
+            <div onclick="openModuleDetail('${mod.id}')" class="group relative bg-white border border-slate-200/85 hover:border-slate-300 rounded-[26px] p-3.5 space-y-2.5 shadow-[0_6px_20px_-6px_rgba(15,23,42,0.05)] active:scale-[0.98] transition-all cursor-pointer flex flex-col justify-between overflow-hidden">
+              <!-- Top: Soft Duotone Icon Squircle, Quick + Button & Percent -->
+              <div class="flex items-start justify-between gap-1.5">
+                <div class="w-11 h-11 rounded-[16px] flex items-center justify-center shrink-0 border shadow-2xs transition-transform group-active:scale-95" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.hex};">
+                  ${getMedicalIconHTML(mod.iconKey, 'w-6 h-6')}
                 </div>
                 
-                <div class="flex items-center gap-1.5 shrink-0">
-                  <button type="button" onclick="event.stopPropagation(); openLessonSheet('${mod.id}')" class="w-7 h-7 rounded-xl bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 border border-slate-200 hover:border-emerald-600 flex items-center justify-center text-sm font-black active:scale-90 transition-all shadow-2xs" title="Adicionar Aula neste Módulo">
-                    ＋
-                  </button>
-                  <span class="text-[11px] font-black px-2 py-0.5 rounded-full border shadow-2xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
+                <div class="flex items-center gap-1 shrink-0">
+                  <span class="text-[11px] font-extrabold px-2 py-0.5 rounded-full border" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
                     ${percent}%
                   </span>
+                  <button type="button" onclick="event.stopPropagation(); openLessonSheet('${mod.id}')" class="w-7 h-7 rounded-xl bg-slate-50 hover:bg-slate-900 hover:text-white text-slate-600 border border-slate-200/80 hover:border-slate-900 flex items-center justify-center text-sm font-bold active:scale-90 transition-all" title="Adicionar Aula neste Módulo">
+                    +
+                  </button>
                 </div>
               </div>
 
               <!-- Middle: Name & Count -->
-              <div class="min-w-0">
-                <h3 class="text-[13.5px] font-black text-slate-900 truncate leading-snug tracking-tight">${mod.name}</h3>
-                <p class="text-[11px] text-slate-500 font-bold">${totalCount} aula${totalCount === 1 ? '' : 's'}</p>
+              <div class="min-w-0 pt-0.5">
+                <h3 class="text-[13.5px] font-extrabold text-slate-900 truncate leading-snug tracking-tight">${mod.name}</h3>
+                <p class="text-[11px] text-slate-400 font-semibold mt-0.5">${studiedCount}/${totalCount} aula${totalCount === 1 ? '' : 's'}</p>
               </div>
 
-              <!-- Bottom: High-Contrast Mini-Squares & Progress bar -->
-              <div class="space-y-2 pt-2 border-t border-slate-100">
-                <div class="flex items-center justify-between gap-1">
-                  <!-- Aulas a Estudar (Contraste Alto) -->
-                  <div class="px-2 py-0.5 rounded-lg text-[11px] font-black flex items-center gap-1.5 border ${
-                    pendingStudy > 0 ? 'bg-amber-100 text-amber-950 border-amber-300 shadow-2xs' : 'bg-slate-100 text-slate-400 border-slate-200'
+              <!-- Bottom: Clean Micro-Pills & Single Smooth Progress Bar -->
+              <div class="space-y-2 pt-1">
+                <div class="flex items-center justify-between gap-1.5">
+                  <!-- Aulas a Estudar -->
+                  <div class="flex-1 px-2 py-1 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1 border transition-colors ${
+                    pendingStudy > 0
+                      ? 'bg-amber-50/90 text-amber-800 border-amber-200/80'
+                      : 'bg-slate-50 text-slate-400 border-slate-100'
                   }" title="${pendingStudy} aula(s) a estudar">
-                    <span class="text-xs">📖</span>
+                    ${UI_ICONS.book}
                     <span>${pendingStudy}</span>
                   </div>
 
-                  <!-- Revisões Pendentes (Contraste Alto) -->
-                  <div class="px-2 py-0.5 rounded-lg text-[11px] font-black flex items-center gap-1.5 border ${
-                    pendingReviews > 0 ? 'bg-rose-100 text-rose-950 border-rose-300 shadow-2xs animate-soft-pulse' : 'bg-slate-100 text-slate-400 border-slate-200'
+                  <!-- Revisões Pendentes -->
+                  <div class="flex-1 px-2 py-1 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1 border transition-colors ${
+                    pendingReviews > 0
+                      ? 'bg-rose-50/90 text-rose-700 border-rose-200/80 animate-soft-pulse'
+                      : 'bg-slate-50 text-slate-400 border-slate-100'
                   }" title="${pendingReviews} revisão(ões) pendente(s)">
-                    <span class="text-xs">🔁</span>
+                    ${UI_ICONS.repeat}
                     <span>${pendingReviews}</span>
                   </div>
                 </div>
 
-                <!-- Barra de Progresso com mais destaque -->
-                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden shadow-inner">
+                <!-- Barra de Progresso Única e Suave -->
+                <div class="w-full rounded-full h-1.5 overflow-hidden" style="background-color: ${colorObj.track};">
                   <div class="h-full rounded-full transition-all duration-500" style="width: ${percent}%; background-color: ${colorObj.hex};"></div>
                 </div>
               </div>
@@ -1831,51 +2053,52 @@
           const pendingStudy = getUnstudiedLessonsForModule(mod.id);
           const pendingReviews = getReviewsForModule(mod.id);
 
-          const iconObj = MEDICAL_ICONS.find(i => i.key === mod.iconKey) || MEDICAL_ICONS[0];
           const colorObj = getColorConfig(mod.colorKey);
 
           return `
-            <div onclick="openModuleDetail('${mod.id}')" class="group relative bg-white border border-slate-200/90 hover:border-slate-300 rounded-[26px] p-3.5 space-y-2.5 shadow-[0_4px_16px_rgba(15,23,42,0.04)] active:bg-slate-50 transition-all cursor-pointer overflow-hidden">
-              <!-- Colored Top Accent Line -->
-              <div class="absolute top-0 left-0 right-0 h-1" style="background-color: ${colorObj.hex};"></div>
-
-              <div class="flex items-center justify-between pt-0.5">
+            <div onclick="openModuleDetail('${mod.id}')" class="group relative bg-white border border-slate-200/85 hover:border-slate-300 rounded-[26px] p-3.5 space-y-2.5 shadow-[0_6px_20px_-6px_rgba(15,23,42,0.05)] active:bg-slate-50/70 transition-all cursor-pointer overflow-hidden">
+              <div class="flex items-center justify-between gap-2">
                 <div class="flex items-center gap-3 min-w-0">
-                  <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl shrink-0 border shadow-xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border};">
-                    ${getMedicalIconHTML(mod.iconKey, 'w-7 h-7 text-2xl')}
+                  <div class="w-11 h-11 rounded-[16px] flex items-center justify-center shrink-0 border shadow-2xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.hex};">
+                    ${getMedicalIconHTML(mod.iconKey, 'w-6 h-6')}
                   </div>
                   <div class="min-w-0">
-                    <h3 class="text-[14.5px] font-black text-slate-900 truncate leading-snug tracking-tight">${mod.name}</h3>
-                    <p class="text-[11px] text-slate-500 font-bold">${totalCount} aula${totalCount === 1 ? '' : 's'}</p>
+                    <h3 class="text-[14px] font-extrabold text-slate-900 truncate leading-snug tracking-tight">${mod.name}</h3>
+                    <p class="text-[11px] text-slate-400 font-semibold">${studiedCount}/${totalCount} aula${totalCount === 1 ? '' : 's'}</p>
                   </div>
                 </div>
 
                 <div class="flex items-center gap-1.5 shrink-0">
-                  <div class="px-2 py-1 rounded-lg text-[11px] font-black flex items-center gap-1 border ${
-                    pendingStudy > 0 ? 'bg-amber-100 text-amber-950 border-amber-300 shadow-2xs' : 'bg-slate-100 text-slate-400 border-slate-200'
+                  <div class="px-2 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1 border ${
+                    pendingStudy > 0
+                      ? 'bg-amber-50/90 text-amber-800 border-amber-200/80'
+                      : 'bg-slate-50 text-slate-400 border-slate-100'
                   }" title="${pendingStudy} aula(s) a estudar">
-                    <span class="text-xs">📖</span>
+                    ${UI_ICONS.book}
                     <span>${pendingStudy}</span>
                   </div>
 
-                  <div class="px-2 py-1 rounded-lg text-[11px] font-black flex items-center gap-1 border ${
-                    pendingReviews > 0 ? 'bg-rose-100 text-rose-950 border-rose-300 shadow-2xs animate-soft-pulse' : 'bg-slate-100 text-slate-400 border-slate-200'
+                  <div class="px-2 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1 border ${
+                    pendingReviews > 0
+                      ? 'bg-rose-50/90 text-rose-700 border-rose-200/80 animate-soft-pulse'
+                      : 'bg-slate-50 text-slate-400 border-slate-100'
                   }" title="${pendingReviews} revisão(ões) pendente(s)">
-                    <span class="text-xs">🔁</span>
+                    ${UI_ICONS.repeat}
                     <span>${pendingReviews}</span>
                   </div>
 
-                  <span class="text-[11px] font-black px-2 py-0.5 rounded-full border shadow-2xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
+                  <span class="text-[11px] font-extrabold px-2 py-0.5 rounded-full border" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
                     ${percent}%
                   </span>
 
-                  <button type="button" onclick="event.stopPropagation(); openLessonSheet('${mod.id}')" class="w-7 h-7 rounded-xl bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 border border-slate-200 hover:border-emerald-600 flex items-center justify-center text-sm font-black active:scale-90 transition-all shadow-2xs" title="Adicionar Aula neste Módulo">
-                    ＋
+                  <button type="button" onclick="event.stopPropagation(); openLessonSheet('${mod.id}')" class="w-7 h-7 rounded-xl bg-slate-50 hover:bg-slate-900 hover:text-white text-slate-600 border border-slate-200/80 hover:border-slate-900 flex items-center justify-center text-sm font-bold active:scale-90 transition-all" title="Adicionar Aula neste Módulo">
+                    +
                   </button>
                 </div>
               </div>
 
-              <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden shadow-inner">
+              <!-- Barra de Progresso Única e Suave -->
+              <div class="w-full rounded-full h-1.5 overflow-hidden" style="background-color: ${colorObj.track};">
                 <div class="h-full rounded-full transition-all duration-500" style="width: ${percent}%; background-color: ${colorObj.hex};"></div>
               </div>
             </div>
@@ -1909,47 +2132,49 @@
       const pendingStudy = getUnstudiedLessonsForModule(moduleId);
       const pendingReviews = getReviewsForModule(moduleId);
 
-      const iconObj = MEDICAL_ICONS.find(i => i.key === mod.iconKey) || MEDICAL_ICONS[0];
       const colorObj = getColorConfig(mod.colorKey);
 
       summaryCard.innerHTML = `
         <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl border shadow-2xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border};">
-              ${getMedicalIconHTML(mod.iconKey, 'w-7 h-7 text-2xl')}
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-11 h-11 rounded-[16px] flex items-center justify-center border shadow-2xs shrink-0" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.hex};">
+              ${getMedicalIconHTML(mod.iconKey, 'w-6 h-6')}
             </div>
-            <div>
-              <h2 class="text-base font-extrabold text-slate-900 tracking-tight">${mod.name}</h2>
-              <p class="text-[11px] text-slate-500">${studiedCount} de ${totalCount} estudadas (${percent}%)</p>
+            <div class="min-w-0">
+              <h2 class="text-base font-extrabold text-slate-900 tracking-tight truncate">${mod.name}</h2>
+              <p class="text-[11px] text-slate-500 font-semibold">${studiedCount} de ${totalCount} estudadas (${percent}%)</p>
             </div>
           </div>
 
-          <div class="flex items-center gap-1.5">
-            <div class="px-2 py-1 rounded-xl text-xs font-black flex items-center gap-1 border ${
-              pendingStudy > 0 ? 'bg-amber-100 text-amber-950 border-amber-300 shadow-2xs' : 'bg-slate-100 text-slate-400 border-slate-200'
+          <div class="flex items-center gap-1.5 shrink-0">
+            <div class="px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1 border ${
+              pendingStudy > 0 ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-slate-50 text-slate-400 border-slate-100'
             }" title="Aulas a estudar">
-              <span>📖</span>
+              ${UI_ICONS.book}
               <span>${pendingStudy}</span>
             </div>
-            <div class="px-2 py-1 rounded-xl text-xs font-black flex items-center gap-1 border ${
-              pendingReviews > 0 ? 'bg-rose-100 text-rose-950 border-rose-300 shadow-2xs animate-soft-pulse' : 'bg-slate-100 text-slate-400 border-slate-200'
+            <div class="px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1 border ${
+              pendingReviews > 0 ? 'bg-rose-50 text-rose-700 border-rose-200 animate-soft-pulse' : 'bg-slate-50 text-slate-400 border-slate-100'
             }" title="Revisões pendentes">
-              <span>🔁</span>
+              ${UI_ICONS.repeat}
               <span>${pendingReviews}</span>
             </div>
           </div>
         </div>
 
-        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden mt-1">
+        <div class="w-full rounded-full h-1.5 overflow-hidden mt-1" style="background-color: ${colorObj.track};">
           <div class="h-full rounded-full transition-all duration-500" style="width: ${percent}%; background-color: ${colorObj.hex};"></div>
         </div>
       `;
 
       if (lessons.length === 0) {
         lessonsList.innerHTML = `
-          <div class="bg-white border border-slate-200/80 rounded-[28px] p-5 text-center space-y-2 shadow-xs">
-            <p class="text-xs text-slate-500">Nenhuma aula cadastrada neste módulo.</p>
-            <button onclick="openLessonSheet('${mod.id}')" class="px-3.5 py-1.5 rounded-2xl bg-brand-500 text-white font-bold text-xs shadow-sm active:scale-95 transition-transform inline-flex items-center gap-1">
+          <div class="bg-white border border-slate-200/80 rounded-[28px] p-5 text-center space-y-2.5 shadow-xs">
+            <div class="w-10 h-10 rounded-2xl mx-auto flex items-center justify-center border" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.hex};">
+              ${UI_ICONS.book}
+            </div>
+            <p class="text-xs text-slate-500 font-medium">Nenhuma aula cadastrada neste módulo.</p>
+            <button onclick="openLessonSheet('${mod.id}')" class="px-3.5 py-2 rounded-2xl bg-brand-500 text-white font-bold text-xs shadow-sm active:scale-95 transition-transform inline-flex items-center gap-1">
               <span>+</span> Adicionar Aula 01
             </button>
           </div>
@@ -1961,7 +2186,7 @@
         return `
           <div class="bg-white border border-slate-200/80 hover:border-slate-300 rounded-[24px] p-3 flex items-center justify-between gap-2.5 shadow-2xs active:bg-slate-50 transition-colors">
             <div class="flex items-center gap-2.5 flex-1 min-w-0 cursor-pointer" onclick="openViewLessonModal('${lesson.id}')">
-              <span class="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center shrink-0">
+              <span class="w-8 h-8 rounded-xl border font-extrabold text-xs flex items-center justify-center shrink-0" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
                 ${String(lesson.number).padStart(2, '0')}
               </span>
               <div class="min-w-0 flex-1">
@@ -1981,8 +2206,8 @@
 
             <button onclick="toggleLessonStudied('${lesson.id}')" class="shrink-0 px-2.5 py-1 rounded-xl text-[11px] font-bold active:scale-95 transition-all ${
               lesson.isStudied
-                ? 'bg-emerald-50 text-emerald-700 border border-emerald-300'
-                : 'bg-amber-50 text-amber-800 border border-amber-300'
+                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                : 'bg-amber-50 text-amber-800 border border-amber-200'
             }">
               ${lesson.isStudied ? '✓ Estudada' : 'Pendente'}
             </button>
@@ -2020,8 +2245,10 @@
       const revListEl = document.getElementById('estudo-revisoes-list');
       if (allReviewsToDay.length === 0) {
         revListEl.innerHTML = `
-          <div class="bg-white border border-slate-200/80 rounded-[28px] p-6 text-center space-y-2 shadow-xs">
-            <div class="text-3xl">✨</div>
+          <div class="bg-white border border-slate-200/80 rounded-[28px] p-6 text-center space-y-2.5 shadow-xs">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200/70 mx-auto flex items-center justify-center">
+              ${UI_ICONS.check}
+            </div>
             <h3 class="text-sm font-bold text-slate-900">Tudo revisado por hoje!</h3>
             <p class="text-xs text-slate-500 max-w-xs mx-auto">Você não tem ciclos de revisão pendentes ou atrasados para hoje.</p>
           </div>
@@ -2030,14 +2257,13 @@
         revListEl.innerHTML = allReviewsToDay.map(item => {
           const { lesson, stage, dueDate, status } = item;
           const mod = getModule(lesson.moduleId) || { name: 'Módulo', iconKey: 'heart', colorKey: 'emerald' };
-          const iconObj = MEDICAL_ICONS.find(i => i.key === mod.iconKey) || MEDICAL_ICONS[0];
           const colorObj = getColorConfig(mod.colorKey);
 
           return `
             <div class="bg-white border border-slate-200/80 rounded-[24px] p-3 flex items-center justify-between gap-3 shadow-2xs active:bg-slate-50 transition-colors">
               <div class="flex items-center gap-2.5 flex-1 min-w-0 cursor-pointer" onclick="openViewLessonModal('${lesson.id}')">
-                <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-xl shrink-0 border" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border};">
-                  ${getMedicalIconHTML(mod.iconKey, 'w-6 h-6 text-xl')}
+                <div class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.hex};">
+                  ${getMedicalIconHTML(mod.iconKey, 'w-5 h-5')}
                 </div>
                 <div class="min-w-0 flex-1">
                   <div class="flex items-center gap-1.5 flex-wrap">
@@ -2057,7 +2283,7 @@
                 </div>
               </div>
 
-              <button onclick="checkReviewDone('${lesson.id}', '${stage}')" class="w-10 h-10 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-700 flex items-center justify-center text-lg font-bold shadow-xs active:scale-85 transition-all" title="Concluir Revisão">
+              <button onclick="checkReviewDone('${lesson.id}', '${stage}')" class="w-10 h-10 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 flex items-center justify-center text-base font-bold shadow-2xs active:scale-90 transition-all" title="Concluir Revisão">
                 ✓
               </button>
             </div>
@@ -2069,8 +2295,10 @@
       const estListEl = document.getElementById('estudo-pendentes-list');
       if (unstudiedLessons.length === 0) {
         estListEl.innerHTML = `
-          <div class="bg-white border border-slate-200/80 rounded-[28px] p-6 text-center space-y-2 shadow-xs">
-            <div class="text-3xl">🎉</div>
+          <div class="bg-white border border-slate-200/80 rounded-[28px] p-6 text-center space-y-2.5 shadow-xs">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200/70 mx-auto flex items-center justify-center">
+              ${UI_ICONS.check}
+            </div>
             <h3 class="text-sm font-bold text-slate-900">Todas as aulas foram estudadas!</h3>
             <p class="text-xs text-slate-500 max-w-xs mx-auto">Cadastre novas aulas ou acompanhe as revisões espaçadas programadas.</p>
           </div>
@@ -2078,14 +2306,13 @@
       } else {
         estListEl.innerHTML = unstudiedLessons.map(lesson => {
           const mod = getModule(lesson.moduleId) || { name: 'Módulo', iconKey: 'heart', colorKey: 'emerald' };
-          const iconObj = MEDICAL_ICONS.find(i => i.key === mod.iconKey) || MEDICAL_ICONS[0];
           const colorObj = getColorConfig(mod.colorKey);
 
           return `
             <div class="bg-white border border-slate-200/80 rounded-[24px] p-3 flex items-center justify-between gap-3 shadow-2xs active:bg-slate-50 transition-colors">
               <div class="flex items-center gap-2.5 flex-1 min-w-0 cursor-pointer" onclick="openViewLessonModal('${lesson.id}')">
-                <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-xl shrink-0 border" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border};">
-                  ${getMedicalIconHTML(mod.iconKey, 'w-6 h-6 text-xl')}
+                <div class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.hex};">
+                  ${getMedicalIconHTML(mod.iconKey, 'w-5 h-5')}
                 </div>
                 <div class="min-w-0 flex-1">
                   <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-50 text-amber-800 border border-amber-200">
@@ -2096,7 +2323,7 @@
                 </div>
               </div>
 
-              <button onclick="toggleLessonStudied('${lesson.id}')" class="shrink-0 px-2.5 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold shadow-xs active:scale-90 transition-all">
+              <button onclick="toggleLessonStudied('${lesson.id}')" class="shrink-0 px-3 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold shadow-xs active:scale-90 transition-all">
                 Estudei
               </button>
             </div>
@@ -2130,8 +2357,8 @@
       if (AppState.exams.length === 0) {
         container.innerHTML = `
           <div class="bg-white border border-slate-200/80 rounded-[28px] p-6 text-center space-y-3 shadow-xs">
-            <div class="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 border border-brand-200 mx-auto flex items-center justify-center text-2xl">
-              📋
+            <div class="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 border border-brand-200/70 mx-auto flex items-center justify-center">
+              ${UI_ICONS.calendar}
             </div>
             <div>
               <h3 class="text-sm font-bold text-slate-900">Nenhuma Prova Cadastrada</h3>
@@ -2167,7 +2394,7 @@
           badgeText = "É HOJE! 🎯";
           badgeClass = "bg-rose-100 text-rose-700 border-rose-300 font-extrabold animate-soft-pulse";
         } else if (days === 1) {
-          badgeText = "Amanhã! ⚠️";
+          badgeText = "Amanhã!";
           badgeClass = "bg-amber-100 text-amber-800 border-amber-300 font-bold";
         } else {
           badgeText = `Faltam ${days} dias`;
@@ -2234,15 +2461,17 @@
       }).join('');
     }
 
-    // --- FORM SUBMIT HANDLERS ---
-    document.getElementById('form-lesson').addEventListener('submit', (e) => {
-      e.preventDefault();
+    // --- FORM SUBMIT & SMART REGISTRATION HANDLERS ---
+    function saveLessonFromForm(keepOpenForNext = false) {
       vibrate(20);
 
       const lessonId = document.getElementById('lesson-id-input').value;
-      const title = document.getElementById('lesson-title-input').value.trim();
-      const notes = document.getElementById('lesson-notes-input').value.trim();
-      const number = parseInt(document.getElementById('lesson-number-input').value, 10) || 1;
+      const titleInput = document.getElementById('lesson-title-input');
+      const notesInput = document.getElementById('lesson-notes-input');
+      const numInput = document.getElementById('lesson-number-input');
+      const title = titleInput.value.trim();
+      const notes = notesInput.value.trim();
+      const number = parseInt(numInput.value, 10) || 1;
       const isStudied = document.getElementById('lesson-studied-toggle').checked;
       const examId = document.getElementById('lesson-exam-select').value || null;
 
@@ -2251,6 +2480,7 @@
 
       if (!title) {
         showToast("Insira o tema da aula.", "⚠️", true);
+        titleInput.focus();
         return;
       }
 
@@ -2272,7 +2502,9 @@
             lesson.reviews = null;
           }
         }
+        saveState();
         showToast("Aula atualizada!");
+        closeLessonSheet();
       } else {
         const newLesson = {
           id: 'l_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
@@ -2296,12 +2528,73 @@
           }
         }
 
-        showToast("Aula cadastrada!", "✨");
-        if (isStudied) triggerCelebration();
+        saveState();
+
+        if (keepOpenForNext) {
+          const nextNum = getNextLessonNumber(moduleId);
+          numInput.value = nextNum;
+          updateLessonNumberDisplay();
+          titleInput.value = "";
+          notesInput.value = "";
+          autoResizeNotesTextarea();
+          showToast(`Aula ${String(number).padStart(2, '0')} salva! Próxima pronta.`, "✨");
+          setTimeout(() => titleInput.focus(), 60);
+        } else {
+          showToast("Aula cadastrada!", "✨");
+          if (isStudied) triggerCelebration();
+          closeLessonSheet();
+        }
+      }
+    }
+
+    document.getElementById('form-lesson').addEventListener('submit', (e) => {
+      e.preventDefault();
+      saveLessonFromForm(false);
+    });
+
+    document.getElementById('btn-save-and-next-lesson').addEventListener('click', () => {
+      saveLessonFromForm(true);
+    });
+
+    // Auto-Match Inteligente no input de Nome do Módulo
+    document.getElementById('module-name-input').addEventListener('input', (e) => {
+      if (userManuallyPickedIcon && userManuallyPickedColor) return;
+      const query = normalizeSearchStr(e.target.value);
+      const autoHint = document.getElementById('module-automatch-hint');
+      if (query.length < 2) {
+        if (autoHint) autoHint.classList.add('hidden');
+        return;
       }
 
-      saveState();
-      closeLessonSheet();
+      const matched = MEDICAL_ICONS.find(item => {
+        const labelNorm = normalizeSearchStr(item.label);
+        if (labelNorm.includes(query) || query.includes(labelNorm)) return true;
+        if (Array.isArray(item.keywords)) {
+          return item.keywords.some(kw => {
+            const kwNorm = normalizeSearchStr(kw);
+            return kwNorm.length >= 2 && (query.includes(kwNorm) || kwNorm.startsWith(query));
+          });
+        }
+        return false;
+      });
+
+      if (matched) {
+        let changed = false;
+        if (!userManuallyPickedIcon && selectedModuleIcon !== matched.key) {
+          selectedModuleIcon = matched.key;
+          changed = true;
+        }
+        if (!userManuallyPickedColor && matched.defaultColor && selectedModuleColor !== matched.defaultColor) {
+          selectedModuleColor = matched.defaultColor;
+          changed = true;
+        }
+        if (changed) {
+          renderIconPicker();
+          renderColorPicker();
+          updateModuleLivePreview();
+        }
+        if (autoHint) autoHint.classList.remove('hidden');
+      }
     });
 
     document.getElementById('form-module').addEventListener('submit', (e) => {
@@ -2330,7 +2623,7 @@
           createdAt: Date.now()
         };
         AppState.modules.push(newMod);
-        showToast("Módulo criado!", "🩺");
+        showToast("Módulo criado!", "✨");
       }
 
       saveState();
@@ -2399,15 +2692,43 @@
 
     document.getElementById('lesson-number-input').addEventListener('input', updateLessonNumberDisplay);
 
+    // Smart Notes Textarea: Auto-Resize & Auto-Bullet on Enter
+    const lessonNotesEl = document.getElementById('lesson-notes-input');
+    lessonNotesEl.addEventListener('input', autoResizeNotesTextarea);
+    lessonNotesEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        const start = lessonNotesEl.selectionStart;
+        const val = lessonNotesEl.value;
+        const lineStart = val.lastIndexOf('\n', start - 1) + 1;
+        const currentLine = val.substring(lineStart, start);
+
+        if (/^•\s+/.test(currentLine)) {
+          e.preventDefault();
+          // Se a linha tinha apenas "• ", remove o marcador vazio ao dar Enter
+          if (currentLine.trim() === '•') {
+            lessonNotesEl.value = val.substring(0, lineStart) + val.substring(start);
+            lessonNotesEl.setSelectionRange(lineStart, lineStart);
+          } else {
+            const insert = '\n• ';
+            lessonNotesEl.value = val.substring(0, start) + insert + val.substring(lessonNotesEl.selectionEnd);
+            const newPos = start + insert.length;
+            lessonNotesEl.setSelectionRange(newPos, newPos);
+          }
+          autoResizeNotesTextarea();
+        }
+      }
+    });
+
     // Toolbar tags
     document.getElementById('btn-format-bold').addEventListener('click', () => {
       vibrate(8);
-      insertTextAtCursor(document.getElementById('lesson-notes-input'), '**', '**');
+      insertTextAtCursor(lessonNotesEl, '**', '**');
     });
 
     document.getElementById('btn-format-bullet').addEventListener('click', () => {
       vibrate(8);
-      insertTextAtCursor(document.getElementById('lesson-notes-input'), '\n• ', '');
+      const prefix = lessonNotesEl.value.length === 0 || lessonNotesEl.value.endsWith('\n') ? '• ' : '\n• ';
+      insertTextAtCursor(lessonNotesEl, prefix, '');
     });
 
     document.querySelectorAll('.btn-insert-tag').forEach(btn => {
@@ -2420,7 +2741,7 @@
           green: '[Diagnóstico: ',
           blue: '[Conceito: '
         };
-        insertTextAtCursor(document.getElementById('lesson-notes-input'), labels[tagType] || '[Destaque: ', ']');
+        insertTextAtCursor(lessonNotesEl, labels[tagType] || '[Destaque: ', ']');
       });
     });
 
@@ -2432,6 +2753,7 @@
       const replacement = prefix + (sel || '') + suffix;
 
       textarea.value = val.substring(0, start) + replacement + val.substring(end);
+      autoResizeNotesTextarea();
       textarea.focus();
       const newPos = start + prefix.length + (sel ? sel.length : 0);
       textarea.setSelectionRange(newPos, newPos);
