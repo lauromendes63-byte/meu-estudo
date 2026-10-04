@@ -1,6 +1,5 @@
 {
-  "version": "2.0.1",
-  "buildTime": "2026-10-04T18:52:00.000Z",
-  "buildLabel": "04/10/2026 às 15:52",
-  "releaseNotes": "Novo ícone de Reumatologia (perna dobrada mostrando os ossos e articulação inflamada no estilo fofo moderno) e Ortopedia (osso anatômico simétrico)."
+  "version": "2.1.0",
+  "buildTime": "2026-10-04T19:30:00.000Z",
+  "notes": "v2.1.0: Novas aulas iniciam como Pendente (não estudadas), ícones médicos 32x32 com mais contraste e detalhamento anatômico (Reumatologia em visão anterolateral 30° de joelho inflamado e Psiquiatria com ícone exclusivo)."
 }
