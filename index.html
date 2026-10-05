@@ -88,6 +88,7 @@
       will-change: transform;
       transform: translate3d(0, 100%, 0);
       max-height: 94vh;
+      touch-action: pan-y;
     }
     .sheet-open .sheet-overlay {
       opacity: 1;
@@ -97,26 +98,26 @@
       transform: translate3d(0, 0, 0);
     }
 
-    /* Modal / Dialog Smooth Entrance & Backdrop Blur (@starting-style) */
+    /* Modal / Dialog Smooth Bottom-Anchored One UI Entrance (@starting-style + Top Layer) */
     dialog {
       transition:
         display 0.24s,
         overlay 0.24s,
         opacity 0.24s cubic-bezier(0.22, 1, 0.36, 1),
-        transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+        transform 0.26s cubic-bezier(0.22, 1, 0.36, 1);
       transition-behavior: allow-discrete;
       will-change: transform, opacity;
-      transform: scale(0.95) translate3d(0, 10px, 0);
+      transform: translate3d(0, 28px, 0) scale(0.98);
       opacity: 0;
     }
     dialog[open] {
       opacity: 1;
-      transform: scale(1) translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0) scale(1);
     }
     @starting-style {
       dialog[open] {
         opacity: 0;
-        transform: scale(0.95) translate3d(0, 10px, 0);
+        transform: translate3d(0, 28px, 0) scale(0.98);
       }
     }
     dialog::backdrop {
@@ -136,15 +137,22 @@
       }
     }
 
-    /* Tab entrance smooth animation (GPU Accelerated + @starting-style) */
+    /* Native View Transitions API (120Hz Smooth Morph) */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 0.18s;
+      animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Tab entrance smooth animation (GPU Accelerated) */
     .tab-pane {
-      animation: tabEnter 0.24s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation: tabEnter 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
       will-change: transform, opacity;
     }
     @keyframes tabEnter {
       from {
         opacity: 0;
-        transform: translate3d(0, 6px, 0);
+        transform: translate3d(0, 5px, 0);
       }
       to {
         opacity: 1;
@@ -152,19 +160,41 @@
       }
     }
 
-    /* Micro-interactions táteis e suaves sem consumo de CPU */
+    /* Micro-interactions táteis e suaves sem consumo de CPU (Compositor GPU) */
     .tap-smooth {
-      transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.16s ease, background-color 0.16s ease;
+      transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
       will-change: transform;
     }
     .tap-smooth:active {
       transform: scale3d(0.97, 0.97, 1);
     }
 
+    /* Hit-target invisível de 44x44px para botões minimalistas (Ergonomia de 1 mão) */
+    .touch-target {
+      position: relative;
+    }
+    .touch-target::after {
+      content: '';
+      position: absolute;
+      inset: -7px;
+    }
+
+    /* Números tabulares sem jitter horizontal */
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Offscreen rendering optimization (120Hz Scroll Performance) */
+    .cv-card {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 76px;
+    }
+
     @media (prefers-reduced-motion: reduce) {
-      .tab-pane, dialog, .sheet-drawer, .tap-smooth {
-        animation-duration: 0.05s !important;
-        transition-duration: 0.05s !important;
+      .tab-pane, dialog, .sheet-drawer, .tap-smooth,
+      ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) {
+        animation-duration: 0.01s !important;
+        transition-duration: 0.01s !important;
       }
     }
 
@@ -244,9 +274,9 @@
   <div class="fixed top-0 left-0 right-0 h-48 bg-gradient-to-b from-emerald-500/[0.05] via-emerald-500/[0.015] to-transparent pointer-events-none z-0"></div>
 
   <!-- ==================== FLOATING UPDATE BANNER ==================== -->
-  <div id="update-banner" class="hidden fixed top-3 left-3 right-3 z-50 bg-slate-900 text-white p-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center justify-between gap-2.5 transition-all">
+  <div id="update-banner" role="status" aria-live="polite" class="hidden fixed top-3 left-3 right-3 z-50 bg-slate-900 text-white p-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center justify-between gap-2.5 transition-[transform,opacity]">
     <div class="flex items-center gap-2.5 min-w-0">
-      <div class="w-8 h-8 rounded-xl bg-brand-500 text-white flex items-center justify-center font-bold text-sm shrink-0">
+      <div class="w-8 h-8 rounded-xl bg-brand-500 text-white flex items-center justify-center font-bold text-sm shrink-0" aria-hidden="true">
         🚀
       </div>
       <div class="min-w-0">
@@ -262,14 +292,14 @@
   <!-- ==================== HEADER (CENTRALIZADO, ELEGANTE & LIMPO) ==================== -->
   <header class="pt-safe px-4 pb-2.5 bg-white/90 backdrop-blur-xl border-b border-slate-200/60 sticky top-0 flex items-center justify-between shrink-0 z-20 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
     <!-- Spacer esquerdo com indicador sutil -->
-    <div class="w-8 flex items-center justify-start">
+    <div class="w-8 flex items-center justify-start" aria-hidden="true">
       <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
     </div>
 
     <!-- Bloco Central: Emblema, Título & Data Editorial -->
     <div class="flex flex-col items-center justify-center text-center">
       <div class="flex items-center gap-1.5">
-        <div class="w-5 h-5 rounded-md bg-gradient-to-tr from-brand-600 to-emerald-500 flex items-center justify-center text-white font-extrabold text-[11px] shadow-xs">
+        <div class="w-5 h-5 rounded-md bg-gradient-to-tr from-brand-600 to-emerald-500 flex items-center justify-center text-white font-extrabold text-[11px] shadow-xs" aria-hidden="true">
           ✚
         </div>
         <h1 class="font-extrabold text-[15.5px] tracking-tight text-slate-900 leading-none">Meu Estudo</h1>
@@ -279,8 +309,8 @@
     </div>
 
     <!-- Right: Config & Backup -->
-    <button id="btn-open-settings" class="w-8 h-8 rounded-xl bg-slate-100/90 hover:bg-slate-200/90 border border-slate-200/80 flex items-center justify-center text-slate-600 active:scale-90 transition-transform shadow-2xs" title="Configurações e Backup">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><circle cx="12" cy="12" r="3" stroke-width="2"></circle></svg>
+    <button id="btn-open-settings" aria-label="Configurações e Backup" class="touch-target w-8 h-8 rounded-xl bg-slate-100/90 hover:bg-slate-200/90 border border-slate-200/80 flex items-center justify-center text-slate-600 active:scale-90 transition-transform shadow-2xs" title="Configurações e Backup">
+      <svg class="w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><circle cx="12" cy="12" r="3" stroke-width="2"></circle></svg>
     </button>
   </header>
 
@@ -294,24 +324,24 @@
       <div class="flex items-center justify-between px-1 pt-0.5">
         <div class="flex items-center gap-2">
           <h2 class="text-[16px] font-black text-slate-900 tracking-tight">Módulos</h2>
-          <span id="modules-count-badge" class="text-[10px] font-black text-slate-500 bg-white px-2 py-0.5 rounded-full border border-slate-200/80 shadow-2xs">0</span>
+          <span id="modules-count-badge" class="tabular-nums text-[10px] font-black text-slate-500 bg-white px-2 py-0.5 rounded-full border border-slate-200/80 shadow-2xs">0</span>
         </div>
 
         <!-- Minimalist Controls: + Módulo Button & View Switcher (Mesmo estilo compacto) -->
         <div class="flex items-center gap-1.5">
           <!-- Botão Minimalista Novo Módulo -->
-          <button id="btn-open-create-module" class="h-8 px-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-[11px] shadow-xs active:scale-95 transition-all flex items-center gap-1 border border-slate-900" title="Criar Novo Módulo">
-            <span class="text-sm font-bold leading-none">＋</span>
+          <button id="btn-open-create-module" class="tap-smooth h-8 px-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-[11px] shadow-xs flex items-center gap-1 border border-slate-900" title="Criar Novo Módulo">
+            <span class="text-sm font-bold leading-none" aria-hidden="true">＋</span>
             <span>Módulo</span>
           </button>
 
           <!-- Alavanca de Modos de Visualização (Lista vs Grade 2 colunas) -->
           <div class="bg-slate-200/70 p-0.5 rounded-xl border border-slate-300/60 flex items-center shadow-inner h-8">
-            <button id="btn-view-list" class="h-7 px-2 rounded-lg text-slate-400 hover:text-slate-700 transition-all flex items-center justify-center" title="Visualização em Linhas">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <button id="btn-view-list" aria-label="Visualização em Linhas" class="touch-target h-7 px-2 rounded-lg text-slate-400 hover:text-slate-700 transition-colors flex items-center justify-center" title="Visualização em Linhas">
+              <svg class="w-3.5 h-3.5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
-            <button id="btn-view-grid" class="h-7 px-2 rounded-lg text-slate-400 hover:text-slate-700 transition-all flex items-center justify-center" title="Visualização em 2 Colunas">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path></svg>
+            <button id="btn-view-grid" aria-label="Visualização em 2 Colunas" class="touch-target h-7 px-2 rounded-lg text-slate-400 hover:text-slate-700 transition-colors flex items-center justify-center" title="Visualização em 2 Colunas">
+              <svg class="w-3.5 h-3.5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path></svg>
             </button>
           </div>
         </div>
@@ -326,16 +356,16 @@
     <!-- ==================== ABA 1.1: DETALHE DO MÓDULO (AULAS) ==================== -->
     <section id="tab-modulo-detail" class="tab-pane hidden space-y-3">
       <div class="flex items-center justify-between">
-        <button id="btn-back-to-modules" class="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900 active:scale-95 transition-transform py-1">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
-          Módulos
+        <button id="btn-back-to-modules" class="touch-target flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900 active:scale-95 transition-transform py-1.5 pr-2">
+          <svg class="w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+          <span>Módulos</span>
         </button>
-        <div class="flex items-center gap-1">
-          <button id="btn-edit-current-module" class="p-1.5 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-100" title="Editar Módulo">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+        <div class="flex items-center gap-1.5">
+          <button id="btn-edit-current-module" aria-label="Editar Módulo" class="touch-target p-2 text-slate-500 hover:text-slate-800 rounded-xl hover:bg-slate-100 active:scale-90 transition-transform" title="Editar Módulo">
+            <svg class="w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
           </button>
-          <button id="btn-delete-current-module" class="p-1.5 text-rose-500 hover:text-rose-700 rounded-lg hover:bg-rose-50" title="Excluir Módulo">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+          <button id="btn-delete-current-module" aria-label="Excluir Módulo" class="touch-target p-2 text-rose-500 hover:text-rose-700 rounded-xl hover:bg-rose-50 active:scale-90 transition-transform" title="Excluir Módulo">
+            <svg class="w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
           </button>
         </div>
       </div>
@@ -348,8 +378,8 @@
       <!-- Header Aulas -->
       <div class="flex items-center justify-between pt-1">
         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Aulas do Módulo</h3>
-        <button id="btn-add-lesson-in-module" class="px-3 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold shadow-sm flex items-center gap-1 active:scale-95 transition-transform">
-          <span>+</span> Adicionar Aula
+        <button id="btn-add-lesson-in-module" class="tap-smooth px-3.5 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold shadow-sm flex items-center gap-1">
+          <span aria-hidden="true">+</span> Adicionar Aula
         </button>
       </div>
 
@@ -368,13 +398,13 @@
 
       <!-- Segmented Control -->
       <div class="bg-slate-200/80 p-1 rounded-xl flex items-center gap-1">
-        <button id="btn-subtab-revisar" class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-sm flex items-center justify-center gap-1.5">
+        <button id="btn-subtab-revisar" class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-[background-color,color,box-shadow] bg-white text-slate-900 shadow-sm flex items-center justify-center gap-1.5">
           <span>Para Revisar</span>
-          <span id="subtab-count-revisar" class="px-1.5 py-0.2 rounded-full text-[10px] bg-rose-100 text-rose-700 font-extrabold">0</span>
+          <span id="subtab-count-revisar" class="tabular-nums px-1.5 py-0.2 rounded-full text-[10px] bg-rose-100 text-rose-700 font-extrabold">0</span>
         </button>
-        <button id="btn-subtab-estudar" class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5">
+        <button id="btn-subtab-estudar" class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-[background-color,color,box-shadow] text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5">
           <span>Para Estudar</span>
-          <span id="subtab-count-estudar" class="px-1.5 py-0.2 rounded-full text-[10px] bg-amber-100 text-amber-700 font-extrabold">0</span>
+          <span id="subtab-count-estudar" class="tabular-nums px-1.5 py-0.2 rounded-full text-[10px] bg-amber-100 text-amber-700 font-extrabold">0</span>
         </button>
       </div>
 
@@ -400,8 +430,8 @@
           <h2 class="text-base font-extrabold text-slate-900 tracking-tight">Provas</h2>
           <p class="text-[11px] text-slate-500">Cronograma e cobertura do edital</p>
         </div>
-        <button id="btn-open-create-exam" class="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-xs font-semibold text-brand-600 shadow-sm flex items-center gap-1 active:scale-95 transition-transform">
-          <span class="text-sm font-bold">+</span> Nova Prova
+        <button id="btn-open-create-exam" class="tap-smooth px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-xs font-semibold text-brand-600 shadow-sm flex items-center gap-1">
+          <span class="text-sm font-bold" aria-hidden="true">+</span> Nova Prova
         </button>
       </div>
 
@@ -418,14 +448,14 @@
       
       <!-- Tab 1: Módulos -->
       <button data-tab="tab-modulos" class="nav-tab-btn flex-1 py-1 flex flex-col items-center justify-center text-brand-600 active:scale-90 transition-transform">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+        <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
         <span class="text-[10.5px] font-bold mt-1">Módulos</span>
       </button>
 
       <!-- Tab 2: Estudo & Revisões -->
       <button data-tab="tab-estudo" class="nav-tab-btn flex-1 py-1 flex flex-col items-center justify-center text-slate-500 hover:text-slate-800 active:scale-90 transition-transform">
         <div class="relative">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+          <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
           <span id="nav-rev-dot" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white animate-soft-pulse"></span>
         </div>
         <span class="text-[10.5px] font-medium mt-1">Estudo</span>
@@ -434,8 +464,8 @@
       <!-- Tab 3: Provas -->
       <button data-tab="tab-provas" class="nav-tab-btn flex-1 py-1 flex flex-col items-center justify-center text-slate-500 hover:text-slate-800 active:scale-90 transition-transform">
         <div class="relative">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
-          <span id="nav-provas-badge" class="hidden absolute -top-1 -right-2 px-1 py-0.2 bg-amber-500 text-white font-bold text-[8.5px] rounded-full">!</span>
+          <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+          <span id="nav-provas-badge" class="tabular-nums hidden absolute -top-1 -right-2 px-1 py-0.2 bg-amber-500 text-white font-bold text-[8.5px] rounded-full">!</span>
         </div>
         <span class="text-[10.5px] font-medium mt-1">Provas</span>
       </button>
@@ -447,16 +477,19 @@
   <div id="sheet-lesson" class="fixed inset-0 z-50 pointer-events-none">
     <div id="sheet-lesson-overlay" class="sheet-overlay absolute inset-0 bg-slate-900/40 backdrop-blur-sm opacity-0 cursor-pointer pointer-events-none"></div>
 
-    <div class="sheet-drawer absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 rounded-t-[32px] shadow-2xl flex flex-col pointer-events-auto pb-safe">
-      <div class="pt-3 pb-1 flex justify-center cursor-grab">
-        <div class="w-12 h-1 bg-slate-300 rounded-full"></div>
-      </div>
+    <div id="sheet-lesson-drawer" class="sheet-drawer absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 rounded-t-[32px] shadow-2xl flex flex-col pointer-events-auto pb-safe">
+      <!-- Drag Handle Area (Supports 1-Handed Swipe-Down to Dismiss) -->
+      <div id="sheet-lesson-drag-header" class="touch-none select-none">
+        <div class="pt-3 pb-1 flex justify-center cursor-grab">
+          <div class="w-12 h-1.5 bg-slate-300/90 rounded-full"></div>
+        </div>
 
-      <div class="px-5 py-2.5 flex items-center justify-between border-b border-slate-100">
-        <h3 class="text-base font-extrabold text-slate-900 tracking-tight" id="lesson-modal-title">Nova Aula</h3>
-        <button id="btn-close-sheet-lesson" class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs active:scale-90">
-          ✕
-        </button>
+        <div class="px-5 py-2.5 flex items-center justify-between border-b border-slate-100">
+          <h3 class="text-base font-extrabold text-slate-900 tracking-tight" id="lesson-modal-title">Nova Aula</h3>
+          <button type="button" id="btn-close-sheet-lesson" aria-label="Fechar gaveta" class="touch-target w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs active:scale-90 transition-transform">
+            ✕
+          </button>
+        </div>
       </div>
 
       <form id="form-lesson" class="px-5 py-3 space-y-3 overflow-y-auto max-h-[82vh]">
@@ -472,13 +505,13 @@
 
         <!-- Linha 2: Stepper Compacto -->
         <div class="flex items-center justify-between bg-slate-50/80 border border-slate-200/80 rounded-2xl px-3.5 py-2">
-          <span id="lesson-number-preview" class="text-xs font-bold text-slate-800">Aula 01</span>
+          <span id="lesson-number-preview" class="tabular-nums text-xs font-bold text-slate-800">Aula 01</span>
           <div class="flex items-center gap-1 bg-white border border-slate-200/80 rounded-xl p-0.5 shadow-2xs">
-            <button type="button" id="btn-lesson-num-minus" class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 font-bold text-base flex items-center justify-center active:scale-90">
+            <button type="button" id="btn-lesson-num-minus" aria-label="Diminuir número da aula" class="touch-target w-8 h-7 rounded-lg bg-slate-100 text-slate-700 font-bold text-base flex items-center justify-center active:scale-90 transition-transform">
               –
             </button>
-            <input type="number" id="lesson-number-input" min="1" max="999" value="1" class="w-9 text-center font-bold text-slate-900 bg-transparent outline-none text-xs">
-            <button type="button" id="btn-lesson-num-plus" class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 font-bold text-base flex items-center justify-center active:scale-90">
+            <input type="number" id="lesson-number-input" inputmode="numeric" min="1" max="999" value="1" aria-label="Número da aula" class="tabular-nums w-9 text-center font-bold text-slate-900 bg-transparent outline-none text-xs">
+            <button type="button" id="btn-lesson-num-plus" aria-label="Aumentar número da aula" class="touch-target w-8 h-7 rounded-lg bg-slate-100 text-slate-700 font-bold text-base flex items-center justify-center active:scale-90 transition-transform">
               +
             </button>
           </div>
@@ -486,68 +519,68 @@
 
         <!-- Linha 3: Tema / Título -->
         <div>
-          <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Tema da Aula</label>
-          <input type="text" id="lesson-title-input" required placeholder="Ex: Fraturas de Fêmur e Bacia" class="w-full bg-white border border-slate-200/90 focus:border-brand-500 rounded-2xl px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 outline-none shadow-xs transition-colors">
+          <label for="lesson-title-input" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Tema da Aula</label>
+          <input type="text" id="lesson-title-input" name="lessonTitle" autocomplete="off" enterkeyhint="done" required placeholder="Ex: Fraturas de Fêmur e Bacia…" class="w-full bg-white border border-slate-200/90 focus:border-brand-500 rounded-2xl px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 outline-none shadow-xs transition-colors">
         </div>
 
         <!-- Linha 4: Anotações com Toolbar Compacta -->
         <div>
           <div class="flex items-center justify-between mb-1">
-            <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Palavras-Chave e Anotações</label>
+            <label for="lesson-notes-input" class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Palavras-Chave e Anotações</label>
             <span class="text-[10px] text-slate-400">Marcadores rápidos</span>
           </div>
 
           <div class="bg-slate-100/90 border border-slate-200/90 border-b-0 rounded-t-2xl px-2.5 py-1.5 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
-            <button type="button" id="btn-format-bold" class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-xs font-extrabold text-slate-800 shadow-2xs active:scale-90" title="Negrito">
+            <button type="button" id="btn-format-bold" class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-xs font-extrabold text-slate-800 shadow-2xs active:scale-90 transition-transform" title="Negrito">
               B
             </button>
-            <button type="button" id="btn-format-bullet" class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-800 shadow-2xs active:scale-90" title="Tópico">
+            <button type="button" id="btn-format-bullet" class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-800 shadow-2xs active:scale-90 transition-transform" title="Tópico">
               • Lista
             </button>
-            <div class="h-4 w-[1px] bg-slate-300 mx-0.5 shrink-0"></div>
-            <button type="button" data-tag="red" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-rose-50 text-rose-800 border border-rose-200 flex items-center gap-1.5 active:scale-90">
-              <span class="w-2 h-2 rounded-full bg-rose-500"></span>Alerta
+            <div class="h-4 w-[1px] bg-slate-300 mx-0.5 shrink-0" aria-hidden="true"></div>
+            <button type="button" data-tag="red" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-rose-50 text-rose-800 border border-rose-200 flex items-center gap-1.5 active:scale-90 transition-transform">
+              <span class="w-2 h-2 rounded-full bg-rose-500" aria-hidden="true"></span>Alerta
             </button>
-            <button type="button" data-tag="yellow" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-amber-50 text-amber-800 border border-amber-200 flex items-center gap-1.5 active:scale-90">
-              <span class="w-2 h-2 rounded-full bg-amber-500"></span>Fisiopato
+            <button type="button" data-tag="yellow" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-amber-50 text-amber-800 border border-amber-200 flex items-center gap-1.5 active:scale-90 transition-transform">
+              <span class="w-2 h-2 rounded-full bg-amber-500" aria-hidden="true"></span>Fisiopato
             </button>
-            <button type="button" data-tag="green" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1.5 active:scale-90">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>Padrão-Ouro
+            <button type="button" data-tag="green" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1.5 active:scale-90 transition-transform">
+              <span class="w-2 h-2 rounded-full bg-emerald-500" aria-hidden="true"></span>Padrão-Ouro
             </button>
-            <button type="button" data-tag="blue" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-blue-50 text-blue-800 border border-blue-200 flex items-center gap-1.5 active:scale-90">
-              <span class="w-2 h-2 rounded-full bg-blue-500"></span>Conceito
+            <button type="button" data-tag="blue" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-blue-50 text-blue-800 border border-blue-200 flex items-center gap-1.5 active:scale-90 transition-transform">
+              <span class="w-2 h-2 rounded-full bg-blue-500" aria-hidden="true"></span>Conceito
             </button>
           </div>
 
-          <textarea id="lesson-notes-input" rows="3" placeholder="Critérios clínicos, condutas, o que vai cair na prova... (Enter continua listas automaticamente)" class="w-full bg-white border border-slate-200/90 focus:border-brand-500 rounded-b-2xl px-3.5 py-2.5 text-xs text-slate-800 placeholder-slate-400 outline-none resize-none font-sans leading-relaxed shadow-xs transition-all"></textarea>
+          <textarea id="lesson-notes-input" rows="3" placeholder="Critérios clínicos, condutas, o que vai cair na prova… (Enter continua listas automaticamente)" class="w-full bg-white border border-slate-200/90 focus:border-brand-500 rounded-b-2xl px-3.5 py-2.5 text-xs text-slate-800 placeholder-slate-400 outline-none resize-none font-sans leading-relaxed shadow-xs transition-colors"></textarea>
         </div>
 
         <!-- Linha 5: Vínculo Opcional com Prova -->
         <div>
-          <label class="block text-[11px] font-semibold text-slate-500 mb-1">Vincular a uma Prova <span class="text-slate-400 font-normal lowercase">(opcional)</span></label>
+          <label for="lesson-exam-select" class="block text-[11px] font-semibold text-slate-500 mb-1">Vincular a uma Prova <span class="text-slate-400 font-normal lowercase">(opcional)</span></label>
           <select id="lesson-exam-select" class="w-full bg-white border border-slate-200/90 rounded-2xl px-3.5 py-2 text-xs text-slate-700 outline-none shadow-xs">
             <option value="">Nenhuma prova vinculada</option>
           </select>
         </div>
 
-        <!-- Linha 6: Toggle de Estudo -->
-        <div class="bg-slate-50/80 border border-slate-200/80 rounded-2xl px-3.5 py-2.5 flex items-center justify-between">
+        <!-- Linha 6: Toggle de Estudo (Single Hit Target) -->
+        <label for="lesson-studied-toggle" class="bg-slate-50/80 border border-slate-200/80 rounded-2xl px-3.5 py-2.5 flex items-center justify-between cursor-pointer active:bg-slate-100/80 transition-colors">
           <div>
             <span class="block text-xs font-bold text-slate-800">Já estudei esta aula hoje</span>
             <span class="text-[10.5px] text-slate-500">Agenda revisões D+1, D+7, D+30</span>
           </div>
-          <label class="relative inline-flex items-center cursor-pointer">
+          <div class="relative inline-flex items-center">
             <input type="checkbox" id="lesson-studied-toggle" class="sr-only peer">
-            <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-500"></div>
-          </label>
-        </div>
+            <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-transform peer-checked:bg-brand-500 transition-colors"></div>
+          </div>
+        </label>
 
         <!-- Botões de Ação (Salvar & Salvar +1) -->
         <div class="pt-1 flex items-center gap-2">
-          <button type="button" id="btn-save-and-next-lesson" class="px-4 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 border border-slate-200/90 text-slate-700 font-extrabold text-xs active:scale-95 transition-all shrink-0" title="Salvar aula atual e já abrir a próxima em sequência">
+          <button type="button" id="btn-save-and-next-lesson" class="tap-smooth px-4 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 border border-slate-200/90 text-slate-700 font-extrabold text-xs shrink-0" title="Salvar aula atual e já abrir a próxima em sequência">
             Salvar e +1
           </button>
-          <button type="submit" id="btn-save-lesson" class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-brand-600 via-brand-500 to-emerald-500 hover:from-brand-500 hover:to-brand-400 text-white font-bold text-sm shadow-md shadow-brand-500/25 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+          <button type="submit" id="btn-save-lesson" class="tap-smooth flex-1 py-3 rounded-2xl bg-gradient-to-r from-brand-600 via-brand-500 to-emerald-500 hover:from-brand-500 hover:to-brand-400 text-white font-bold text-sm shadow-md shadow-brand-500/25 flex items-center justify-center gap-2">
             Salvar Aula
           </button>
         </div>
@@ -555,22 +588,25 @@
     </div>
   </div>
 
-  <!-- ==================== MODAL: CRIAR / EDITAR MÓDULO ==================== -->
-  <dialog id="modal-module" class="bg-transparent p-0 w-full max-w-md m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm" closedby="any">
-    <div class="bg-white border border-slate-200/90 rounded-[32px] p-5 shadow-2xl space-y-3.5 mx-3 max-h-[90vh] flex flex-col">
-      <div class="flex items-center justify-between pb-1 border-b border-slate-100 shrink-0">
-        <h3 id="modal-module-title" class="text-base font-extrabold text-slate-900">Novo Módulo</h3>
-        <button type="button" id="btn-close-modal-module" class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs">✕</button>
+  <!-- ==================== MODAL: CRIAR / EDITAR MÓDULO (ONE UI BOTTOM-ANCHORED) ==================== -->
+  <dialog id="modal-module" class="bg-transparent p-0 w-full max-w-md mt-auto mb-0 sm:m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm" closedby="any">
+    <div class="dialog-sheet-card bg-white border-t sm:border border-slate-200/90 rounded-t-[32px] sm:rounded-[32px] p-5 pb-safe shadow-2xl space-y-3.5 sm:mx-3 max-h-[90vh] flex flex-col">
+      <div data-dialog-drag class="touch-none select-none -mt-2 pt-1 pb-1.5 border-b border-slate-100 shrink-0">
+        <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-2.5 sm:hidden"></div>
+        <div class="flex items-center justify-between">
+          <h3 id="modal-module-title" class="text-base font-extrabold text-slate-900">Novo Módulo</h3>
+          <button type="button" id="btn-close-modal-module" aria-label="Fechar modal" class="touch-target w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs active:scale-90 transition-transform">✕</button>
+        </div>
       </div>
 
       <form id="form-module" class="space-y-3.5 overflow-y-auto flex-1 pr-0.5">
         <input type="hidden" id="module-id-input">
 
         <div>
-          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Nome do Módulo</label>
+          <label for="module-name-input" class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Nome do Módulo</label>
           <div class="flex items-center gap-2">
-            <div id="module-live-preview-icon" class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border transition-all"></div>
-            <input type="text" id="module-name-input" required placeholder="Ex: Cardiologia, Gastro, GO, Pediatria..." class="flex-1 bg-white border border-slate-200/90 focus:border-brand-500 rounded-2xl px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 outline-none shadow-xs">
+            <div id="module-live-preview-icon" class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border transition-colors"></div>
+            <input type="text" id="module-name-input" name="moduleName" autocomplete="off" enterkeyhint="done" required placeholder="Ex: Cardiologia, Gastro, GO, Pediatria…" class="flex-1 bg-white border border-slate-200/90 focus:border-brand-500 rounded-2xl px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 outline-none shadow-xs transition-colors">
           </div>
         </div>
 
@@ -592,7 +628,7 @@
         </div>
 
         <div class="pt-2 shrink-0">
-          <button type="submit" class="w-full py-2.5 rounded-2xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-md shadow-brand-500/20 active:scale-95 transition-transform">
+          <button type="submit" class="tap-smooth w-full py-3 rounded-2xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-md shadow-brand-500/20">
             Salvar Módulo
           </button>
         </div>
@@ -600,29 +636,32 @@
     </div>
   </dialog>
 
-  <!-- ==================== MODAL: CRIAR / EDITAR PROVA ==================== -->
-  <dialog id="modal-exam" class="bg-transparent p-0 w-full max-w-md m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm" closedby="any">
-    <div class="bg-white border border-slate-200 rounded-[32px] p-5 shadow-2xl space-y-3 mx-3 max-h-[88vh] flex flex-col">
-      <div class="flex items-center justify-between pb-1 border-b border-slate-100 shrink-0">
-        <h3 id="modal-exam-title" class="text-base font-extrabold text-slate-900">Cadastrar Prova</h3>
-        <button type="button" id="btn-close-modal-exam" class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs">✕</button>
+  <!-- ==================== MODAL: CRIAR / EDITAR PROVA (ONE UI BOTTOM-ANCHORED) ==================== -->
+  <dialog id="modal-exam" class="bg-transparent p-0 w-full max-w-md mt-auto mb-0 sm:m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm" closedby="any">
+    <div class="dialog-sheet-card bg-white border-t sm:border border-slate-200 rounded-t-[32px] sm:rounded-[32px] p-5 pb-safe shadow-2xl space-y-3 sm:mx-3 max-h-[88vh] flex flex-col">
+      <div data-dialog-drag class="touch-none select-none -mt-2 pt-1 pb-1.5 border-b border-slate-100 shrink-0">
+        <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-2.5 sm:hidden"></div>
+        <div class="flex items-center justify-between">
+          <h3 id="modal-exam-title" class="text-base font-extrabold text-slate-900">Cadastrar Prova</h3>
+          <button type="button" id="btn-close-modal-exam" aria-label="Fechar modal" class="touch-target w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs active:scale-90 transition-transform">✕</button>
+        </div>
       </div>
 
       <form id="form-exam" class="space-y-3 overflow-y-auto flex-1 pr-0.5">
         <input type="hidden" id="exam-id-input">
 
         <div>
-          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Nome da Prova</label>
-          <input type="text" id="exam-name-input" required placeholder="Ex: P1 Clínica Médica, Simulado R1" class="w-full bg-white border border-slate-200/90 focus:border-brand-500 rounded-2xl px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 outline-none shadow-xs">
+          <label for="exam-name-input" class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Nome da Prova</label>
+          <input type="text" id="exam-name-input" name="examName" autocomplete="off" enterkeyhint="done" required placeholder="Ex: P1 Clínica Médica, Simulado R1…" class="w-full bg-white border border-slate-200/90 focus:border-brand-500 rounded-2xl px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 outline-none shadow-xs">
         </div>
 
         <div>
-          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Data do Exame</label>
+          <label for="exam-date-input" class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Data do Exame</label>
           <input type="date" id="exam-date-input" required class="w-full bg-white border border-slate-200/90 focus:border-brand-500 rounded-2xl px-3.5 py-2 text-xs text-slate-900 outline-none shadow-xs">
         </div>
 
         <div>
-          <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Módulo Correspondente</label>
+          <label for="exam-module-select" class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Módulo Correspondente</label>
           <select id="exam-module-select" required class="w-full bg-white border border-slate-200/90 rounded-2xl px-3.5 py-2 text-xs text-slate-800 outline-none shadow-xs">
             <option value="">Selecione o Módulo</option>
           </select>
@@ -631,7 +670,7 @@
         <div>
           <div class="flex items-center justify-between mb-1">
             <label class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Conteúdo Cobrado</label>
-            <span class="text-[10px] text-brand-600 font-semibold cursor-pointer" id="btn-exam-select-all">Selecionar Todas</span>
+            <button type="button" class="text-[10px] text-brand-600 font-semibold cursor-pointer" id="btn-exam-select-all">Selecionar Todas</button>
           </div>
           <div id="exam-lessons-checklist" class="space-y-1.5 max-h-40 overflow-y-auto p-2 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs">
             <p class="text-slate-400 text-center py-2">Selecione um módulo acima para ver as aulas.</p>
@@ -639,7 +678,7 @@
         </div>
 
         <div class="pt-2 shrink-0">
-          <button type="submit" class="w-full py-2.5 rounded-2xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-md shadow-brand-500/20 active:scale-95 transition-transform">
+          <button type="submit" class="tap-smooth w-full py-3 rounded-2xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-md shadow-brand-500/20">
             Salvar Prova
           </button>
         </div>
@@ -647,17 +686,20 @@
     </div>
   </dialog>
 
-  <!-- ==================== MODAL: DETALHES DA AULA / LEITOR ==================== -->
-  <dialog id="modal-view-lesson" class="bg-transparent p-0 w-full max-w-md m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm" closedby="any">
-    <div class="bg-white border border-slate-200 rounded-[32px] p-5 shadow-2xl space-y-3.5 mx-3 max-h-[88vh] flex flex-col">
-      <div class="flex items-center justify-between pb-1 border-b border-slate-100 shrink-0">
-        <div class="flex items-center gap-2">
-          <span id="view-lesson-badge" class="text-[10.5px] px-2 py-0.5 rounded-md font-bold bg-slate-100 text-brand-700 border border-slate-200">
-            Aula 01
-          </span>
-          <span id="view-lesson-module-tag" class="text-[11px] font-semibold text-slate-600"></span>
+  <!-- ==================== MODAL: DETALHES DA AULA / LEITOR (ONE UI BOTTOM-ANCHORED) ==================== -->
+  <dialog id="modal-view-lesson" class="bg-transparent p-0 w-full max-w-md mt-auto mb-0 sm:m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm" closedby="any">
+    <div class="dialog-sheet-card bg-white border-t sm:border border-slate-200 rounded-t-[32px] sm:rounded-[32px] p-5 pb-safe shadow-2xl space-y-3.5 sm:mx-3 max-h-[88vh] flex flex-col">
+      <div data-dialog-drag class="touch-none select-none -mt-2 pt-1 pb-1.5 border-b border-slate-100 shrink-0">
+        <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-2.5 sm:hidden"></div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span id="view-lesson-badge" class="tabular-nums text-[10.5px] px-2 py-0.5 rounded-md font-bold bg-slate-100 text-brand-700 border border-slate-200">
+              Aula 01
+            </span>
+            <span id="view-lesson-module-tag" class="text-[11px] font-semibold text-slate-600"></span>
+          </div>
+          <button type="button" id="btn-close-view-lesson" aria-label="Fechar detalhes da aula" class="touch-target w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs active:scale-90 transition-transform">✕</button>
         </div>
-        <button type="button" id="btn-close-view-lesson" class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs">✕</button>
       </div>
 
       <div class="overflow-y-auto flex-1 space-y-3">
@@ -666,8 +708,8 @@
         <div class="bg-slate-50 border border-slate-200/90 rounded-2xl p-2.5 space-y-2">
           <div class="flex items-center justify-between">
             <span class="text-xs font-semibold text-slate-700">Estado de Estudo:</span>
-            <button id="view-lesson-toggle-status" class="px-2.5 py-1 rounded-lg text-xs font-bold active:scale-95 transition-all">
-              Carregando...
+            <button id="view-lesson-toggle-status" class="px-2.5 py-1 rounded-lg text-xs font-bold active:scale-95 transition-transform">
+              Carregando…
             </button>
           </div>
 
@@ -688,41 +730,44 @@
       </div>
 
       <div class="flex items-center gap-2 pt-2 border-t border-slate-100 shrink-0">
-        <button id="btn-edit-lesson-trigger" class="flex-1 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-semibold text-slate-700 active:scale-95 transition-transform flex items-center justify-center gap-1.5">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+        <button id="btn-edit-lesson-trigger" class="tap-smooth flex-1 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-semibold text-slate-700 flex items-center justify-center gap-1.5">
+          <svg class="w-3.5 h-3.5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
           Editar Aula
         </button>
-        <button id="btn-delete-lesson-trigger" class="px-3 py-2 rounded-2xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 text-xs font-semibold active:scale-95 transition-transform">
+        <button id="btn-delete-lesson-trigger" class="tap-smooth px-3.5 py-2.5 rounded-2xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 text-xs font-semibold">
           Excluir
         </button>
       </div>
     </div>
   </dialog>
 
-  <!-- ==================== MODAL: CONFIGURAÇÕES, BACKUP & VERSÃO ==================== -->
-  <dialog id="modal-settings" class="bg-transparent p-0 w-full max-w-sm m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm" closedby="any">
-    <div class="bg-white border border-slate-200/90 rounded-[32px] p-5 shadow-2xl space-y-3.5 mx-3">
-      <div class="flex items-center justify-between pb-1 border-b border-slate-100">
-        <div class="flex items-center gap-2">
-          <div class="w-6 h-6 rounded-lg bg-brand-50 text-brand-700 flex items-center justify-center text-xs font-bold">⚙</div>
-          <h3 class="text-base font-bold text-slate-900">Configurações & Backup</h3>
+  <!-- ==================== MODAL: CONFIGURAÇÕES, BACKUP & VERSÃO (ONE UI BOTTOM-ANCHORED) ==================== -->
+  <dialog id="modal-settings" class="bg-transparent p-0 w-full max-w-sm mt-auto mb-0 sm:m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm" closedby="any">
+    <div class="dialog-sheet-card bg-white border-t sm:border border-slate-200/90 rounded-t-[32px] sm:rounded-[32px] p-5 pb-safe shadow-2xl space-y-3.5 sm:mx-3">
+      <div data-dialog-drag class="touch-none select-none -mt-2 pt-1 pb-1.5 border-b border-slate-100">
+        <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-2.5 sm:hidden"></div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded-lg bg-brand-50 text-brand-700 flex items-center justify-center text-xs font-bold" aria-hidden="true">⚙</div>
+            <h3 class="text-base font-bold text-slate-900">Configurações & Backup</h3>
+          </div>
+          <button type="button" id="btn-close-modal-settings" aria-label="Fechar configurações" class="touch-target w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs active:scale-90 transition-transform">✕</button>
         </div>
-        <button type="button" id="btn-close-modal-settings" class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs">✕</button>
       </div>
 
       <!-- Quick Metrics -->
       <div class="grid grid-cols-3 gap-2 bg-slate-50 border border-slate-200/80 rounded-2xl p-2.5 text-center">
         <div>
           <span class="text-[10px] text-slate-500 uppercase tracking-tight block">Módulos</span>
-          <span id="stat-total-modules" class="text-sm font-bold text-slate-900">0</span>
+          <span id="stat-total-modules" class="tabular-nums text-sm font-bold text-slate-900">0</span>
         </div>
         <div>
           <span class="text-[10px] text-slate-500 uppercase tracking-tight block">Aulas</span>
-          <span id="stat-total-lessons" class="text-sm font-bold text-brand-600">0</span>
+          <span id="stat-total-lessons" class="tabular-nums text-sm font-bold text-brand-600">0</span>
         </div>
         <div>
           <span class="text-[10px] text-slate-500 uppercase tracking-tight block">Provas</span>
-          <span id="stat-total-exams" class="text-sm font-bold text-blue-600">0</span>
+          <span id="stat-total-exams" class="tabular-nums text-sm font-bold text-blue-600">0</span>
         </div>
       </div>
 
@@ -730,17 +775,17 @@
       <div class="space-y-2">
         <span class="text-[10.5px] font-bold uppercase tracking-wider text-slate-500 block">Segurança de Dados</span>
 
-        <button id="btn-export-backup" class="w-full py-2.5 px-3 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 flex items-center justify-between active:scale-95 transition-transform shadow-xs">
+        <button id="btn-export-backup" class="tap-smooth w-full py-2.5 px-3 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 flex items-center justify-between shadow-xs">
           <div class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            <svg class="w-4 h-4 text-brand-600" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
             <span>Exportar Backup (JSON)</span>
           </div>
           <span class="text-[10px] text-slate-400 font-medium">Baixar</span>
         </button>
 
-        <label class="w-full py-2.5 px-3 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 flex items-center justify-between cursor-pointer active:scale-95 transition-transform shadow-xs">
+        <label class="tap-smooth w-full py-2.5 px-3 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 flex items-center justify-between cursor-pointer shadow-xs">
           <div class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+            <svg class="w-4 h-4 text-blue-600" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
             <span>Restaurar Backup (JSON)</span>
           </div>
           <span class="text-[10px] text-slate-400 font-medium">Carregar</span>
@@ -752,14 +797,14 @@
       <div class="pt-2 border-t border-slate-100 space-y-1.5">
         <div class="flex items-center justify-between">
           <span class="text-[10.5px] font-bold uppercase tracking-wider text-slate-500">Versão do Aplicativo</span>
-          <span id="settings-version-label" class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-brand-50 text-brand-700 border border-brand-200">v2.1.1</span>
+          <span id="settings-version-label" class="tabular-nums text-[10px] font-bold px-1.5 py-0.5 rounded bg-brand-50 text-brand-700 border border-brand-200">v2.2.0</span>
         </div>
         <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-2.5 flex items-center justify-between">
           <div>
-            <span id="settings-build-label" class="text-xs font-semibold text-slate-800 block">04/10/2026 às 16:55</span>
+            <span id="settings-build-label" class="tabular-nums text-xs font-semibold text-slate-800 block">04/10/2026 às 20:55</span>
             <span id="settings-update-status" class="text-[10px] text-slate-500">Sincronizado com Vercel</span>
           </div>
-          <button id="btn-check-update-manual" class="px-2.5 py-1 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-brand-600 text-xs font-bold active:scale-90 shadow-2xs">
+          <button id="btn-check-update-manual" class="touch-target px-2.5 py-1 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-brand-600 text-xs font-bold active:scale-90 transition-transform shadow-2xs">
             Verificar
           </button>
         </div>
@@ -768,15 +813,15 @@
       <!-- App Info -->
       <div class="pt-1 text-center">
         <p class="text-[11px] text-slate-600 font-medium">Caderno de Estudos Médicos • Lauro</p>
-        <p class="text-[9.5px] text-slate-400 mt-0.5">Samsung Galaxy A54 • Tema Claro Otimizado</p>
+        <p class="text-[9.5px] text-slate-400 mt-0.5">Samsung Galaxy A54 (120Hz) • Tema Claro Otimizado</p>
       </div>
     </div>
   </dialog>
 
   <!-- ==================== TOAST NOTIFICATION ==================== -->
-  <div id="toast-container" class="fixed top-12 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 transform -translate-y-2">
+  <div id="toast-container" role="status" aria-live="polite" class="fixed top-12 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-[transform,opacity] duration-300 opacity-0 transform -translate-y-2">
     <div id="toast-content" class="bg-slate-900 text-white px-4 py-2 rounded-2xl shadow-xl text-xs font-semibold flex items-center gap-2">
-      <span id="toast-icon">✓</span>
+      <span id="toast-icon" aria-hidden="true">✓</span>
       <span id="toast-msg">Operação realizada</span>
     </div>
   </div>
@@ -784,9 +829,9 @@
   <!-- ==================== APPLICATION LOGIC ==================== -->
   <script>
     // --- APP VERSION & AUTO-UPDATE DETECTOR ---
-    const CURRENT_APP_VERSION = '2.1.1';
-    const CURRENT_BUILD_TIMESTAMP = '2026-10-04T19:55:00.000Z';
-    const CURRENT_BUILD_LABEL = '04/10/2026 às 16:55';
+    const CURRENT_APP_VERSION = '2.2.0';
+    const CURRENT_BUILD_TIMESTAMP = '2026-10-04T23:55:00.000Z';
+    const CURRENT_BUILD_LABEL = '04/10/2026 às 20:55';
 
     let pendingServerUpdate = null;
 
@@ -1169,8 +1214,26 @@
       currentModuleId: null,
       activeTab: 'tab-modulos',
       studySubTab: 'revisar',
-      moduleViewMode: localStorage.getItem(VIEW_MODE_KEY) || 'grid' // 'grid' | 'list'
+      moduleViewMode: localStorage.getItem(VIEW_MODE_KEY) || 'grid', // 'grid' | 'list'
+      scrollPositions: {
+        'tab-modulos': 0,
+        'tab-estudo': 0,
+        'tab-provas': 0
+      }
     };
+
+    function runViewTransition(updateFn) {
+      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (document.startViewTransition && !prefersReduced) {
+        try {
+          document.startViewTransition(() => {
+            updateFn();
+          });
+          return;
+        } catch (e) {}
+      }
+      updateFn();
+    }
 
     function loadState() {
       try {
@@ -1197,6 +1260,9 @@
     function saveState() {
       const mainEl = document.getElementById('main-content');
       const prevScroll = mainEl ? mainEl.scrollTop : 0;
+      if (AppState.activeTab && AppState.activeTab !== 'tab-modulo-detail') {
+        AppState.scrollPositions[AppState.activeTab] = prevScroll;
+      }
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
           version: 1,
@@ -1209,7 +1275,7 @@
         console.error("Erro ao salvar localStorage:", e);
         showToast("Erro ao gravar dados.", "⚠️", true);
       }
-      updateUI();
+      updateUI(true);
       if (mainEl) mainEl.scrollTop = prevScroll;
     }
 
@@ -1317,7 +1383,18 @@
 
     function switchTab(tabId) {
       vibrate(10);
+      const mainEl = document.getElementById('main-content');
+      const prevTab = AppState.activeTab;
+
+      if (mainEl && prevTab && prevTab !== 'tab-modulo-detail') {
+        AppState.scrollPositions[prevTab] = mainEl.scrollTop;
+      }
+
       AppState.activeTab = tabId;
+
+      if (tabId === 'tab-modulos') renderModulosTab();
+      else if (tabId === 'tab-estudo') renderEstudoTab();
+      else if (tabId === 'tab-provas') renderProvasTab();
 
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
       const activeEl = document.getElementById(tabId);
@@ -1334,7 +1411,13 @@
         }
       });
 
-      document.getElementById('main-content').scrollTop = 0;
+      if (mainEl) {
+        if (tabId === 'tab-modulo-detail') {
+          mainEl.scrollTop = 0;
+        } else {
+          mainEl.scrollTop = AppState.scrollPositions[tabId] || 0;
+        }
+      }
     }
 
     // --- QUICK ATALHO PARA CRIAR MÓDULO RÁPIDO ---
@@ -1355,16 +1438,21 @@
 
     function autoResizeNotesTextarea() {
       const notesInput = document.getElementById('lesson-notes-input');
+      const formEl = document.getElementById('form-lesson');
       if (!notesInput) return;
+      const prevFormScroll = formEl ? formEl.scrollTop : 0;
       notesInput.style.height = 'auto';
       const nextHeight = Math.min(Math.max(notesInput.scrollHeight, 84), 220);
       notesInput.style.height = nextHeight + 'px';
+      if (formEl) formEl.scrollTop = prevFormScroll;
     }
 
     // --- BOTTOM SHEET CONTROLS ---
     function openLessonSheet(preselectedModuleId = null, editLessonId = null) {
       vibrate(15);
       const sheet = document.getElementById('sheet-lesson');
+      const drawer = document.getElementById('sheet-lesson-drawer');
+      const overlay = document.getElementById('sheet-lesson-overlay');
       const form = document.getElementById('form-lesson');
       const titleModal = document.getElementById('lesson-modal-title');
       const lessonIdInput = document.getElementById('lesson-id-input');
@@ -1374,6 +1462,15 @@
       const studiedToggle = document.getElementById('lesson-studied-toggle');
       const examSelect = document.getElementById('lesson-exam-select');
       const btnSaveAndNext = document.getElementById('btn-save-and-next-lesson');
+
+      if (drawer) {
+        drawer.style.transition = '';
+        drawer.style.transform = '';
+      }
+      if (overlay) {
+        overlay.style.transition = '';
+        overlay.style.opacity = '';
+      }
 
       form.reset();
       populateExamSelect(examSelect);
@@ -1408,14 +1505,18 @@
         if (btnSaveAndNext) btnSaveAndNext.classList.remove('hidden');
       }
 
-      renderModuleSelectorChips(activeModuleId);
+      renderModuleSelectorChips(activeModuleId, true);
       updateLessonNumberDisplay();
       autoResizeNotesTextarea();
 
       sheet.classList.add('sheet-open');
       setTimeout(() => {
-        titleInput.focus();
-      }, 250);
+        try {
+          titleInput.focus({ preventScroll: true });
+        } catch (e) {
+          titleInput.focus();
+        }
+      }, 260);
     }
 
     function closeLessonSheet() {
@@ -1423,11 +1524,23 @@
       if (document.activeElement && typeof document.activeElement.blur === 'function') {
         document.activeElement.blur();
       }
-      document.getElementById('sheet-lesson').classList.remove('sheet-open');
+      const sheet = document.getElementById('sheet-lesson');
+      const drawer = document.getElementById('sheet-lesson-drawer');
+      const overlay = document.getElementById('sheet-lesson-overlay');
+      if (drawer) {
+        drawer.style.transition = '';
+        drawer.style.transform = '';
+      }
+      if (overlay) {
+        overlay.style.transition = '';
+        overlay.style.opacity = '';
+      }
+      sheet.classList.remove('sheet-open');
     }
 
-    function renderModuleSelectorChips(selectedModuleId) {
+    function renderModuleSelectorChips(selectedModuleId, shouldScrollIntoView = false) {
       const container = document.getElementById('lesson-modules-selector');
+      const prevScrollLeft = container ? container.scrollLeft : 0;
 
       container.innerHTML = AppState.modules.map(mod => {
         const isSelected = mod.id === selectedModuleId;
@@ -1435,7 +1548,7 @@
         const isReuma = mod.iconKey === 'reuma' || mod.iconKey === 'joint';
 
         return `
-          <button type="button" data-id="${mod.id}" class="chip-module-select shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${
+          <button type="button" data-id="${mod.id}" class="chip-module-select shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-[transform,background-color,border-color,color] active:scale-95 ${
             isSelected
               ? 'bg-slate-900 text-white shadow-sm ring-2 ring-slate-400/60 font-bold'
               : 'bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50'
@@ -1448,11 +1561,22 @@
         `;
       }).join('');
 
+      container.scrollLeft = prevScrollLeft;
+
+      if (shouldScrollIntoView) {
+        requestAnimationFrame(() => {
+          const activeChip = container.querySelector('.chip-module-select.bg-slate-900');
+          if (activeChip && typeof activeChip.scrollIntoView === 'function') {
+            activeChip.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          }
+        });
+      }
+
       container.querySelectorAll('.chip-module-select').forEach(btn => {
         btn.addEventListener('click', () => {
           vibrate(10);
           const newId = btn.getAttribute('data-id');
-          renderModuleSelectorChips(newId);
+          renderModuleSelectorChips(newId, false);
           const lessonId = document.getElementById('lesson-id-input').value;
           if (!lessonId) {
             const nextNum = getNextLessonNumber(newId);
@@ -1847,14 +1971,26 @@
     }
 
     // --- RENDER FUNCTIONS ---
-    function updateUI() {
+    function updateUI(onlyActive = false) {
       renderDateHeader();
-      renderModulosTab();
-      if (AppState.currentModuleId) {
-        renderModuloDetailTab(AppState.currentModuleId);
+      if (!onlyActive) {
+        renderModulosTab();
+        if (AppState.currentModuleId) {
+          renderModuloDetailTab(AppState.currentModuleId);
+        }
+        renderEstudoTab();
+        renderProvasTab();
+      } else {
+        if (AppState.activeTab === 'tab-modulos') {
+          renderModulosTab();
+        } else if (AppState.activeTab === 'tab-modulo-detail' && AppState.currentModuleId) {
+          renderModuloDetailTab(AppState.currentModuleId);
+        } else if (AppState.activeTab === 'tab-estudo') {
+          renderEstudoTab();
+        } else if (AppState.activeTab === 'tab-provas') {
+          renderProvasTab();
+        }
       }
-      renderEstudoTab();
-      renderProvasTab();
       updateBadges();
       updateViewToggleButtons();
     }
@@ -1872,11 +2008,11 @@
       if (!btnList || !btnGrid) return;
 
       if (AppState.moduleViewMode === 'grid') {
-        btnGrid.className = "p-1.5 rounded-lg bg-white text-brand-600 shadow-xs transition-all";
-        btnList.className = "p-1.5 rounded-lg text-slate-400 hover:text-slate-700 transition-all";
+        btnGrid.className = "touch-target p-1.5 rounded-lg bg-white text-brand-600 shadow-xs transition-[background-color,color,box-shadow]";
+        btnList.className = "touch-target p-1.5 rounded-lg text-slate-400 hover:text-slate-700 transition-[background-color,color,box-shadow]";
       } else {
-        btnList.className = "p-1.5 rounded-lg bg-white text-brand-600 shadow-xs transition-all";
-        btnGrid.className = "p-1.5 rounded-lg text-slate-400 hover:text-slate-700 transition-all";
+        btnList.className = "touch-target p-1.5 rounded-lg bg-white text-brand-600 shadow-xs transition-[background-color,color,box-shadow]";
+        btnGrid.className = "touch-target p-1.5 rounded-lg text-slate-400 hover:text-slate-700 transition-[background-color,color,box-shadow]";
       }
     }
 
@@ -1946,37 +2082,37 @@
             <div class="pt-1">
               <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block mb-2.5">Especialidades Médicas</span>
               <div class="flex flex-wrap items-center justify-center gap-1.5 max-w-xs mx-auto">
-                <button onclick="createQuickModule('Cardiologia', 'heart', 'crimson')" class="px-3 py-1.5 rounded-xl bg-red-50/90 hover:bg-red-100 border border-red-200/80 text-xs font-bold text-red-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Cardiologia', 'heart', 'crimson')" class="px-3 py-1.5 rounded-xl bg-red-50/90 hover:bg-red-100 border border-red-200/80 text-xs font-bold text-red-700 flex items-center gap-1.5 active:scale-95 transition-transform shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('heart', 'w-4 h-4')}</span><span>Cardio</span>
                 </button>
-                <button onclick="createQuickModule('Gastroenterologia', 'gastro', 'orange')" class="px-3 py-1.5 rounded-xl bg-orange-50/90 hover:bg-orange-100 border border-orange-200/80 text-xs font-bold text-orange-800 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Gastroenterologia', 'gastro', 'orange')" class="px-3 py-1.5 rounded-xl bg-orange-50/90 hover:bg-orange-100 border border-orange-200/80 text-xs font-bold text-orange-800 flex items-center gap-1.5 active:scale-95 transition-transform shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('gastro', 'w-4 h-4')}</span><span>Gastro</span>
                 </button>
-                <button onclick="createQuickModule('Endocrinologia', 'endocrino', 'amber')" class="px-3 py-1.5 rounded-xl bg-amber-50/90 hover:bg-amber-100 border border-amber-200/80 text-xs font-bold text-amber-800 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Endocrinologia', 'endocrino', 'amber')" class="px-3 py-1.5 rounded-xl bg-amber-50/90 hover:bg-amber-100 border border-amber-200/80 text-xs font-bold text-amber-800 flex items-center gap-1.5 active:scale-95 transition-transform shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('endocrino', 'w-4 h-4')}</span><span>Endócrino</span>
                 </button>
-                <button onclick="createQuickModule('Reumatologia', 'reuma', 'purple')" class="px-3 py-1.5 rounded-xl bg-purple-50/90 hover:bg-purple-100 border border-purple-200/80 text-xs font-bold text-purple-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Reumatologia', 'reuma', 'purple')" class="px-3 py-1.5 rounded-xl bg-purple-50/90 hover:bg-purple-100 border border-purple-200/80 text-xs font-bold text-purple-700 flex items-center gap-1.5 active:scale-95 transition-transform shadow-2xs">
                   <span class="w-5 h-5 rounded-md bg-[#303b4d] border border-[#444f60] p-0.5 flex items-center justify-center text-white">${getMedicalIconHTML('reuma', 'w-4 h-4')}</span><span>Reumato</span>
                 </button>
-                <button onclick="createQuickModule('Ginecologia / GO', 'gineco', 'rose')" class="px-3 py-1.5 rounded-xl bg-rose-50/90 hover:bg-rose-100 border border-rose-200/80 text-xs font-bold text-rose-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Ginecologia / GO', 'gineco', 'rose')" class="px-3 py-1.5 rounded-xl bg-rose-50/90 hover:bg-rose-100 border border-rose-200/80 text-xs font-bold text-rose-700 flex items-center gap-1.5 active:scale-95 transition-transform shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('gineco', 'w-4 h-4')}</span><span>Gineco/GO</span>
                 </button>
-                <button onclick="createQuickModule('Cirurgia Geral', 'scalpel', 'teal')" class="px-3 py-1.5 rounded-xl bg-teal-50/90 hover:bg-teal-100 border border-teal-200/80 text-xs font-bold text-teal-800 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Cirurgia Geral', 'scalpel', 'teal')" class="px-3 py-1.5 rounded-xl bg-teal-50/90 hover:bg-teal-100 border border-teal-200/80 text-xs font-bold text-teal-800 flex items-center gap-1.5 active:scale-95 transition-transform shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('scalpel', 'w-4 h-4')}</span><span>Cirurgia</span>
                 </button>
-                <button onclick="createQuickModule('Neurologia', 'brain', 'purple')" class="px-3 py-1.5 rounded-xl bg-purple-50/90 hover:bg-purple-100 border border-purple-200/80 text-xs font-bold text-purple-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Neurologia', 'brain', 'purple')" class="px-3 py-1.5 rounded-xl bg-purple-50/90 hover:bg-purple-100 border border-purple-200/80 text-xs font-bold text-purple-700 flex items-center gap-1.5 active:scale-95 transition-transform shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('brain', 'w-4 h-4')}</span><span>Neuro</span>
                 </button>
-                <button onclick="createQuickModule('Ortopedia', 'bone', 'emerald')" class="px-3 py-1.5 rounded-xl bg-emerald-50/90 hover:bg-emerald-100 border border-emerald-200/80 text-xs font-bold text-emerald-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Ortopedia', 'bone', 'emerald')" class="px-3 py-1.5 rounded-xl bg-emerald-50/90 hover:bg-emerald-100 border border-emerald-200/80 text-xs font-bold text-emerald-700 flex items-center gap-1.5 active:scale-95 transition-transform shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('bone', 'w-4 h-4')}</span><span>Orto</span>
                 </button>
-                <button onclick="createQuickModule('Pneumologia', 'lung', 'blue')" class="px-3 py-1.5 rounded-xl bg-blue-50/90 hover:bg-blue-100 border border-blue-200/80 text-xs font-bold text-blue-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Pneumologia', 'lung', 'blue')" class="px-3 py-1.5 rounded-xl bg-blue-50/90 hover:bg-blue-100 border border-blue-200/80 text-xs font-bold text-blue-700 flex items-center gap-1.5 active:scale-95 transition-transform shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('lung', 'w-4 h-4')}</span><span>Pneumo</span>
                 </button>
-                <button onclick="createQuickModule('Pediatria', 'baby', 'amber')" class="px-3 py-1.5 rounded-xl bg-amber-50/90 hover:bg-amber-100 border border-amber-200/80 text-xs font-bold text-amber-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Pediatria', 'baby', 'amber')" class="px-3 py-1.5 rounded-xl bg-amber-50/90 hover:bg-amber-100 border border-amber-200/80 text-xs font-bold text-amber-700 flex items-center gap-1.5 active:scale-95 transition-transform shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('baby', 'w-4 h-4')}</span><span>Pediatria</span>
                 </button>
-                <button onclick="createQuickModule('Nefrologia', 'kidney', 'cyan')" class="px-3 py-1.5 rounded-xl bg-cyan-50/90 hover:bg-cyan-100 border border-cyan-200/80 text-xs font-bold text-cyan-700 flex items-center gap-1.5 active:scale-95 transition-all shadow-2xs">
+                <button onclick="createQuickModule('Nefrologia', 'kidney', 'cyan')" class="px-3 py-1.5 rounded-xl bg-cyan-50/90 hover:bg-cyan-100 border border-cyan-200/80 text-xs font-bold text-cyan-700 flex items-center gap-1.5 active:scale-95 transition-transform shadow-2xs">
                   <span class="w-4 h-4 flex items-center justify-center">${getMedicalIconHTML('kidney', 'w-4 h-4')}</span><span>Nefro</span>
                 </button>
               </div>
@@ -2009,7 +2145,7 @@
           const colorObj = getColorConfig(mod.colorKey);
 
           return `
-            <div onclick="openModuleDetail('${mod.id}')" class="group relative bg-white border border-slate-200/85 hover:border-slate-300 rounded-[26px] p-3.5 space-y-2.5 shadow-[0_6px_20px_-6px_rgba(15,23,42,0.05)] active:scale-[0.98] transition-all cursor-pointer flex flex-col justify-between overflow-hidden">
+            <div onclick="openModuleDetail('${mod.id}')" class="cv-card group relative bg-white border border-slate-200/85 hover:border-slate-300 rounded-[26px] p-3.5 space-y-2.5 shadow-[0_6px_20px_-6px_rgba(15,23,42,0.05)] active:scale-[0.98] transition-[transform,border-color,background-color] cursor-pointer flex flex-col justify-between overflow-hidden">
               <!-- Top: Soft Duotone Icon Squircle, Quick + Button & Percent -->
               <div class="flex items-start justify-between gap-1.5">
                 <div class="w-11 h-11 rounded-[16px] flex items-center justify-center shrink-0 border shadow-2xs transition-transform group-active:scale-95" style="${getIconSquircleStyle(colorObj, mod.iconKey)}">
@@ -2017,10 +2153,10 @@
                 </div>
                 
                 <div class="flex items-center gap-1 shrink-0">
-                  <span class="text-[11px] font-extrabold px-2 py-0.5 rounded-full border" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
+                  <span class="tabular-nums text-[11px] font-extrabold px-2 py-0.5 rounded-full border" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
                     ${percent}%
                   </span>
-                  <button type="button" onclick="event.stopPropagation(); openLessonSheet('${mod.id}')" class="w-7 h-7 rounded-xl bg-slate-50 hover:bg-slate-900 hover:text-white text-slate-600 border border-slate-200/80 hover:border-slate-900 flex items-center justify-center text-sm font-bold active:scale-90 transition-all" title="Adicionar Aula neste Módulo">
+                  <button type="button" aria-label="Adicionar aula em ${mod.name}" onclick="event.stopPropagation(); openLessonSheet('${mod.id}')" class="touch-target w-7 h-7 rounded-xl bg-slate-50 hover:bg-slate-900 hover:text-white text-slate-600 border border-slate-200/80 hover:border-slate-900 flex items-center justify-center text-sm font-bold active:scale-90 transition-[transform,background-color,color,border-color]" title="Adicionar Aula neste Módulo">
                     +
                   </button>
                 </div>
@@ -2029,14 +2165,14 @@
               <!-- Middle: Name & Count -->
               <div class="min-w-0 pt-0.5">
                 <h3 class="text-[13.5px] font-extrabold text-slate-900 truncate leading-snug tracking-tight">${mod.name}</h3>
-                <p class="text-[11px] text-slate-400 font-semibold mt-0.5">${studiedCount}/${totalCount} aula${totalCount === 1 ? '' : 's'}</p>
+                <p class="tabular-nums text-[11px] text-slate-400 font-semibold mt-0.5">${studiedCount}/${totalCount} aula${totalCount === 1 ? '' : 's'}</p>
               </div>
 
               <!-- Bottom: Clean Micro-Pills & Single Smooth Progress Bar -->
               <div class="space-y-2 pt-1">
                 <div class="flex items-center justify-between gap-1.5">
                   <!-- Aulas a Estudar -->
-                  <div class="flex-1 px-2 py-1 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1 border transition-colors ${
+                  <div class="tabular-nums flex-1 px-2 py-1 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1 border transition-colors ${
                     pendingStudy > 0
                       ? 'bg-amber-50/90 text-amber-800 border-amber-200/80'
                       : 'bg-slate-50 text-slate-400 border-slate-100'
@@ -2046,7 +2182,7 @@
                   </div>
 
                   <!-- Revisões Pendentes -->
-                  <div class="flex-1 px-2 py-1 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1 border transition-colors ${
+                  <div class="tabular-nums flex-1 px-2 py-1 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1 border transition-colors ${
                     pendingReviews > 0
                       ? 'bg-rose-50/90 text-rose-700 border-rose-200/80 animate-soft-pulse'
                       : 'bg-slate-50 text-slate-400 border-slate-100'
@@ -2058,7 +2194,7 @@
 
                 <!-- Barra de Progresso Única e Suave -->
                 <div class="w-full rounded-full h-1.5 overflow-hidden" style="background-color: ${colorObj.track};">
-                  <div class="h-full rounded-full transition-all duration-500" style="width: ${percent}%; background-color: ${colorObj.hex};"></div>
+                  <div class="h-full rounded-full transition-[width] duration-500" style="width: ${percent}%; background-color: ${colorObj.hex};"></div>
                 </div>
               </div>
             </div>
@@ -2079,7 +2215,7 @@
           const colorObj = getColorConfig(mod.colorKey);
 
           return `
-            <div onclick="openModuleDetail('${mod.id}')" class="group relative bg-white border border-slate-200/85 hover:border-slate-300 rounded-[26px] p-3.5 space-y-2.5 shadow-[0_6px_20px_-6px_rgba(15,23,42,0.05)] active:bg-slate-50/70 transition-all cursor-pointer overflow-hidden">
+            <div onclick="openModuleDetail('${mod.id}')" class="cv-card group relative bg-white border border-slate-200/85 hover:border-slate-300 rounded-[26px] p-3.5 space-y-2.5 shadow-[0_6px_20px_-6px_rgba(15,23,42,0.05)] active:bg-slate-50/70 active:scale-[0.99] transition-[transform,background-color,border-color] cursor-pointer overflow-hidden">
               <div class="flex items-center justify-between gap-2">
                 <div class="flex items-center gap-3 min-w-0">
                   <div class="w-11 h-11 rounded-[16px] flex items-center justify-center shrink-0 border shadow-2xs" style="${getIconSquircleStyle(colorObj, mod.iconKey)}">
@@ -2087,12 +2223,12 @@
                   </div>
                   <div class="min-w-0">
                     <h3 class="text-[14px] font-extrabold text-slate-900 truncate leading-snug tracking-tight">${mod.name}</h3>
-                    <p class="text-[11px] text-slate-400 font-semibold">${studiedCount}/${totalCount} aula${totalCount === 1 ? '' : 's'}</p>
+                    <p class="tabular-nums text-[11px] text-slate-400 font-semibold">${studiedCount}/${totalCount} aula${totalCount === 1 ? '' : 's'}</p>
                   </div>
                 </div>
 
                 <div class="flex items-center gap-1.5 shrink-0">
-                  <div class="px-2 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1 border ${
+                  <div class="tabular-nums px-2 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1 border ${
                     pendingStudy > 0
                       ? 'bg-amber-50/90 text-amber-800 border-amber-200/80'
                       : 'bg-slate-50 text-slate-400 border-slate-100'
@@ -2101,7 +2237,7 @@
                     <span>${pendingStudy}</span>
                   </div>
 
-                  <div class="px-2 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1 border ${
+                  <div class="tabular-nums px-2 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1 border ${
                     pendingReviews > 0
                       ? 'bg-rose-50/90 text-rose-700 border-rose-200/80 animate-soft-pulse'
                       : 'bg-slate-50 text-slate-400 border-slate-100'
@@ -2110,11 +2246,11 @@
                     <span>${pendingReviews}</span>
                   </div>
 
-                  <span class="text-[11px] font-extrabold px-2 py-0.5 rounded-full border" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
+                  <span class="tabular-nums text-[11px] font-extrabold px-2 py-0.5 rounded-full border" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
                     ${percent}%
                   </span>
 
-                  <button type="button" onclick="event.stopPropagation(); openLessonSheet('${mod.id}')" class="w-7 h-7 rounded-xl bg-slate-50 hover:bg-slate-900 hover:text-white text-slate-600 border border-slate-200/80 hover:border-slate-900 flex items-center justify-center text-sm font-bold active:scale-90 transition-all" title="Adicionar Aula neste Módulo">
+                  <button type="button" aria-label="Adicionar aula em ${mod.name}" onclick="event.stopPropagation(); openLessonSheet('${mod.id}')" class="touch-target w-7 h-7 rounded-xl bg-slate-50 hover:bg-slate-900 hover:text-white text-slate-600 border border-slate-200/80 hover:border-slate-900 flex items-center justify-center text-sm font-bold active:scale-90 transition-[transform,background-color,color,border-color]" title="Adicionar Aula neste Módulo">
                     +
                   </button>
                 </div>
@@ -2122,7 +2258,7 @@
 
               <!-- Barra de Progresso Única e Suave -->
               <div class="w-full rounded-full h-1.5 overflow-hidden" style="background-color: ${colorObj.track};">
-                <div class="h-full rounded-full transition-all duration-500" style="width: ${percent}%; background-color: ${colorObj.hex};"></div>
+                <div class="h-full rounded-full transition-[width] duration-500" style="width: ${percent}%; background-color: ${colorObj.hex};"></div>
               </div>
             </div>
           `;
@@ -2132,9 +2268,11 @@
 
     function openModuleDetail(moduleId) {
       vibrate(10);
-      AppState.currentModuleId = moduleId;
-      renderModuloDetailTab(moduleId);
-      switchTab('tab-modulo-detail');
+      runViewTransition(() => {
+        AppState.currentModuleId = moduleId;
+        renderModuloDetailTab(moduleId);
+        switchTab('tab-modulo-detail');
+      });
     }
 
     // --- RENDER ABA 1.1: DETALHE DO MÓDULO ---
@@ -2165,18 +2303,18 @@
             </div>
             <div class="min-w-0">
               <h2 class="text-base font-extrabold text-slate-900 tracking-tight truncate">${mod.name}</h2>
-              <p class="text-[11px] text-slate-500 font-semibold">${studiedCount} de ${totalCount} estudadas (${percent}%)</p>
+              <p class="tabular-nums text-[11px] text-slate-500 font-semibold">${studiedCount} de ${totalCount} estudadas (${percent}%)</p>
             </div>
           </div>
 
           <div class="flex items-center gap-1.5 shrink-0">
-            <div class="px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1 border ${
+            <div class="tabular-nums px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1 border ${
               pendingStudy > 0 ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-slate-50 text-slate-400 border-slate-100'
             }" title="Aulas a estudar">
               ${UI_ICONS.book}
               <span>${pendingStudy}</span>
             </div>
-            <div class="px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1 border ${
+            <div class="tabular-nums px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1 border ${
               pendingReviews > 0 ? 'bg-rose-50 text-rose-700 border-rose-200 animate-soft-pulse' : 'bg-slate-50 text-slate-400 border-slate-100'
             }" title="Revisões pendentes">
               ${UI_ICONS.repeat}
@@ -2186,7 +2324,7 @@
         </div>
 
         <div class="w-full rounded-full h-1.5 overflow-hidden mt-1" style="background-color: ${colorObj.track};">
-          <div class="h-full rounded-full transition-all duration-500" style="width: ${percent}%; background-color: ${colorObj.hex};"></div>
+          <div class="h-full rounded-full transition-[width] duration-500" style="width: ${percent}%; background-color: ${colorObj.hex};"></div>
         </div>
       `;
 
@@ -2207,9 +2345,9 @@
 
       lessonsList.innerHTML = lessons.map(lesson => {
         return `
-          <div class="bg-white border border-slate-200/80 hover:border-slate-300 rounded-[24px] p-3 flex items-center justify-between gap-2.5 shadow-2xs active:bg-slate-50 transition-colors">
+          <div class="cv-card bg-white border border-slate-200/80 hover:border-slate-300 rounded-[24px] p-3 flex items-center justify-between gap-2.5 shadow-2xs active:bg-slate-50 transition-colors">
             <div class="flex items-center gap-2.5 flex-1 min-w-0 cursor-pointer" onclick="openViewLessonModal('${lesson.id}')">
-              <span class="w-8 h-8 rounded-xl border font-extrabold text-xs flex items-center justify-center shrink-0" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
+              <span class="tabular-nums w-8 h-8 rounded-xl border font-extrabold text-xs flex items-center justify-center shrink-0" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
                 ${String(lesson.number).padStart(2, '0')}
               </span>
               <div class="min-w-0 flex-1">
@@ -2227,7 +2365,7 @@
               </div>
             </div>
 
-            <button onclick="toggleLessonStudied('${lesson.id}')" class="shrink-0 px-2.5 py-1 rounded-xl text-[11px] font-bold active:scale-95 transition-all ${
+            <button onclick="toggleLessonStudied('${lesson.id}')" class="touch-target shrink-0 px-2.5 py-1 rounded-xl text-[11px] font-bold active:scale-95 transition-[transform,background-color,color,border-color] ${
               lesson.isStudied
                 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                 : 'bg-amber-50 text-amber-800 border border-amber-200'
@@ -2240,8 +2378,10 @@
     }
 
     document.getElementById('btn-back-to-modules').addEventListener('click', () => {
-      AppState.currentModuleId = null;
-      switchTab('tab-modulos');
+      runViewTransition(() => {
+        AppState.currentModuleId = null;
+        switchTab('tab-modulos');
+      });
     });
     document.getElementById('btn-edit-current-module').addEventListener('click', () => {
       if (AppState.currentModuleId) openModuleModal(AppState.currentModuleId);
@@ -2283,17 +2423,17 @@
           const colorObj = getColorConfig(mod.colorKey);
 
           return `
-            <div class="bg-white border border-slate-200/80 rounded-[24px] p-3 flex items-center justify-between gap-3 shadow-2xs active:bg-slate-50 transition-colors">
+            <div class="cv-card bg-white border border-slate-200/80 rounded-[24px] p-3 flex items-center justify-between gap-3 shadow-2xs active:bg-slate-50 transition-colors">
               <div class="flex items-center gap-2.5 flex-1 min-w-0 cursor-pointer" onclick="openViewLessonModal('${lesson.id}')">
                 <div class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border" style="${getIconSquircleStyle(colorObj, mod.iconKey)}">
                   ${getMedicalIconHTML(mod.iconKey, 'w-6 h-6')}
                 </div>
                 <div class="min-w-0 flex-1">
                   <div class="flex items-center gap-1.5 flex-wrap">
-                    <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-slate-100 border border-slate-200 text-slate-700">
+                    <span class="tabular-nums text-[10px] font-bold px-1.5 py-0.2 rounded bg-slate-100 border border-slate-200 text-slate-700">
                       Aula ${String(lesson.number).padStart(2, '0')}
                     </span>
-                    <span class="text-[10px] font-bold px-1.5 py-0.2 rounded ${
+                    <span class="tabular-nums text-[10px] font-bold px-1.5 py-0.2 rounded ${
                       status === 'atrasada'
                         ? 'bg-rose-50 text-rose-700 border border-rose-200'
                         : 'bg-blue-50 text-blue-700 border border-blue-200'
@@ -2306,7 +2446,7 @@
                 </div>
               </div>
 
-              <button onclick="checkReviewDone('${lesson.id}', '${stage}')" class="w-10 h-10 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 flex items-center justify-center text-base font-bold shadow-2xs active:scale-90 transition-all" title="Concluir Revisão">
+              <button aria-label="Concluir revisão ${stage.toUpperCase()}" onclick="checkReviewDone('${lesson.id}', '${stage}')" class="touch-target w-10 h-10 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 flex items-center justify-center text-base font-bold shadow-2xs active:scale-90 transition-[transform,background-color]" title="Concluir Revisão">
                 ✓
               </button>
             </div>
@@ -2332,13 +2472,13 @@
           const colorObj = getColorConfig(mod.colorKey);
 
           return `
-            <div class="bg-white border border-slate-200/80 rounded-[24px] p-3 flex items-center justify-between gap-3 shadow-2xs active:bg-slate-50 transition-colors">
+            <div class="cv-card bg-white border border-slate-200/80 rounded-[24px] p-3 flex items-center justify-between gap-3 shadow-2xs active:bg-slate-50 transition-colors">
               <div class="flex items-center gap-2.5 flex-1 min-w-0 cursor-pointer" onclick="openViewLessonModal('${lesson.id}')">
                 <div class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border" style="${getIconSquircleStyle(colorObj, mod.iconKey)}">
                   ${getMedicalIconHTML(mod.iconKey, 'w-6 h-6')}
                 </div>
                 <div class="min-w-0 flex-1">
-                  <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-50 text-amber-800 border border-amber-200">
+                  <span class="tabular-nums text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-50 text-amber-800 border border-amber-200">
                     Aula ${String(lesson.number).padStart(2, '0')} • Pendente
                   </span>
                   <h4 class="text-xs font-bold text-slate-900 truncate mt-0.5">${lesson.title}</h4>
@@ -2346,7 +2486,7 @@
                 </div>
               </div>
 
-              <button onclick="toggleLessonStudied('${lesson.id}')" class="shrink-0 px-3 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold shadow-xs active:scale-90 transition-all">
+              <button onclick="toggleLessonStudied('${lesson.id}')" class="touch-target shrink-0 px-3 py-1.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold shadow-xs active:scale-90 transition-[transform,background-color]">
                 Estudei
               </button>
             </div>
@@ -2358,8 +2498,8 @@
     document.getElementById('btn-subtab-revisar').addEventListener('click', () => {
       vibrate(8);
       AppState.studySubTab = 'revisar';
-      document.getElementById('btn-subtab-revisar').className = "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-sm flex items-center justify-center gap-1.5";
-      document.getElementById('btn-subtab-estudar').className = "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5";
+      document.getElementById('btn-subtab-revisar').className = "flex-1 py-1.5 rounded-lg text-xs font-bold transition-[background-color,color,box-shadow] bg-white text-slate-900 shadow-sm flex items-center justify-center gap-1.5";
+      document.getElementById('btn-subtab-estudar').className = "flex-1 py-1.5 rounded-lg text-xs font-bold transition-[background-color,color,box-shadow] text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5";
       document.getElementById('subpane-revisar').classList.remove('hidden');
       document.getElementById('subpane-estudar').classList.add('hidden');
     });
@@ -2367,8 +2507,8 @@
     document.getElementById('btn-subtab-estudar').addEventListener('click', () => {
       vibrate(8);
       AppState.studySubTab = 'estudar';
-      document.getElementById('btn-subtab-estudar').className = "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-sm flex items-center justify-center gap-1.5";
-      document.getElementById('btn-subtab-revisar').className = "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5";
+      document.getElementById('btn-subtab-estudar').className = "flex-1 py-1.5 rounded-lg text-xs font-bold transition-[background-color,color,box-shadow] bg-white text-slate-900 shadow-sm flex items-center justify-center gap-1.5";
+      document.getElementById('btn-subtab-revisar').className = "flex-1 py-1.5 rounded-lg text-xs font-bold transition-[background-color,color,box-shadow] text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5";
       document.getElementById('subpane-estudar').classList.remove('hidden');
       document.getElementById('subpane-revisar').classList.add('hidden');
     });
@@ -2425,11 +2565,11 @@
         }
 
         return `
-          <div class="bg-white border border-slate-200/80 rounded-[26px] p-3.5 space-y-3 shadow-[0_2px_12px_rgba(15,23,42,0.03)]">
+          <div class="cv-card bg-white border border-slate-200/80 rounded-[26px] p-3.5 space-y-3 shadow-[0_2px_12px_rgba(15,23,42,0.03)]">
             <div class="flex items-start justify-between">
               <div>
                 <div class="flex items-center gap-1.5">
-                  <span class="text-[10px] px-2 py-0.5 rounded-full font-bold border ${badgeClass}">
+                  <span class="tabular-nums text-[10px] px-2 py-0.5 rounded-full font-bold border ${badgeClass}">
                     ${badgeText}
                   </span>
                   <span class="text-[10px] text-slate-500 font-medium">
@@ -2441,10 +2581,10 @@
               </div>
 
               <div class="flex items-center gap-1">
-                <button onclick="openExamModal('${exam.id}')" class="p-1.5 text-slate-400 hover:text-slate-800 rounded-lg hover:bg-slate-100" title="Editar">
+                <button aria-label="Editar prova ${exam.name}" onclick="openExamModal('${exam.id}')" class="touch-target p-1.5 text-slate-400 hover:text-slate-800 rounded-lg hover:bg-slate-100 active:scale-90 transition-transform" title="Editar">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                 </button>
-                <button onclick="deleteExam('${exam.id}')" class="p-1.5 text-rose-500 hover:text-rose-700 rounded-lg hover:bg-rose-50" title="Excluir">
+                <button aria-label="Excluir prova ${exam.name}" onclick="deleteExam('${exam.id}')" class="touch-target p-1.5 text-rose-500 hover:text-rose-700 rounded-lg hover:bg-rose-50 active:scale-90 transition-transform" title="Excluir">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                 </button>
               </div>
@@ -2453,12 +2593,12 @@
             <div>
               <div class="flex items-center justify-between text-xs mb-1">
                 <span class="text-slate-500 text-[11px]">Conteúdo Estudado</span>
-                <span class="font-bold ${percent === 100 ? 'text-brand-600' : 'text-slate-700'}">
+                <span class="tabular-nums font-bold ${percent === 100 ? 'text-brand-600' : 'text-slate-700'}">
                   ${studiedLinked}/${totalLinked} aulas (${percent}%)
                 </span>
               </div>
               <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                <div class="h-full rounded-full bg-brand-500 transition-all duration-500" style="width: ${percent}%;"></div>
+                <div class="h-full rounded-full bg-brand-500 transition-[width] duration-500" style="width: ${percent}%;"></div>
               </div>
             </div>
 
@@ -2813,21 +2953,33 @@
     });
     document.getElementById('btn-close-modal-settings').addEventListener('click', () => document.getElementById('modal-settings').close());
 
-    // View Mode Toggle (Grid vs List)
+    // View Mode Toggle (Grid vs List) with View Transitions
     document.getElementById('btn-view-list').addEventListener('click', () => {
+      if (AppState.moduleViewMode === 'list') return;
       vibrate(10);
-      AppState.moduleViewMode = 'list';
-      localStorage.setItem(VIEW_MODE_KEY, 'list');
-      updateViewToggleButtons();
-      renderModulosTab();
+      const mainEl = document.getElementById('main-content');
+      const savedScroll = mainEl ? mainEl.scrollTop : 0;
+      runViewTransition(() => {
+        AppState.moduleViewMode = 'list';
+        localStorage.setItem(VIEW_MODE_KEY, 'list');
+        updateViewToggleButtons();
+        renderModulosTab();
+        if (mainEl) mainEl.scrollTop = savedScroll;
+      });
     });
 
     document.getElementById('btn-view-grid').addEventListener('click', () => {
+      if (AppState.moduleViewMode === 'grid') return;
       vibrate(10);
-      AppState.moduleViewMode = 'grid';
-      localStorage.setItem(VIEW_MODE_KEY, 'grid');
-      updateViewToggleButtons();
-      renderModulosTab();
+      const mainEl = document.getElementId('main-content');
+      const savedScroll = mainEl ? mainEl.scrollTop : 0;
+      runViewTransition(() => {
+        AppState.moduleViewMode = 'grid';
+        localStorage.setItem(VIEW_MODE_KEY, 'grid');
+        updateViewToggleButtons();
+        renderModulosTab();
+        if (mainEl) mainEl.scrollTop = savedScroll;
+      });
     });
 
     document.querySelectorAll('.nav-tab-btn').forEach(btn => {
@@ -2897,8 +3049,12 @@
       e.target.value = "";
     });
 
-    // Dialog Light Dismiss Fallback
+    // Dialog Light Dismiss Fallback & Style Cleanup
     document.querySelectorAll('dialog').forEach(dlg => {
+      dlg.addEventListener('close', () => {
+        dlg.style.transition = '';
+        dlg.style.transform = '';
+      });
       if (!('closedBy' in HTMLDialogElement.prototype)) {
         dlg.addEventListener('click', (event) => {
           if (event.target !== dlg) return;
@@ -2913,6 +3069,148 @@
         });
       }
     });
+
+    // --- 120HZ ONE-HANDED TOUCH GESTURES (GALAXY A54 ERGONOMICS) ---
+    function initTouchGestures() {
+      // 1. Swipe-Down to Dismiss Bottom Sheet (#sheet-lesson)
+      const sheetDragHeader = document.getElementById('sheet-lesson-drag-header');
+      const sheetDrawer = document.getElementById('sheet-lesson-drawer');
+      const sheetOverlay = document.getElementById('sheet-lesson-overlay');
+
+      if (sheetDragHeader && sheetDrawer) {
+        let startY = 0;
+        let currentDeltaY = 0;
+        let startTime = 0;
+        let isDragging = false;
+
+        sheetDragHeader.addEventListener('touchstart', (e) => {
+          if (e.touches.length !== 1) return;
+          startY = e.touches[0].clientY;
+          currentDeltaY = 0;
+          startTime = performance.now();
+          isDragging = true;
+          sheetDrawer.style.transition = 'none';
+          if (sheetOverlay) sheetOverlay.style.transition = 'none';
+        }, { passive: true });
+
+        sheetDragHeader.addEventListener('touchmove', (e) => {
+          if (!isDragging || e.touches.length !== 1) return;
+          const deltaY = e.touches[0].clientY - startY;
+          if (deltaY > 0) {
+            currentDeltaY = deltaY;
+            sheetDrawer.style.transform = `translate3d(0, ${deltaY}px, 0)`;
+            if (sheetOverlay) {
+              const progress = Math.min(deltaY / 280, 1);
+              sheetOverlay.style.opacity = String(Math.max(1 - progress * 0.85, 0));
+            }
+          } else {
+            currentDeltaY = 0;
+            sheetDrawer.style.transform = 'translate3d(0, 0, 0)';
+          }
+        }, { passive: true });
+
+        const finishSheetDrag = () => {
+          if (!isDragging) return;
+          isDragging = false;
+          const elapsed = Math.max(performance.now() - startTime, 1);
+          const velocity = currentDeltaY / elapsed; // px/ms
+
+          sheetDrawer.style.transition = 'transform 0.28s cubic-bezier(0.22, 1, 0.36, 1)';
+          if (sheetOverlay) sheetOverlay.style.transition = 'opacity 0.24s ease';
+
+          if (currentDeltaY > 85 || (currentDeltaY > 35 && velocity > 0.55)) {
+            closeLessonSheet();
+          } else {
+            sheetDrawer.style.transform = '';
+            if (sheetOverlay) sheetOverlay.style.opacity = '';
+          }
+          currentDeltaY = 0;
+        };
+
+        sheetDragHeader.addEventListener('touchend', finishSheetDrag, { passive: true });
+        sheetDragHeader.addEventListener('touchcancel', finishSheetDrag, { passive: true });
+      }
+
+      // 2. Swipe-Down to Dismiss <dialog> Modals via [data-dialog-drag]
+      document.querySelectorAll('[data-dialog-drag]').forEach(dragHandle => {
+        const dlg = dragHandle.closest('dialog');
+        if (!dlg) return;
+
+        let startY = 0;
+        let currentDeltaY = 0;
+        let startTime = 0;
+        let isDragging = false;
+
+        dragHandle.addEventListener('touchstart', (e) => {
+          if (e.touches.length !== 1) return;
+          startY = e.touches[0].clientY;
+          currentDeltaY = 0;
+          startTime = performance.now();
+          isDragging = true;
+          dlg.style.transition = 'none';
+        }, { passive: true });
+
+        dragHandle.addEventListener('touchmove', (e) => {
+          if (!isDragging || e.touches.length !== 1) return;
+          const deltaY = e.touches[0].clientY - startY;
+          if (deltaY > 0) {
+            currentDeltaY = deltaY;
+            dlg.style.transform = `translate3d(0, ${deltaY}px, 0)`;
+          } else {
+            currentDeltaY = 0;
+            dlg.style.transform = 'translate3d(0, 0, 0)';
+          }
+        }, { passive: true });
+
+        const finishDialogDrag = () => {
+          if (!isDragging) return;
+          isDragging = false;
+          const elapsed = Math.max(performance.now() - startTime, 1);
+          const velocity = currentDeltaY / elapsed;
+
+          dlg.style.transition = 'transform 0.24s cubic-bezier(0.22, 1, 0.36, 1)';
+          if (currentDeltaY > 80 || (currentDeltaY > 35 && velocity > 0.55)) {
+            vibrate(8);
+            dlg.close();
+          } else {
+            dlg.style.transform = '';
+          }
+          currentDeltaY = 0;
+        };
+
+        dragHandle.addEventListener('touchend', finishDialogDrag, { passive: true });
+        dragHandle.addEventListener('touchcancel', finishDialogDrag, { passive: true });
+      });
+
+      // 3. Swipe-Right to Go Back on #tab-modulo-detail (One-Handed Back Gesture)
+      const detailPane = document.getElementById('tab-modulo-detail');
+      if (detailPane) {
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchStartTime = 0;
+
+        detailPane.addEventListener('touchstart', (e) => {
+          if (e.touches.length !== 1) return;
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
+          touchStartTime = performance.now();
+        }, { passive: true });
+
+        detailPane.addEventListener('touchend', (e) => {
+          if (AppState.activeTab !== 'tab-modulo-detail' || e.changedTouches.length !== 1) return;
+          const deltaX = e.changedTouches[0].clientX - touchStartX;
+          const deltaY = Math.abs(e.changedTouches[0].clientY - touchStartY);
+          const elapsed = performance.now() - touchStartTime;
+
+          if (deltaX > 75 && deltaY < 48 && elapsed < 500) {
+            runViewTransition(() => {
+              AppState.currentModuleId = null;
+              switchTab('tab-modulos');
+            });
+          }
+        }, { passive: true });
+      }
+    }
 
     // --- ANDROID HARDWARE & GESTURE BACK BUTTON NAVIGATION ---
     let lastBackPressTime = 0;
@@ -2947,8 +3245,10 @@
 
         // 3. Se estiver na visualização detalhada de um Módulo, volta para lista de Módulos
         if (AppState.activeTab === 'tab-modulo-detail') {
-          AppState.currentModuleId = null;
-          switchTab('tab-modulos');
+          runViewTransition(() => {
+            AppState.currentModuleId = null;
+            switchTab('tab-modulos');
+          });
           history.pushState({ app: 'meu-estudo', step: 'guard' }, '');
           return;
         }
@@ -2989,6 +3289,7 @@
       updateUI();
       switchTab('tab-modulos');
       initAndroidBackHandler();
+      initTouchGestures();
 
       checkServerVersion(false);
 

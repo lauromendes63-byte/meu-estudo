@@ -1,5 +1,6 @@
 {
-  "version": "2.1.1",
-  "buildTime": "2026-10-04T19:55:00.000Z",
-  "notes": "v2.1.1: Novos ícones anatômicos limpos para Endócrino (tireoide borboleta sem sobreposição), Gastro (estômago em J clássico) e Nefro (rim em feijão com hilo e ureter), além de fixar o ícone de Reumatologia permanentemente no estilo escuro com ossos brancos e inflamação vermelha."
+  "version": "2.2.0",
+  "buildTime": "2026-10-04T23:55:00.000Z",
+  "notes": "v2.2.0: Auditoria Mobile UI/UX & 120Hz (Galaxy A54): restauração de rolagem sem pulos ao voltar de módulos ou trocar chips, gestos de uma mão (arrastar para baixo para fechar gavetas/modais e deslizar para a direita para voltar), modais ancorados na base (estilo One UI) e otimização de performance 120Hz com View Transitions."
 }
+
