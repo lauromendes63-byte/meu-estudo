@@ -1,7 +1,6 @@
 {
-  "version": "2.4.0",
-  "buildTime": "2026-10-08T17:35:00.000Z",
-  "buildLabel": "08/10/2026 às 14:35",
-  "notes": "v2.4.0: Header e Barra Inferior em Azul Marinho Escuro com texto branco de alto contraste; ícones 3D aprimorados para Cardio, Endócrino, Ortopedia, Pediatria, Dermato, Geriatria e Psiquiatria; diferenciação cromática viva entre módulos; e nova interface moderna de criação de aulas."
+  "version": "2.4.1",
+  "buildTime": "2026-10-08T18:00:00.000Z",
+  "buildLabel": "08/10/2026 às 15:00",
+  "notes": "v2.4.1: Restauração do ícone 3D da Tireoide em Endocrinologia (sem o fundo de documento), novo ícone de Ortopedia com osso único e fratura angulada evidente, e novo ícone 3D de Cardiologia com pulso ECG."
 }
-
