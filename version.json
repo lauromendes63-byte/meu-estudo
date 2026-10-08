@@ -1,6 +1,7 @@
 {
-  "version": "2.3.2",
-  "buildTime": "2026-10-08T16:58:00.000Z",
-  "buildLabel": "08/10/2026 às 13:58",
-  "notes": "v2.3.2: Redesign anatômico 3D completo (padrão Reumatologia com ilhas anatômicas separadas sem sobreposição de traços) para Cardiologia, Endocrinologia, Ortopedia, Cirurgia, Ginecologia/GO, Pediatria e Urologia."
+  "version": "2.4.0",
+  "buildTime": "2026-10-08T17:35:00.000Z",
+  "buildLabel": "08/10/2026 às 14:35",
+  "notes": "v2.4.0: Header e Barra Inferior em Azul Marinho Escuro com texto branco de alto contraste; ícones 3D aprimorados para Cardio, Endócrino, Ortopedia, Pediatria, Dermato, Geriatria e Psiquiatria; diferenciação cromática viva entre módulos; e nova interface moderna de criação de aulas."
 }
+

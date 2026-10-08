@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
   <title>Meu Estudo • Caderno Médico</title>
   
-  <!-- PWA & Mobile Meta Tags (Light Theme Ultra-Premium) -->
-  <meta name="theme-color" content="#ffffff">
+  <!-- PWA & Mobile Meta Tags (Dark Navy Header & Ultra-Premium Contrast) -->
+  <meta name="theme-color" content="#111c40">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Meu Estudo">
   <meta name="application-name" content="Meu Estudo">
   <meta name="format-detection" content="telephone=no">
@@ -48,9 +48,10 @@
   <style>
     /* Estilos Globais Ultra-Premium para Samsung Galaxy A54 (Design Engineering 120Hz) */
     :root {
-      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
       --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
       --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     * {
@@ -65,7 +66,7 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      background-color: #f8fafc;
+      background-color: #f1f5f9;
       color: #0f172a;
       overscroll-behavior-y: contain;
       font-size: 14.5px;
@@ -81,21 +82,21 @@
       padding-bottom: max(14px, env(safe-area-inset-bottom));
     }
     .pb-nav {
-      padding-bottom: calc(max(14px, env(safe-area-inset-bottom)) + 76px);
+      padding-bottom: calc(max(14px, env(safe-area-inset-bottom)) + 82px);
     }
 
     /* Dark-Slate Anatomical Icon Squircle (Reumato Signature Aesthetic) */
     .med-icon-squircle {
       background: linear-gradient(145deg, #354154 0%, #273142 100%);
       border-color: #475569;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 4px 10px -2px rgba(15, 23, 42, 0.18);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 4px 10px -2px rgba(15, 23, 42, 0.22);
     }
 
     /* Pearl Minimalist App Crest Squircle */
     .app-crest-squircle {
       background: linear-gradient(135deg, #fff9f2 0%, #f8fafc 48%, #e6f2ff 100%);
-      border-color: #cbd5e1;
-      box-shadow: inset 0 1px 0 #ffffff, 0 2px 6px -1px rgba(22, 38, 84, 0.12);
+      border-color: rgba(255, 255, 255, 0.85);
+      box-shadow: inset 0 1px 0 #ffffff, 0 3px 10px -1px rgba(0, 0, 0, 0.25);
     }
 
     /* Bottom Sheet Animation (120Hz Hardware Accelerated) */
@@ -359,16 +360,16 @@
     </button>
   </div>
 
-  <!-- ==================== HEADER MODERNIZADO (CAPELO + LIVRO MINIMALISTA AZUL MARINHO, BUSCA RÁPIDA & STATUS AO VIVO) ==================== -->
-  <header class="pt-safe px-3.5 pb-2.5 bg-white/92 backdrop-blur-xl border-b border-slate-200/70 sticky top-0 flex items-center justify-between shrink-0 z-20 shadow-[0_2px_12px_-4px_rgba(22,38,84,0.05)]">
+  <!-- ==================== HEADER MODERNIZADO (FUNDO AZUL MARINHO PROFUNDO, TEXTO BRANCO DE ALTO CONTRASTE & BUSCA RÁPIDA) ==================== -->
+  <header class="pt-safe px-3.5 pb-2.5 bg-gradient-to-r from-[#0f1a38] via-[#132147] to-[#162654] text-white border-b border-white/10 sticky top-0 flex items-center justify-between shrink-0 z-20 shadow-[0_6px_22px_-4px_rgba(15,23,42,0.32)]">
     <!-- Left: Busca Rápida Global (1-Toque, Simétrico com Config) -->
-    <button id="btn-open-search" aria-label="Busca rápida de módulos, aulas e notas" class="touch-target tap-smooth w-9 h-9 rounded-[14px] bg-slate-100/90 hover:bg-brand-50 border border-slate-200/90 flex items-center justify-center text-brand-600 shadow-2xs" title="Buscar Aula, Módulo ou Anotação">
-      <svg class="w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+    <button id="btn-open-search" aria-label="Busca rápida de módulos, aulas e notas" class="touch-target tap-smooth w-9 h-9 rounded-[14px] bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white shadow-2xs" title="Buscar Aula, Módulo ou Anotação">
+      <svg class="w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
     </button>
 
-    <!-- Bloco Central: Símbolo Minimalista Capelo + Livro em Azul Marinho, Título & Pulso Diário -->
-    <button type="button" id="btn-header-center-status" class="tap-smooth flex flex-col items-center justify-center text-center px-2.5 py-0.5 rounded-2xl">
-      <div class="flex items-center gap-1.5">
+    <!-- Bloco Central: Símbolo Minimalista Capelo + Livro em Azul Marinho sobre Squircle Perolado & Título Branco -->
+    <button type="button" id="btn-header-center-status" class="tap-smooth flex flex-col items-center justify-center text-center px-3 py-0.5 rounded-2xl">
+      <div class="flex items-center gap-2">
         <!-- Mini Símbolo do App: Capelo + Livro Aberto em Azul Marinho sobre Fundo Perolado -->
         <div class="w-6 h-6 rounded-[8px] app-crest-squircle border flex items-center justify-center shrink-0" aria-hidden="true">
           <svg viewBox="0 0 512 512" class="w-4 h-4" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -382,17 +383,16 @@
             <rect x="380" y="242" width="34" height="46" rx="14" fill="#162654" />
           </svg>
         </div>
-        <h1 class="font-black text-[15.5px] tracking-tight text-[#111c40] leading-none">Meu Estudo</h1>
-        <span class="text-[8.5px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md bg-brand-600 text-sky-200 border border-brand-500 leading-none shadow-2xs">Med</span>
+        <h1 class="font-black text-[16px] tracking-tight text-white leading-none drop-shadow-2xs">Meu Estudo</h1>
+        <span class="text-[8.5px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md bg-sky-400/20 text-sky-200 border border-sky-300/30 leading-none">Med</span>
       </div>
-      <div class="flex items-center gap-1.5 mt-1">
-        <span id="header-status-dot" class="w-1.5 h-1.5 rounded-full bg-brand-500"></span>
-        <p id="header-date" class="tabular-nums text-[9.5px] font-bold text-slate-500 uppercase tracking-wider leading-none">Carregando...</p>
+      <div class="flex items-center justify-center mt-1">
+        <p id="header-date" class="tabular-nums text-[9.5px] font-bold text-slate-300 uppercase tracking-wider leading-none">Carregando...</p>
       </div>
     </button>
 
     <!-- Right: Config & Backup -->
-    <button id="btn-open-settings" aria-label="Configurações e Backup" class="touch-target tap-smooth w-9 h-9 rounded-[14px] bg-slate-100/90 hover:bg-brand-50 border border-slate-200/90 flex items-center justify-center text-brand-600 shadow-2xs" title="Configurações e Backup">
+    <button id="btn-open-settings" aria-label="Configurações e Backup" class="touch-target tap-smooth w-9 h-9 rounded-[14px] bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white shadow-2xs" title="Configurações e Backup">
       <svg class="w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.1" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><circle cx="12" cy="12" r="3" stroke-width="2.1"></circle></svg>
     </button>
   </header>
@@ -407,19 +407,19 @@
       <div class="flex items-center justify-between px-1 pt-0.5">
         <div class="flex items-center gap-2">
           <h2 class="text-[16px] font-black text-slate-900 tracking-tight">Módulos</h2>
-          <span id="modules-count-badge" class="tabular-nums text-[10px] font-black text-slate-500 bg-white px-2 py-0.5 rounded-full border border-slate-200/80 shadow-2xs">0</span>
+          <span id="modules-count-badge" class="tabular-nums text-[10.5px] font-black text-brand-700 bg-white px-2 py-0.5 rounded-full border border-slate-200/90 shadow-2xs">0</span>
         </div>
 
         <!-- Minimalist Controls: + Módulo Button & View Switcher (Mesmo estilo compacto) -->
         <div class="flex items-center gap-1.5">
           <!-- Botão Minimalista Novo Módulo -->
-          <button id="btn-open-create-module" class="tap-smooth h-8 px-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-[11px] shadow-xs flex items-center gap-1 border border-brand-600" title="Criar Novo Módulo">
+          <button id="btn-open-create-module" class="tap-smooth h-8 px-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-extrabold text-[11.5px] shadow-sm flex items-center gap-1 border border-brand-700" title="Criar Novo Módulo">
             <span class="text-sm font-bold leading-none" aria-hidden="true">＋</span>
             <span>Módulo</span>
           </button>
 
           <!-- Alavanca de Modos de Visualização (Lista vs Grade 2 colunas) -->
-          <div class="bg-slate-200/70 p-0.5 rounded-xl border border-slate-300/60 flex items-center shadow-inner h-8">
+          <div class="bg-slate-200/80 p-0.5 rounded-xl border border-slate-300/70 flex items-center shadow-inner h-8">
             <button id="btn-view-list" aria-label="Visualização em Linhas" class="touch-target h-7 px-2 rounded-lg text-slate-400 hover:text-slate-700 transition-colors flex items-center justify-center" title="Visualização em Linhas">
               <svg class="w-3.5 h-3.5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
@@ -526,7 +526,7 @@
           <h2 class="text-base font-extrabold text-slate-900 tracking-tight">Provas</h2>
           <p class="text-[11px] text-slate-500">Cronograma e cobertura do edital</p>
         </div>
-        <button id="btn-open-create-exam" class="tap-smooth px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-xs font-semibold text-brand-600 shadow-sm flex items-center gap-1">
+        <button id="btn-open-create-exam" class="tap-smooth px-3 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold shadow-sm flex items-center gap-1">
           <span class="text-sm font-bold" aria-hidden="true">+</span> Nova Prova
         </button>
       </div>
@@ -538,152 +538,169 @@
 
   </main>
 
-  <!-- ==================== BOTTOM NAVIGATION (SIMÉTRICA, ELEGANTE & LIMPA) ==================== -->
-  <nav class="fixed bottom-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-xl border-t border-slate-200/80 px-4 pt-2 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
-    <div class="flex items-center justify-between max-w-md mx-auto">
+  <!-- ==================== BOTTOM NAVIGATION (AZUL MARINHO PROFUNDO, TEXTO BRANCO & BADGE VERMELHO DE ALTO CONTRASTE) ==================== -->
+  <nav class="fixed bottom-0 left-0 right-0 z-30 bg-gradient-to-r from-[#0f1a38] via-[#132147] to-[#162654] border-t border-white/10 px-3.5 pt-1.5 pb-safe shadow-[0_-8px_28px_rgba(15,23,42,0.34)]">
+    <div class="flex items-center justify-between gap-2 max-w-md mx-auto">
       
       <!-- Tab 1: Módulos -->
-      <button data-tab="tab-modulos" class="nav-tab-btn flex-1 py-1 flex flex-col items-center justify-center text-brand-600 active:scale-90 transition-transform">
-        <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-        <span class="text-[10.5px] font-bold mt-1">Módulos</span>
+      <button data-tab="tab-modulos" class="nav-tab-btn tap-smooth flex-1 py-1.5 rounded-2xl flex flex-col items-center justify-center text-white bg-white/14 shadow-2xs">
+        <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.1" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+        <span class="text-[10.5px] font-extrabold mt-0.5 tracking-tight">Módulos</span>
       </button>
 
       <!-- Tab 2: Estudo & Revisões -->
-      <button data-tab="tab-estudo" class="nav-tab-btn flex-1 py-1 flex flex-col items-center justify-center text-slate-500 hover:text-slate-800 active:scale-90 transition-transform">
+      <button data-tab="tab-estudo" class="nav-tab-btn tap-smooth flex-1 py-1.5 rounded-2xl flex flex-col items-center justify-center text-slate-400 hover:text-white/90">
         <div class="relative">
-          <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-          <span id="nav-rev-dot" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white animate-soft-pulse"></span>
+          <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.1" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+          <span id="nav-rev-dot" class="hidden absolute -top-1 -right-1.5 w-2.5 h-2.5 bg-rose-500 rounded-full ring-2 ring-[#132147] animate-soft-pulse"></span>
         </div>
-        <span class="text-[10.5px] font-medium mt-1">Estudo</span>
+        <span class="text-[10.5px] font-semibold mt-0.5 tracking-tight">Estudo</span>
       </button>
 
       <!-- Tab 3: Provas -->
-      <button data-tab="tab-provas" class="nav-tab-btn flex-1 py-1 flex flex-col items-center justify-center text-slate-500 hover:text-slate-800 active:scale-90 transition-transform">
+      <button data-tab="tab-provas" class="nav-tab-btn tap-smooth flex-1 py-1.5 rounded-2xl flex flex-col items-center justify-center text-slate-400 hover:text-white/90">
         <div class="relative">
-          <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
-          <span id="nav-provas-badge" class="tabular-nums hidden absolute -top-1 -right-2 px-1 py-0.2 bg-amber-500 text-white font-bold text-[8.5px] rounded-full">!</span>
+          <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+          <span id="nav-provas-badge" class="tabular-nums hidden absolute -top-1.5 -right-3 min-w-[18px] h-[18px] px-1 bg-rose-600 text-white font-black text-[9px] rounded-full flex items-center justify-center ring-2 ring-[#132147] shadow-sm">!</span>
         </div>
-        <span class="text-[10.5px] font-medium mt-1">Provas</span>
+        <span class="text-[10.5px] font-semibold mt-0.5 tracking-tight">Provas</span>
       </button>
 
     </div>
   </nav>
 
-  <!-- ==================== BOTTOM SHEET: CADASTRO ÁGIL DE AULA ==================== -->
+  <!-- ==================== BOTTOM SHEET: CADASTRO ÁGIL DE AULA (DESIGN MODERNO 2026) ==================== -->
   <div id="sheet-lesson" class="fixed inset-0 z-50 pointer-events-none">
-    <div id="sheet-lesson-overlay" class="sheet-overlay absolute inset-0 bg-slate-900/40 backdrop-blur-sm opacity-0 cursor-pointer pointer-events-none"></div>
+    <div id="sheet-lesson-overlay" class="sheet-overlay absolute inset-0 bg-slate-950/50 backdrop-blur-sm opacity-0 cursor-pointer pointer-events-none"></div>
 
-    <div id="sheet-lesson-drawer" class="sheet-drawer absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 rounded-t-[32px] shadow-2xl flex flex-col pointer-events-auto pb-safe">
+    <div id="sheet-lesson-drawer" class="sheet-drawer absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200/90 rounded-t-[32px] shadow-[0_-16px_48px_rgba(15,23,42,0.22)] flex flex-col pointer-events-auto pb-safe">
       <!-- Drag Handle Area (Supports 1-Handed Swipe-Down to Dismiss) -->
       <div id="sheet-lesson-drag-header" class="touch-none select-none">
         <div class="pt-3 pb-1 flex justify-center cursor-grab">
-          <div class="w-12 h-1.5 bg-slate-300/90 rounded-full"></div>
+          <div class="w-11 h-1.5 bg-slate-300/90 rounded-full"></div>
         </div>
 
         <div class="px-5 py-2.5 flex items-center justify-between border-b border-slate-100">
-          <h3 class="text-base font-extrabold text-slate-900 tracking-tight" id="lesson-modal-title">Nova Aula</h3>
-          <button type="button" id="btn-close-sheet-lesson" aria-label="Fechar gaveta" class="touch-target w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs active:scale-90 transition-transform">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-5 rounded-full bg-brand-600" aria-hidden="true"></span>
+            <h3 class="text-[16px] font-black text-slate-900 tracking-tight" id="lesson-modal-title">Nova Aula</h3>
+          </div>
+          <button type="button" id="btn-close-sheet-lesson" aria-label="Fechar gaveta" class="touch-target w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 flex items-center justify-center text-xs active:scale-90 transition-all">
             ✕
           </button>
         </div>
       </div>
 
-      <form id="form-lesson" class="px-5 py-3 space-y-3 overflow-y-auto max-h-[82vh]">
+      <form id="form-lesson" class="px-5 py-3.5 space-y-3.5 overflow-y-auto max-h-[82vh]">
         <input type="hidden" id="lesson-id-input">
 
-        <!-- Linha 1: Módulo Seletor -->
-        <div class="space-y-1">
-          <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">Módulo</label>
-          <div id="lesson-modules-selector" class="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        <!-- Linha 1: Módulo Seletor (Sangria lateral suave sem corte seco) -->
+        <div class="space-y-1.5">
+          <label class="block text-[10.5px] font-extrabold text-slate-400 uppercase tracking-wider">Módulo da Aula</label>
+          <div id="lesson-modules-selector" class="flex items-center gap-2 overflow-x-auto -mx-5 px-5 py-1 scrollbar-none">
             <!-- Chips -->
           </div>
         </div>
 
-        <!-- Linha 2: Stepper Compacto -->
-        <div class="flex items-center justify-between bg-slate-50/80 border border-slate-200/80 rounded-2xl px-3.5 py-2">
-          <span id="lesson-number-preview" class="tabular-nums text-xs font-bold text-slate-800">Aula 01</span>
-          <div class="flex items-center gap-1 bg-white border border-slate-200/80 rounded-xl p-0.5 shadow-2xs">
-            <button type="button" id="btn-lesson-num-minus" aria-label="Diminuir número da aula" class="touch-target w-8 h-7 rounded-lg bg-slate-100 text-slate-700 font-bold text-base flex items-center justify-center active:scale-90 transition-transform">
-              –
-            </button>
-            <input type="number" id="lesson-number-input" inputmode="numeric" min="1" max="999" value="1" aria-label="Número da aula" class="tabular-nums w-9 text-center font-bold text-slate-900 bg-transparent outline-none text-xs">
-            <button type="button" id="btn-lesson-num-plus" aria-label="Aumentar número da aula" class="touch-target w-8 h-7 rounded-lg bg-slate-100 text-slate-700 font-bold text-base flex items-center justify-center active:scale-90 transition-transform">
-              +
-            </button>
+        <!-- Linha 2 & 3 Unificadas: Número + Tema da Aula em Card Moderno -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label for="lesson-title-input" class="text-[10.5px] font-extrabold text-slate-400 uppercase tracking-wider">Tema e Numeração</label>
+            <!-- Stepper Compacto Integrado -->
+            <div class="flex items-center gap-1.5 bg-slate-100/90 border border-slate-200/80 rounded-xl px-1.5 py-0.5">
+              <span id="lesson-number-preview" class="tabular-nums text-[11px] font-extrabold text-brand-700 pl-1 pr-0.5">Aula 01</span>
+              <button type="button" id="btn-lesson-num-minus" aria-label="Diminuir número da aula" class="touch-target w-6 h-6 rounded-lg bg-white hover:bg-slate-50 text-slate-700 font-extrabold text-sm flex items-center justify-center shadow-2xs active:scale-90 transition-transform">
+                –
+              </button>
+              <input type="number" id="lesson-number-input" inputmode="numeric" min="1" max="999" value="1" aria-label="Número da aula" class="tabular-nums w-7 text-center font-black text-slate-900 bg-transparent outline-none text-xs">
+              <button type="button" id="btn-lesson-num-plus" aria-label="Aumentar número da aula" class="touch-target w-6 h-6 rounded-lg bg-white hover:bg-slate-50 text-slate-700 font-extrabold text-sm flex items-center justify-center shadow-2xs active:scale-90 transition-transform">
+                +
+              </button>
+            </div>
+          </div>
+
+          <div class="relative">
+            <input type="text" id="lesson-title-input" name="lessonTitle" autocomplete="off" enterkeyhint="done" required placeholder="Ex: Insuficiência Cardíaca, Síndrome Nefrótica…" class="w-full bg-slate-50/90 focus:bg-white border-2 border-slate-200/85 focus:border-brand-600 focus:ring-4 focus:ring-brand-500/10 rounded-2xl px-3.5 py-2.5 text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none transition-all">
           </div>
         </div>
 
-        <!-- Linha 3: Tema / Título -->
-        <div>
-          <label for="lesson-title-input" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Tema da Aula</label>
-          <input type="text" id="lesson-title-input" name="lessonTitle" autocomplete="off" enterkeyhint="done" required placeholder="Ex: Fraturas de Fêmur e Bacia…" class="w-full bg-white border border-slate-200/90 focus:border-brand-500 rounded-2xl px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 outline-none shadow-xs transition-colors">
-        </div>
-
-        <!-- Linha 4: Anotações com Toolbar Compacta -->
-        <div>
-          <div class="flex items-center justify-between mb-1">
-            <label for="lesson-notes-input" class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Palavras-Chave e Anotações</label>
-            <span class="text-[10px] text-slate-400">Marcadores rápidos</span>
+        <!-- Linha 4: Card Unificado de Anotações & Marcadores Clínicos (Zero quebra de linha) -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label for="lesson-notes-input" class="text-[10.5px] font-extrabold text-slate-400 uppercase tracking-wider">Palavras-Chave & Anotações</label>
+            <span class="text-[10px] font-semibold text-slate-400">Toque nos marcadores abaixo</span>
           </div>
 
-          <div class="bg-slate-100/90 border border-slate-200/90 border-b-0 rounded-t-2xl px-2.5 py-1.5 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
-            <button type="button" id="btn-format-bold" class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-xs font-extrabold text-slate-800 shadow-2xs active:scale-90 transition-transform" title="Negrito">
-              B
-            </button>
-            <button type="button" id="btn-format-bullet" class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-800 shadow-2xs active:scale-90 transition-transform" title="Tópico">
-              • Lista
-            </button>
-            <div class="h-4 w-[1px] bg-slate-300 mx-0.5 shrink-0" aria-hidden="true"></div>
-            <button type="button" data-tag="red" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-rose-50 text-rose-800 border border-rose-200 flex items-center gap-1.5 active:scale-90 transition-transform">
-              <span class="w-2 h-2 rounded-full bg-rose-500" aria-hidden="true"></span>Alerta
-            </button>
-            <button type="button" data-tag="gold" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1.5 active:scale-90 transition-transform">
-              <span class="w-2 h-2 rounded-full bg-emerald-500" aria-hidden="true"></span>Padrão-Ouro
-            </button>
-            <button type="button" data-tag="yellow" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-amber-50 text-amber-800 border border-amber-200 flex items-center gap-1.5 active:scale-90 transition-transform">
-              <span class="w-2 h-2 rounded-full bg-amber-500" aria-hidden="true"></span>Fisiopato
-            </button>
-            <button type="button" data-tag="green" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-teal-50 text-teal-800 border border-teal-200 flex items-center gap-1.5 active:scale-90 transition-transform">
-              <span class="w-2 h-2 rounded-full bg-teal-500" aria-hidden="true"></span>Diagnóstico
-            </button>
-            <button type="button" data-tag="purple" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-purple-50 text-purple-800 border border-purple-200 flex items-center gap-1.5 active:scale-90 transition-transform">
-              <span class="w-2 h-2 rounded-full bg-purple-500" aria-hidden="true"></span>Conduta
-            </button>
-            <button type="button" data-tag="blue" class="btn-insert-tag shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold bg-blue-50 text-blue-800 border border-blue-200 flex items-center gap-1.5 active:scale-90 transition-transform">
-              <span class="w-2 h-2 rounded-full bg-blue-500" aria-hidden="true"></span>Conceito
-            </button>
-          </div>
+          <div class="rounded-[22px] bg-slate-50/80 border-2 border-slate-200/85 focus-within:bg-white focus-within:border-brand-600 focus-within:ring-4 focus-within:ring-brand-500/10 transition-all overflow-hidden">
+            <textarea id="lesson-notes-input" rows="3" placeholder="Critérios clínicos, fisiopatologia, condutas ou dicas de prova…" class="w-full bg-transparent px-3.5 pt-3 pb-2 text-xs text-slate-800 placeholder-slate-400 outline-none resize-none font-sans leading-relaxed"></textarea>
 
-          <textarea id="lesson-notes-input" rows="3" placeholder="Critérios clínicos, condutas, o que vai cair na prova… (Enter salta marcadores e continua listas)" class="w-full bg-white border border-slate-200/90 focus:border-brand-500 rounded-b-2xl px-3.5 py-2.5 text-xs text-slate-800 placeholder-slate-400 outline-none resize-none font-sans leading-relaxed shadow-xs transition-colors"></textarea>
+            <!-- Barra Inferior de Pílulas Clínicas (Single-Line, Sem Quebra) -->
+            <div class="bg-slate-100/85 border-t border-slate-200/80 px-2.5 py-2 flex items-center gap-1.5 overflow-x-auto scrollbar-none">
+              <button type="button" id="btn-format-bold" class="shrink-0 whitespace-nowrap h-7 px-2.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200/90 text-[11px] font-black text-slate-800 shadow-2xs flex items-center justify-center active:scale-90 transition-transform" title="Negrito">
+                B
+              </button>
+              <button type="button" id="btn-format-bullet" class="shrink-0 whitespace-nowrap h-7 px-2.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200/90 text-[11px] font-bold text-slate-800 shadow-2xs flex items-center gap-1 active:scale-90 transition-transform" title="Adicionar Tópico">
+                <svg class="w-3 h-3 text-brand-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+                <span>Lista</span>
+              </button>
+              <div class="h-4 w-[1px] bg-slate-300/90 mx-0.5 shrink-0" aria-hidden="true"></div>
+              <button type="button" data-tag="red" class="btn-insert-tag shrink-0 whitespace-nowrap h-7 px-2.5 rounded-full text-[10.5px] font-bold bg-rose-50 text-rose-800 border border-rose-200/90 flex items-center gap-1.5 shadow-2xs active:scale-90 transition-transform">
+                <span class="w-2 h-2 rounded-full bg-rose-500 shrink-0" aria-hidden="true"></span><span>Alerta</span>
+              </button>
+              <button type="button" data-tag="gold" class="btn-insert-tag shrink-0 whitespace-nowrap h-7 px-2.5 rounded-full text-[10.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200/90 flex items-center gap-1.5 shadow-2xs active:scale-90 transition-transform">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0" aria-hidden="true"></span><span>Padrão-Ouro</span>
+              </button>
+              <button type="button" data-tag="yellow" class="btn-insert-tag shrink-0 whitespace-nowrap h-7 px-2.5 rounded-full text-[10.5px] font-bold bg-amber-50 text-amber-800 border border-amber-200/90 flex items-center gap-1.5 shadow-2xs active:scale-90 transition-transform">
+                <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0" aria-hidden="true"></span><span>Fisiopato</span>
+              </button>
+              <button type="button" data-tag="green" class="btn-insert-tag shrink-0 whitespace-nowrap h-7 px-2.5 rounded-full text-[10.5px] font-bold bg-teal-50 text-teal-800 border border-teal-200/90 flex items-center gap-1.5 shadow-2xs active:scale-90 transition-transform">
+                <span class="w-2 h-2 rounded-full bg-teal-500 shrink-0" aria-hidden="true"></span><span>Diagnóstico</span>
+              </button>
+              <button type="button" data-tag="purple" class="btn-insert-tag shrink-0 whitespace-nowrap h-7 px-2.5 rounded-full text-[10.5px] font-bold bg-purple-50 text-purple-800 border border-purple-200/90 flex items-center gap-1.5 shadow-2xs active:scale-90 transition-transform">
+                <span class="w-2 h-2 rounded-full bg-purple-500 shrink-0" aria-hidden="true"></span><span>Conduta</span>
+              </button>
+              <button type="button" data-tag="blue" class="btn-insert-tag shrink-0 whitespace-nowrap h-7 px-2.5 rounded-full text-[10.5px] font-bold bg-blue-50 text-blue-800 border border-blue-200/90 flex items-center gap-1.5 shadow-2xs active:scale-90 transition-transform">
+                <span class="w-2 h-2 rounded-full bg-blue-500 shrink-0" aria-hidden="true"></span><span>Conceito</span>
+              </button>
+            </div>
+          </div>
         </div>
 
-        <!-- Linha 5: Vínculo Opcional com Prova -->
-        <div>
-          <label for="lesson-exam-select" class="block text-[11px] font-semibold text-slate-500 mb-1">Vincular a uma Prova <span class="text-slate-400 font-normal lowercase">(opcional)</span></label>
-          <select id="lesson-exam-select" class="w-full bg-white border border-slate-200/90 rounded-2xl px-3.5 py-2 text-xs text-slate-700 outline-none shadow-xs">
-            <option value="">Nenhuma prova vinculada</option>
-          </select>
+        <!-- Linha 5: Vínculo Opcional com Prova (Seletor Customizado sem Seta Nativa Feia) -->
+        <div class="space-y-1">
+          <label for="lesson-exam-select" class="block text-[10.5px] font-extrabold text-slate-400 uppercase tracking-wider">Vincular a uma Prova <span class="text-slate-400 font-semibold normal-case">(opcional)</span></label>
+          <div class="relative">
+            <select id="lesson-exam-select" class="w-full appearance-none bg-slate-50/90 focus:bg-white border-2 border-slate-200/85 focus:border-brand-600 rounded-2xl pl-3.5 pr-9 py-2.5 text-xs font-semibold text-slate-700 outline-none transition-colors">
+              <option value="">Nenhuma prova vinculada</option>
+            </select>
+            <svg class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M19 9l-7 7-7-7"/></svg>
+          </div>
         </div>
 
-        <!-- Linha 6: Toggle de Estudo (Single Hit Target) -->
-        <label for="lesson-studied-toggle" class="bg-slate-50/80 border border-slate-200/80 rounded-2xl px-3.5 py-2.5 flex items-center justify-between cursor-pointer active:bg-slate-100/80 transition-colors">
-          <div>
-            <span class="block text-xs font-bold text-slate-800">Já estudei esta aula hoje</span>
-            <span class="text-[10.5px] text-slate-500">Agenda revisões D+1, D+7, D+30</span>
+        <!-- Linha 6: Toggle de Estudo Moderno -->
+        <label for="lesson-studied-toggle" class="bg-slate-50/90 hover:bg-slate-100/70 border-2 border-slate-200/80 rounded-2xl px-3.5 py-2.5 flex items-center justify-between cursor-pointer active:scale-[0.99] transition-all">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-brand-50 text-brand-600 border border-brand-200/70 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <div>
+              <span class="block text-xs font-extrabold text-slate-800">Já estudei esta aula hoje</span>
+              <span class="text-[10.5px] text-slate-500 font-medium">Agenda revisões D+1, D+7 e D+30</span>
+            </div>
           </div>
-          <div class="relative inline-flex items-center">
+          <div class="relative inline-flex items-center shrink-0">
             <input type="checkbox" id="lesson-studied-toggle" class="sr-only peer">
-            <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-transform peer-checked:bg-brand-500 transition-colors"></div>
+            <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-transform peer-checked:bg-brand-600 transition-colors"></div>
           </div>
         </label>
 
         <!-- Botões de Ação (Salvar & Salvar +1) -->
-        <div class="pt-1 flex items-center gap-2">
-          <button type="button" id="btn-save-and-next-lesson" class="tap-smooth px-4 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 border border-slate-200/90 text-slate-700 font-extrabold text-xs shrink-0" title="Salvar aula atual e já abrir a próxima em sequência">
+        <div class="pt-1 flex items-center gap-2.5">
+          <button type="button" id="btn-save-and-next-lesson" class="tap-smooth px-4 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 border border-slate-200/90 text-slate-800 font-extrabold text-xs shrink-0" title="Salvar aula atual e já abrir a próxima em sequência">
             Salvar e +1
           </button>
-          <button type="submit" id="btn-save-lesson" class="tap-smooth flex-1 py-3 rounded-2xl bg-gradient-to-r from-[#111c40] via-brand-600 to-brand-500 hover:from-brand-600 hover:to-brand-400 text-white font-bold text-sm shadow-md shadow-brand-600/25 flex items-center justify-center gap-2">
-            Salvar Aula
+          <button type="submit" id="btn-save-lesson" class="tap-smooth flex-1 py-3 rounded-2xl bg-gradient-to-r from-[#0f1a38] via-[#162654] to-[#1e3a8a] hover:from-brand-600 hover:to-brand-500 text-white font-extrabold text-sm shadow-lg shadow-brand-600/25 flex items-center justify-center gap-2">
+            <span>Salvar Aula</span>
           </button>
         </div>
       </form>
@@ -902,11 +919,11 @@
       <div class="pt-2 border-t border-slate-100 space-y-1.5">
         <div class="flex items-center justify-between">
           <span class="text-[10.5px] font-bold uppercase tracking-wider text-slate-500">Versão do Aplicativo</span>
-          <span id="settings-version-label" class="tabular-nums text-[10px] font-bold px-1.5 py-0.5 rounded bg-brand-50 text-brand-700 border border-brand-200">v2.3.2</span>
+          <span id="settings-version-label" class="tabular-nums text-[10px] font-bold px-1.5 py-0.5 rounded bg-brand-50 text-brand-700 border border-brand-200">v2.4.0</span>
         </div>
         <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-2.5 flex items-center justify-between">
           <div>
-            <span id="settings-build-label" class="tabular-nums text-xs font-semibold text-slate-800 block">08/10/2026 às 13:58</span>
+            <span id="settings-build-label" class="tabular-nums text-xs font-semibold text-slate-800 block">08/10/2026 às 14:35</span>
             <span id="settings-update-status" class="text-[10px] text-slate-500">Sincronizado com Vercel</span>
           </div>
           <button id="btn-check-update-manual" class="touch-target px-2.5 py-1 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-brand-600 text-xs font-bold active:scale-90 transition-transform shadow-2xs">
@@ -987,9 +1004,9 @@
   <!-- ==================== APPLICATION LOGIC ==================== -->
   <script>
     // --- APP VERSION & AUTO-UPDATE DETECTOR ---
-    const CURRENT_APP_VERSION = '2.3.2';
-    const CURRENT_BUILD_TIMESTAMP = '2026-10-08T16:58:00.000Z';
-    const CURRENT_BUILD_LABEL = '08/10/2026 às 13:58';
+    const CURRENT_APP_VERSION = '2.4.0';
+    const CURRENT_BUILD_TIMESTAMP = '2026-10-08T17:35:00.000Z';
+    const CURRENT_BUILD_LABEL = '08/10/2026 às 14:35';
 
     let pendingServerUpdate = null;
 
@@ -1225,7 +1242,7 @@
         label: 'Cardio',
         defaultColor: 'crimson',
         keywords: ['cardio', 'coracao', 'coração', 'ecg', 'arritmia', 'hemodinamica', 'vascular'],
-        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16.5" cy="18.5" r="7.5" fill="currentColor" fill-opacity="0.22"/><path d="M7.8 5.6C7.8 4.6 10.0 4.6 10.0 5.6V10.2C10.0 11.2 7.8 11.2 7.8 10.2V5.6Z" fill="#ffffff" fill-opacity="0.24" stroke="#ffffff" stroke-width="1.8" stroke-linejoin="round"/><path d="M12.4 10.0C12.4 6.6 14.5 4.4 17.8 4.4C20.8 4.4 23.0 6.4 23.4 9.2C23.6 10.4 21.2 10.6 20.8 9.4C20.4 7.8 19.2 6.8 17.8 6.8C16.0 6.8 14.8 8.0 14.8 10.0C14.8 11.0 12.4 11.0 12.4 10.0Z" fill="#ffffff" fill-opacity="0.28" stroke="#ffffff" stroke-width="1.9" stroke-linejoin="round"/><path d="M15.4 4.2V2.4M18.0 4.2V2.2M20.6 4.8L21.4 2.8" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/><path d="M8.5 13.0C6.2 14.2 5.8 17.8 7.5 21.2C9.8 25.5 15.8 28.8 19.8 28.6C22.5 28.5 24.8 26.0 25.8 22.2C26.8 18.2 25.6 13.8 22.8 12.6C20.5 11.6 18.0 12.5 16.2 13.5C14.2 12.2 10.8 11.8 8.5 13.0Z" fill="#ffffff" fill-opacity="0.32" stroke="#ffffff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.8 15.6C8.4 17.6 9.0 19.8 10.6 21.8" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.82"/><path d="M15.8 15.4C16.2 18.8 17.5 22.5 19.2 25.6M16.5 18.2L21.6 19.6M17.5 21.8L21.4 23.0M15.8 16.2C13.4 17.2 12.0 19.0 11.4 21.0" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round"/><path d="M26.6 8.2C28.5 10.2 29.0 13.2 28.2 16.0" stroke="currentColor" stroke-width="2.0" stroke-linecap="round"/></svg>`
+        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16.5" cy="18" r="7.8" fill="currentColor" fill-opacity="0.24"/><path d="M9.6 11.8V7.4C9.6 6.2 11.8 6.2 11.8 7.4V11.2" fill="#ffffff" fill-opacity="0.26" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.6 11.2C13.6 6.8 15.8 4.6 19.2 4.6C22.2 4.6 24.4 6.6 24.6 9.5" stroke="#ffffff" stroke-width="2.3" stroke-linecap="round"/><path d="M16.5 4.8V2.5M19.2 4.6V2.3M21.8 5.2L22.6 3.0" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/><path d="M8.8 12.6C6.4 13.8 5.8 17.5 7.6 21.0C9.8 25.4 15.8 28.8 20.0 28.5C22.8 28.3 25.0 25.6 26.0 21.6C27.0 17.6 25.6 13.4 22.8 12.2C20.4 11.2 18.0 12.2 16.2 13.2C14.2 11.8 11.0 11.4 8.8 12.6Z" fill="#ffffff" fill-opacity="0.32" stroke="#ffffff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.2 15.4C8.8 17.5 9.4 19.8 11.0 21.8" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.85"/><path d="M16.0 14.8C16.5 18.4 17.8 22.2 19.6 25.5M16.8 18.0L21.8 19.4M17.8 21.6L21.5 22.8M16.0 15.8C13.6 16.8 12.2 18.6 11.6 20.6" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round"/><path d="M27.2 11.2C29.0 13.4 29.2 16.6 28.2 19.2" stroke="currentColor" stroke-width="2.0" stroke-linecap="round"/></svg>`
       },
       {
         key: 'brain',
@@ -1237,9 +1254,9 @@
       {
         key: 'endocrino',
         label: 'Endócrino',
-        defaultColor: 'amber',
+        defaultColor: 'crimson',
         keywords: ['endocrino', 'endócrino', 'tireoide', 'diabetes', 'hormonio', 'metabolismo', 'obesidade', 'adrenal'],
-        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16.5" r="7.5" fill="currentColor" fill-opacity="0.22"/><path d="M12.2 4.0L16.0 6.0L19.8 4.0C20.4 6.0 19.8 8.2 18.5 9.0C17.0 9.6 15.0 9.6 13.5 9.0C12.2 8.2 11.6 6.0 12.2 4.0Z" fill="#ffffff" fill-opacity="0.22" stroke="#ffffff" stroke-width="1.8" stroke-linejoin="round"/><path d="M16.0 14.2C14.2 14.2 13.5 12.5 12.0 9.5C10.8 7.2 7.6 7.0 6.0 9.8C4.2 13.0 4.2 18.2 6.2 21.8C7.8 24.4 11.2 24.2 12.6 21.5C13.4 19.8 14.4 18.8 16.0 18.8C17.6 18.8 18.6 19.8 19.4 21.5C20.8 24.2 24.2 24.4 25.8 21.8C27.8 18.2 27.8 13.0 26.0 9.8C24.4 7.0 21.2 7.2 20.0 9.5C18.5 12.5 17.8 14.2 16.0 14.2Z" fill="#ffffff" fill-opacity="0.32" stroke="#ffffff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.6 11.5C6.8 14.2 6.8 17.5 8.2 20.2" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.85"/><path d="M13.2 22.2C15.0 23.0 17.0 23.0 18.8 22.2M13.2 25.2C15.0 26.0 17.0 26.0 18.8 25.2M13.6 28.0C15.0 28.6 17.0 28.6 18.4 28.0" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round" stroke-opacity="0.85"/><path d="M24.2 11.5C25.0 14.2 25.0 17.5 23.6 20.2M24.4 14.8L21.5 16.2M24.0 17.8L21.4 19.0" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="16.5" r="1.5" fill="currentColor"/></svg>`
+        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16.5" cy="18" r="7.8" fill="currentColor" fill-opacity="0.24"/><path d="M9.6 11.8V7.4C9.6 6.2 11.8 6.2 11.8 7.4V11.2" fill="#ffffff" fill-opacity="0.26" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.6 11.2C13.6 6.8 15.8 4.6 19.2 4.6C22.2 4.6 24.4 6.6 24.6 9.5" stroke="#ffffff" stroke-width="2.3" stroke-linecap="round"/><path d="M16.5 4.8V2.5M19.2 4.6V2.3M21.8 5.2L22.6 3.0" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/><path d="M8.8 12.6C6.4 13.8 5.8 17.5 7.6 21.0C9.8 25.4 15.8 28.8 20.0 28.5C22.8 28.3 25.0 25.6 26.0 21.6C27.0 17.6 25.6 13.4 22.8 12.2C20.4 11.2 18.0 12.2 16.2 13.2C14.2 11.8 11.0 11.4 8.8 12.6Z" fill="#ffffff" fill-opacity="0.32" stroke="#ffffff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.2 15.4C8.8 17.5 9.4 19.8 11.0 21.8" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.85"/><path d="M16.0 14.8C16.5 18.4 17.8 22.2 19.6 25.5M16.8 18.0L21.8 19.4M17.8 21.6L21.5 22.8M16.0 15.8C13.6 16.8 12.2 18.6 11.6 20.6" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round"/><path d="M27.2 11.2C29.0 13.4 29.2 16.6 28.2 19.2" stroke="currentColor" stroke-width="2.0" stroke-linecap="round"/></svg>`
       },
       {
         key: 'gastro',
@@ -1260,7 +1277,7 @@
         label: 'Orto',
         defaultColor: 'emerald',
         keywords: ['orto', 'osso', 'fratura', 'trauma', 'coluna', 'joelho', 'ombro', 'musculoesqueletico', 'osteologia'],
-        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16.5" cy="15.5" r="7.0" fill="currentColor" fill-opacity="0.22"/><path d="M16.0 4.5C20.5 2.5 25.8 4.8 27.5 9.2C28.0 10.6 26.2 11.6 25.2 10.2C23.6 7.2 19.8 5.8 16.5 6.8C15.0 7.2 14.5 5.2 16.0 4.5Z" fill="#ffffff" fill-opacity="0.24" stroke="#ffffff" stroke-width="1.9" stroke-linejoin="round"/><path d="M16.8 10.8C18.0 8.5 21.2 8.2 23.0 10.0C24.8 11.8 24.5 14.8 22.2 16.0C20.8 16.8 19.2 16.2 18.0 15.0L16.5 13.5C15.8 12.8 16.2 11.8 16.8 10.8Z" fill="#ffffff" fill-opacity="0.38" stroke="#ffffff" stroke-width="2.0" stroke-linejoin="round"/><path d="M7.2 11.8C8.2 10.2 10.5 10.5 11.5 12.2L13.2 14.8L15.5 18.5C16.8 19.4 16.8 21.0 15.2 21.6C14.2 22.0 13.8 22.8 13.5 24.2L12.8 28.8C11.5 29.8 8.2 29.5 7.6 28.0L8.5 20.2C6.8 18.2 6.0 14.5 7.2 11.8Z" fill="#ffffff" fill-opacity="0.30" stroke="#ffffff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.4 19.5L9.8 26.8M9.0 13.8C9.8 15.5 11.2 16.8 12.8 17.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.8"/><path d="M13.5 11.8L15.8 14.2L14.8 15.8L17.2 18.0" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M23.5 18.5C25.2 20.5 24.8 23.5 22.5 25.2" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/><path d="M26.5 17.2C28.8 20.2 28.2 24.5 25.2 27.0" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/></svg>`
+        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="7.8" fill="currentColor" fill-opacity="0.22"/><path d="M6.4 17.6C4.8 17.8 3.6 16.6 4.0 15.0C4.3 14.0 5.4 13.6 6.2 14.2L17.8 25.8C18.4 26.6 18.0 27.7 17.0 28.0C15.4 28.4 14.2 27.2 14.4 25.6L6.4 17.6Z" fill="#ffffff" fill-opacity="0.22" stroke="#ffffff" stroke-width="1.7" stroke-linejoin="round"/><path d="M11.2 14.2C8.2 14.8 5.2 13.0 5.5 10.2C5.7 8.8 6.8 7.8 8.0 7.8C7.8 6.5 8.8 5.4 10.2 5.2C13.0 4.9 14.8 7.9 14.2 11.2L20.8 17.8C24.1 17.2 27.1 19.0 26.8 21.8C26.6 23.2 25.5 24.2 24.0 24.0C24.2 25.5 23.2 26.6 21.8 26.8C19.0 27.1 17.2 24.1 17.8 20.8L11.2 14.2Z" fill="#ffffff" fill-opacity="0.34" stroke="#ffffff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.5 11.8L19.5 18.8" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-opacity="0.8"/><path d="M13.6 17.8L16.2 15.2L15.8 13.6L18.4 11.0" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.2 9.2C22.4 10.6 23.4 13.2 22.8 15.6" stroke="currentColor" stroke-width="2.0" stroke-linecap="round"/></svg>`
       },
       {
         key: 'lung',
@@ -1295,7 +1312,7 @@
         label: 'Pediatria',
         defaultColor: 'amber',
         keywords: ['pediatria', 'ped', 'bebe', 'bebê', 'crianca', 'criança', 'neonatologia', 'neo', 'puericultura'],
-        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16.5" r="7.5" fill="currentColor" fill-opacity="0.22"/><path d="M11.5 4.8C8.2 4.8 6.2 7.2 6.5 10.2C6.8 12.8 8.8 14.2 11.2 14.2C13.2 14.2 15.0 13.8 15.6 12.2C16.0 11.2 16.6 10.6 16.0 9.8C15.6 9.2 15.8 8.0 15.0 6.8C14.2 5.5 12.8 4.8 11.5 4.8Z" fill="#ffffff" fill-opacity="0.32" stroke="#ffffff" stroke-width="2.1" stroke-linejoin="round"/><path d="M12.2 9.6Q13.4 10.4 14.4 9.6" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round"/><path d="M8.2 16.2C6.2 18.5 6.5 23.2 9.5 26.2C12.2 28.8 16.8 29.0 19.2 26.8C21.2 25.0 21.5 21.5 19.5 19.8C18.0 18.5 16.2 19.5 16.5 21.2C16.8 22.5 15.8 23.8 14.2 23.5C12.8 23.2 12.2 21.2 12.5 18.8C12.8 16.8 10.0 15.0 8.2 16.2Z" fill="#ffffff" fill-opacity="0.30" stroke="#ffffff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.2 18.5C8.8 21.2 9.8 24.0 12.0 25.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.85"/><path d="M22.5 14.8L19.2 11.4A2.2 2.2 0 0 1 22.5 8.5A2.2 2.2 0 0 1 25.8 11.4L22.5 14.8Z" fill="currentColor" fill-opacity="0.45" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M24.5 18.5C26.8 21.5 25.5 26.0 21.8 28.2" stroke="currentColor" stroke-width="2.0" stroke-linecap="round"/></svg>`
+        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16.5" r="8.0" fill="currentColor" fill-opacity="0.22"/><path d="M6.8 14.2C4.8 14.2 4.2 16.4 4.8 18.0C5.4 19.4 6.8 19.6 7.6 18.8M25.2 14.2C27.2 14.2 27.8 16.4 27.2 18.0C26.6 19.4 25.2 19.6 24.4 18.8" fill="#ffffff" fill-opacity="0.28" stroke="#ffffff" stroke-width="2.0" stroke-linecap="round"/><circle cx="16" cy="16.4" r="9.2" fill="#ffffff" fill-opacity="0.32" stroke="#ffffff" stroke-width="2.1"/><path d="M15.2 7.2C14.8 4.4 17.8 3.4 19.2 5.4C20.2 6.8 18.8 8.8 16.8 8.6C15.8 8.5 15.4 7.7 16.2 7.0" stroke="#ffffff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.0 14.6Q12.5 13.0 14.0 14.6M18.0 14.6Q19.5 13.0 21.0 14.6" stroke="#ffffff" stroke-width="2.0" stroke-linecap="round"/><rect x="11.6" y="17.8" width="8.8" height="5.2" rx="2.6" fill="currentColor" fill-opacity="0.52" stroke="currentColor" stroke-width="1.9"/><circle cx="16" cy="20.4" r="1.5" fill="#ffffff"/><path d="M13.5 22.0C13.5 24.8 18.5 24.8 18.5 22.0" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/></svg>`
       },
       {
         key: 'blood',
@@ -1316,14 +1333,14 @@
         label: 'Psiquiatria',
         defaultColor: 'indigo',
         keywords: ['psiq', 'psiquiatria', 'mental', 'depressao', 'depressão', 'ansiedade', 'psicose', 'bipolar'],
-        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="17.5" cy="12" r="6.8" fill="currentColor" fill-opacity="0.24"/><path d="M8 27.5v-2.5c0 -2.8 2 -4.5 4.8 -4.5h.8c1 0 1.6 -.6 1.6 -1.6v-1.2c-3 -1 -5 -3.8 -5 -7.5c0 -5 4.2 -7.2 8.8 -7.2s8.5 2.8 8.5 7.5c0 1.2 -.3 2.2 -.8 3l1.6 2.4c.4 .6 0 1.3 -.7 1.3h-1.2v1.8c0 1.6 -1.2 2.8 -2.8 2.8h-2.2v4.7" fill="#ffffff" fill-opacity="0.28" stroke="#ffffff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.4 10l2.6 -.6M16 11.6l1.8 1.4M19.8 10.4l-.6 2" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="14.8" cy="10.5" r="1.7" fill="currentColor" stroke="#ffffff" stroke-width="1.2"/><circle cx="20.6" cy="9" r="1.7" fill="currentColor" stroke="#ffffff" stroke-width="1.2"/><circle cx="18.8" cy="14" r="1.7" fill="currentColor" stroke="#ffffff" stroke-width="1.2"/></svg>`
+        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16.5" cy="14" r="7.8" fill="currentColor" fill-opacity="0.24"/><path d="M7.5 28.0V24.5C7.5 22.0 9.2 20.5 11.5 20.0V18.2C8.2 16.8 6.5 13.6 6.8 9.8C7.2 5.2 11.4 2.8 16.5 2.8C21.8 2.8 25.2 5.6 25.2 10.5C25.2 11.8 24.8 12.8 24.2 13.8L26.2 16.6C26.7 17.3 26.2 18.2 25.3 18.2H23.8V20.5C23.8 22.4 22.4 23.6 20.5 23.6H18.0V28.0" fill="#ffffff" fill-opacity="0.30" stroke="#ffffff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.2 8.8C12.2 11.8 13.8 13.2 16.0 13.2C18.2 13.2 19.8 11.8 19.8 8.8M16.0 7.0V16.8M13.6 16.8H18.4" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`
       },
       {
         key: 'skin',
         label: 'Dermato',
         defaultColor: 'orange',
         keywords: ['dermato', 'pele', 'cutaneo', 'cutâneo', 'melanoma', 'acne', 'hanseniase'],
-        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="18" r="7.2" fill="currentColor" fill-opacity="0.22"/><rect x="4" y="12.5" width="24" height="14.5" rx="4" fill="#ffffff" fill-opacity="0.28" stroke="#ffffff" stroke-width="2.1"/><path d="M4 17.5c3 -1.2 6 1.2 12 0s9 -1.2 12 0" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M4 22.2h24" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="2.5 2" stroke-opacity="0.8"/><path d="M16 4.2c1.6 3.5 1.6 7.5 -.4 13.2" stroke="#ffffff" stroke-width="2.3" stroke-linecap="round"/><circle cx="15.3" cy="18.2" r="2.1" fill="currentColor"/><circle cx="9.5" cy="24.6" r="1.2" fill="currentColor"/><circle cx="16" cy="24.6" r="1.2" fill="currentColor"/><circle cx="22.5" cy="24.6" r="1.2" fill="currentColor"/></svg>`
+        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="17.5" r="7.8" fill="currentColor" fill-opacity="0.22"/><path d="M4.5 16.8C8.0 15.6 11.5 17.8 15.5 16.8C19.5 15.8 23.5 17.5 27.5 16.5V25.2C27.5 26.8 26.2 28.0 24.5 28.0H7.5C5.8 28.0 4.5 26.8 4.5 25.2V16.8Z" fill="#ffffff" fill-opacity="0.30" stroke="#ffffff" stroke-width="2.1" stroke-linejoin="round"/><path d="M4.8 21.4C7.8 20.4 10.2 22.4 13.2 21.4C16.2 20.4 19.0 22.4 22.0 21.4C24.5 20.6 26.0 21.6 27.2 21.2" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M13.6 4.8C11.5 8.5 10.6 13.2 11.0 22.4C9.6 23.2 9.4 25.4 11.3 25.8C13.2 25.4 13.0 23.2 11.6 22.4" fill="#ffffff" fill-opacity="0.45" stroke="#ffffff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21.0" cy="10.0" r="4.6" fill="currentColor" fill-opacity="0.42" stroke="currentColor" stroke-width="2.1"/><path d="M19.4 8.0A2.4 2.4 0 0 1 22.6 8.0" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round"/><path d="M24.3 13.3L27.8 16.8" stroke="#ffffff" stroke-width="2.3" stroke-linecap="round"/></svg>`
       },
       {
         key: 'uro',
@@ -1393,7 +1410,7 @@
         label: 'Geriatria',
         defaultColor: 'teal',
         keywords: ['geriatria', 'idoso', 'envelhecimento', 'demencia', 'paliativo'],
-        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="7.5" fill="currentColor" fill-opacity="0.22"/><path d="M26 16.5l-10 10l-10 -10a6.8 6.8 0 1 1 10 -8.8a6.8 6.8 0 1 1 10 8.8z" fill="#ffffff" fill-opacity="0.30" stroke="#ffffff" stroke-width="2.2" stroke-linejoin="round"/><circle cx="16" cy="16" r="5.2" fill="#303b4d" stroke="currentColor" stroke-width="1.8"/><path d="M16 13v3.2l2.4 1.6" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+        svg: `<svg viewBox="0 0 32 32" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16.5" r="7.8" fill="currentColor" fill-opacity="0.22"/><circle cx="13.2" cy="7.2" r="3.4" fill="#ffffff" fill-opacity="0.34" stroke="#ffffff" stroke-width="2.1"/><path d="M10.5 12.2C7.8 12.8 6.5 15.8 7.2 19.5L8.2 27.5C8.4 28.6 11.6 28.6 11.8 27.5L12.6 20.8L15.2 27.5C15.6 28.6 18.2 28.2 17.8 26.8L15.5 19.5V15.6L19.5 16.5C20.8 16.8 21.4 15.0 20.0 14.4L15.0 12.6C13.6 12.0 11.8 11.9 10.5 12.2Z" fill="#ffffff" fill-opacity="0.32" stroke="#ffffff" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.8 15.5C19.8 13.2 23.6 13.2 23.6 15.8V28.2" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M22.2 28.4H25.0" stroke="#ffffff" stroke-width="2.3" stroke-linecap="round"/><path d="M24.5 10.8L22.2 8.4A1.6 1.6 0 0 1 24.5 6.2A1.6 1.6 0 0 1 26.8 8.4L24.5 10.8Z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>`
       },
       {
         key: 'anestesia',
@@ -1412,17 +1429,17 @@
     }
 
     const PALETTE_COLORS = [
-      { key: 'navy', hex: '#162654', iconAccent: '#60a5fa', bg: '#e8effa', track: '#dce6f5', border: '#93b4e8', text: '#111c40', label: 'Azul Marinho' },
-      { key: 'blue', hex: '#2563eb', iconAccent: '#38bdf8', bg: '#dbeafe', track: '#dbeafe', border: '#93c5fd', text: '#1e40af', label: 'Azul Real' },
-      { key: 'emerald', hex: '#059669', iconAccent: '#34d399', bg: '#d1fae5', track: '#d1fae5', border: '#6ee7b7', text: '#065f46', label: 'Esmeralda' },
-      { key: 'purple', hex: '#7c3aed', iconAccent: '#c084fc', bg: '#ede9fe', track: '#ede9fe', border: '#c4b5fd', text: '#5b21b6', label: 'Roxo' },
-      { key: 'rose', hex: '#e11d48', iconAccent: '#fb7185', bg: '#ffe4e6', track: '#ffe4e6', border: '#fda4af', text: '#9f1239', label: 'Rosa / Rubi' },
-      { key: 'crimson', hex: '#dc2626', iconAccent: '#ef4444', bg: '#fee2e2', track: '#fee2e2', border: '#fca5a5', text: '#991b1b', label: 'Vermelho' },
-      { key: 'amber', hex: '#d97706', iconAccent: '#fbbf24', bg: '#fef3c7', track: '#fef3c7', border: '#fcd34d', text: '#92400e', label: 'Âmbar' },
-      { key: 'cyan', hex: '#0891b2', iconAccent: '#22d3ee', bg: '#cffafe', track: '#cffafe', border: '#67e8f9', text: '#155e75', label: 'Ciano' },
-      { key: 'orange', hex: '#ea580c', iconAccent: '#fb923c', bg: '#ffedd5', track: '#ffedd5', border: '#fdba74', text: '#9a3412', label: 'Laranja' },
-      { key: 'teal', hex: '#0d9488', iconAccent: '#2dd4bf', bg: '#ccfbf1', track: '#ccfbf1', border: '#5eead4', text: '#115e59', label: 'Teal' },
-      { key: 'indigo', hex: '#4f46e5', iconAccent: '#818cf8', bg: '#e0e7ff', track: '#e0e7ff', border: '#a5b4fc', text: '#3730a3', label: 'Índigo' }
+      { key: 'navy', hex: '#162654', iconAccent: '#60a5fa', bg: '#e8effa', track: '#cbd8f0', border: '#7da2e0', text: '#111c40', label: 'Azul Marinho' },
+      { key: 'blue', hex: '#2563eb', iconAccent: '#38bdf8', bg: '#dbeafe', track: '#bfdbfe', border: '#60a5fa', text: '#1e40af', label: 'Azul Real' },
+      { key: 'emerald', hex: '#059669', iconAccent: '#34d399', bg: '#d1fae5', track: '#a7f3d0', border: '#34d399', text: '#065f46', label: 'Esmeralda' },
+      { key: 'purple', hex: '#7c3aed', iconAccent: '#c084fc', bg: '#ede9fe', track: '#ddd6fe', border: '#a78bfa', text: '#5b21b6', label: 'Roxo' },
+      { key: 'rose', hex: '#e11d48', iconAccent: '#fb7185', bg: '#ffe4e6', track: '#fecdd3', border: '#fb7185', text: '#9f1239', label: 'Rosa / Rubi' },
+      { key: 'crimson', hex: '#dc2626', iconAccent: '#f87171', bg: '#fee2e2', track: '#fecaca', border: '#f87171', text: '#991b1b', label: 'Vermelho' },
+      { key: 'amber', hex: '#d97706', iconAccent: '#fbbf24', bg: '#fef3c7', track: '#fde68a', border: '#fbbf24', text: '#92400e', label: 'Âmbar' },
+      { key: 'cyan', hex: '#0891b2', iconAccent: '#22d3ee', bg: '#cffafe', track: '#a5f3fc', border: '#22d3ee', text: '#155e75', label: 'Ciano' },
+      { key: 'orange', hex: '#ea580c', iconAccent: '#fb923c', bg: '#ffedd5', track: '#fed7aa', border: '#fb923c', text: '#9a3412', label: 'Laranja' },
+      { key: 'teal', hex: '#0d9488', iconAccent: '#2dd4bf', bg: '#ccfbf1', track: '#99f6e4', border: '#2dd4bf', text: '#115e59', label: 'Teal' },
+      { key: 'indigo', hex: '#4f46e5', iconAccent: '#818cf8', bg: '#e0e7ff', track: '#c7d2fe', border: '#818cf8', text: '#3730a3', label: 'Índigo' }
     ];
 
     function getColorConfig(colorKey) {
@@ -1431,9 +1448,9 @@
 
     function getIconSquircleStyle(colorObj, iconKey) {
       if (iconKey === 'reuma' || iconKey === 'joint') {
-        return 'background-color: #303b4d; border-color: #444f60; color: #ffffff;';
+        return `background-color: #303b4d; border-color: #444f60; color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 4px 10px -2px ${colorObj.hex}40;`;
       }
-      return `background-color: #303b4d; border-color: #444f60; color: ${colorObj.iconAccent || '#34d399'}; box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);`;
+      return `background: radial-gradient(circle at 78% 22%, ${colorObj.hex}52 0%, #303b4d 72%); border-color: ${colorObj.hex}b5; color: ${colorObj.iconAccent || '#34d399'}; box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 4px 11px -2px ${colorObj.hex}42;`;
     }
 
     // --- APPLICATION STATE ---
@@ -1656,12 +1673,21 @@
 
       document.querySelectorAll('.nav-tab-btn').forEach(btn => {
         const target = btn.getAttribute('data-tab');
+        const labelSpan = btn.querySelector('span:last-child');
         if (target === tabId || (tabId === 'tab-modulo-detail' && target === 'tab-modulos')) {
-          btn.classList.add('text-brand-600');
-          btn.classList.remove('text-slate-500');
+          btn.classList.add('text-white', 'bg-white/14', 'shadow-2xs');
+          btn.classList.remove('text-slate-400', 'hover:text-white/90');
+          if (labelSpan) {
+            labelSpan.classList.add('font-extrabold');
+            labelSpan.classList.remove('font-semibold');
+          }
         } else {
-          btn.classList.remove('text-brand-600');
-          btn.classList.add('text-slate-500');
+          btn.classList.remove('text-white', 'bg-white/14', 'shadow-2xs');
+          btn.classList.add('text-slate-400', 'hover:text-white/90');
+          if (labelSpan) {
+            labelSpan.classList.remove('font-extrabold');
+            labelSpan.classList.add('font-semibold');
+          }
         }
       });
 
@@ -1802,12 +1828,12 @@
         const colorObj = getColorConfig(mod.colorKey);
 
         return `
-          <button type="button" data-id="${mod.id}" class="chip-module-select shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-[transform,background-color,border-color,color] active:scale-95 ${
+          <button type="button" data-id="${mod.id}" class="chip-module-select shrink-0 whitespace-nowrap px-3 py-1.5 rounded-2xl text-xs flex items-center gap-2 transition-all active:scale-95 ${
             isSelected
-              ? 'bg-slate-900 text-white shadow-sm ring-2 ring-slate-400/60 font-bold'
-              : 'bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50'
+              ? 'bg-slate-900 bg-gradient-to-r from-[#0f1a38] to-[#1e3a8a] text-white shadow-md shadow-brand-600/20 ring-2 ring-brand-500/30 font-extrabold'
+              : 'bg-slate-50/90 border border-slate-200/90 text-slate-700 hover:bg-slate-100 font-semibold'
           }">
-            <span class="w-5 h-5 rounded-md p-0.5 flex items-center justify-center shrink-0 border" style="${getIconSquircleStyle(colorObj, mod.iconKey)}">
+            <span class="w-5 h-5 rounded-lg p-0.5 flex items-center justify-center shrink-0 border" style="${getIconSquircleStyle(colorObj, mod.iconKey)}">
               ${getMedicalIconHTML(mod.iconKey, 'w-4 h-4')}
             </span>
             <span>${mod.name}</span>
@@ -1871,9 +1897,7 @@
       const previewEl = document.getElementById('module-live-preview-icon');
       if (!previewEl) return;
       const colorObj = getColorConfig(selectedModuleColor);
-      previewEl.style.backgroundColor = '#303b4d';
-      previewEl.style.borderColor = '#444f60';
-      previewEl.style.color = colorObj.iconAccent || colorObj.hex;
+      previewEl.setAttribute('style', getIconSquircleStyle(colorObj, selectedModuleIcon));
       previewEl.innerHTML = getMedicalIconHTML(selectedModuleIcon, 'w-7 h-7');
     }
 
@@ -2334,17 +2358,17 @@
       const unstudied = AppState.lessons.filter(l => !l.isStudied).length;
 
       const headerDateEl = document.getElementById('header-date');
-      const dotEl = document.getElementById('header-status-dot');
+      if (!headerDateEl) return;
 
       if (totalRev > 0) {
         headerDateEl.textContent = `${cleanDate} • ${totalRev} rev. hoje`;
-        if (dotEl) dotEl.className = "w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse shrink-0";
+        headerDateEl.className = "tabular-nums text-[9.5px] font-extrabold text-rose-300 uppercase tracking-wider leading-none";
       } else if (unstudied > 0) {
         headerDateEl.textContent = `${cleanDate} • ${unstudied} a estudar`;
-        if (dotEl) dotEl.className = "w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0";
+        headerDateEl.className = "tabular-nums text-[9.5px] font-bold text-slate-300 uppercase tracking-wider leading-none";
       } else {
         headerDateEl.textContent = `${cleanDate} • Em dia`;
-        if (dotEl) dotEl.className = "w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0";
+        headerDateEl.className = "tabular-nums text-[9.5px] font-bold text-emerald-300 uppercase tracking-wider leading-none";
       }
     }
 
@@ -2394,7 +2418,7 @@
       document.getElementById('modules-count-badge').textContent = `${AppState.modules.length}`;
     }
 
-    // --- RENDER ABA 1: MÓDULOS (SUPORTA GRADE 2 COLUNAS & LISTA) ---
+    // --- RENDER ABA 1: MÓDULOS (SUPORTA GRADE 2 COLUNAS & LISTA COM ALTO CONTRASTE CROMÁTICO) ---
     function renderModulosTab() {
       const container = document.getElementById('modulos-list');
 
@@ -2403,8 +2427,8 @@
         const quickPresets = [
           { name: 'Cardiologia', short: 'Cardio', icon: 'heart', color: 'crimson' },
           { name: 'Gastroenterologia', short: 'Gastro', icon: 'gastro', color: 'orange' },
-          { name: 'Endocrinologia', short: 'Endócrino', icon: 'endocrino', color: 'amber' },
-          { name: 'Reumatologia', short: 'Reumato', icon: 'reuma', color: 'purple' },
+          { name: 'Endocrinologia', short: 'Endócrino', icon: 'endocrino', color: 'crimson' },
+          { name: 'Reumatologia', short: 'Reumato', icon: 'reuma', color: 'indigo' },
           { name: 'Ginecologia / GO', short: 'Gineco/GO', icon: 'gineco', color: 'rose' },
           { name: 'Cirurgia Geral', short: 'Cirurgia', icon: 'scalpel', color: 'teal' },
           { name: 'Neurologia', short: 'Neuro', icon: 'brain', color: 'purple' },
@@ -2412,7 +2436,7 @@
           { name: 'Pneumologia', short: 'Pneumo', icon: 'lung', color: 'blue' },
           { name: 'Pediatria', short: 'Pediatria', icon: 'baby', color: 'amber' },
           { name: 'Nefrologia', short: 'Nefro', icon: 'kidney', color: 'cyan' },
-          { name: 'Infectologia', short: 'Infecto', icon: 'microbe', color: 'emerald' }
+          { name: 'Infectologia', short: 'Infecto', icon: 'virus', color: 'emerald' }
         ];
 
         container.className = "space-y-3";
@@ -2491,55 +2515,58 @@
           const colorObj = getColorConfig(mod.colorKey);
 
           return `
-            <div onclick="openModuleDetail('${mod.id}')" style="--stagger-idx: ${Math.min(idx, 10)};" class="cv-card card-stagger group relative bg-white border border-slate-200/85 hover:border-slate-300 rounded-[26px] p-3.5 space-y-2.5 shadow-[0_6px_20px_-6px_rgba(15,23,42,0.05)] active:scale-[0.98] transition-[transform,border-color,background-color] cursor-pointer flex flex-col justify-between overflow-hidden">
+            <div onclick="openModuleDetail('${mod.id}')" style="--stagger-idx: ${Math.min(idx, 10)}; background: linear-gradient(155deg, ${colorObj.bg}85 0%, #ffffff 48%, #ffffff 100%); border-color: ${colorObj.border}; box-shadow: 0 8px 22px -8px ${colorObj.hex}28;" class="cv-card card-stagger group relative border-[1.5px] rounded-[26px] p-3.5 space-y-2.5 active:scale-[0.98] transition-[transform,border-color,box-shadow] cursor-pointer flex flex-col justify-between overflow-hidden">
               <!-- Top: Dark-Slate Icon Squircle, Quick + Button & Percent -->
               <div class="flex items-start justify-between gap-1.5">
-                <div class="med-icon-squircle w-11 h-11 rounded-[16px] flex items-center justify-center shrink-0 border transition-transform group-active:scale-95" style="${getIconSquircleStyle(colorObj, mod.iconKey)}">
+                <div class="med-icon-squircle w-11 h-11 rounded-[16px] flex items-center justify-center shrink-0 border-[1.5px] transition-transform group-active:scale-95" style="${getIconSquircleStyle(colorObj, mod.iconKey)}">
                   ${getMedicalIconHTML(mod.iconKey, 'w-7 h-7')}
                 </div>
                 
                 <div class="flex items-center gap-1 shrink-0">
-                  <span class="tabular-nums text-[11px] font-extrabold px-2 py-0.5 rounded-full border" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
+                  <span class="tabular-nums text-[11px] font-black px-2 py-0.5 rounded-full border shadow-2xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
                     ${percent}%
                   </span>
-                  <button type="button" aria-label="Adicionar aula em ${mod.name}" onclick="event.stopPropagation(); openLessonSheet('${mod.id}')" class="touch-target w-7 h-7 rounded-xl bg-slate-50 hover:bg-slate-900 hover:text-white text-slate-600 border border-slate-200/80 hover:border-slate-900 flex items-center justify-center text-sm font-bold active:scale-90 transition-[transform,background-color,color,border-color]" title="Adicionar Aula neste Módulo">
+                  <button type="button" aria-label="Adicionar aula em ${mod.name}" onclick="event.stopPropagation(); openLessonSheet('${mod.id}')" class="touch-target w-7 h-7 rounded-xl border flex items-center justify-center text-sm font-black active:scale-90 transition-transform shadow-2xs" style="background-color: #ffffff; border-color: ${colorObj.border}; color: ${colorObj.text};" title="Adicionar Aula neste Módulo">
                     +
                   </button>
                 </div>
               </div>
 
-              <!-- Middle: Name & Count -->
+              <!-- Middle: Name with Colored Accent Bar & Count -->
               <div class="min-w-0 pt-0.5">
-                <h3 class="text-[13.5px] font-extrabold text-slate-900 truncate leading-snug tracking-tight">${mod.name}</h3>
-                <p class="tabular-nums text-[11px] text-slate-400 font-semibold mt-0.5">${studiedCount}/${totalCount} aula${totalCount === 1 ? '' : 's'}</p>
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <span class="w-1 h-3.5 rounded-full shrink-0" style="background-color: ${colorObj.hex};"></span>
+                  <h3 class="text-[13.5px] font-black text-slate-900 truncate leading-snug tracking-tight">${mod.name}</h3>
+                </div>
+                <p class="tabular-nums text-[11px] text-slate-500 font-semibold mt-0.5 pl-2.5">${studiedCount}/${totalCount} aula${totalCount === 1 ? '' : 's'}</p>
               </div>
 
               <!-- Bottom: Clean Micro-Pills & Single Smooth Progress Bar -->
               <div class="space-y-2 pt-1">
                 <div class="flex items-center justify-between gap-1.5">
                   <!-- Aulas a Estudar -->
-                  <div class="tabular-nums flex-1 px-2 py-1 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1 border transition-colors ${
+                  <div class="tabular-nums flex-1 px-2 py-1 rounded-xl text-[11px] font-extrabold flex items-center justify-center gap-1 border transition-colors ${
                     pendingStudy > 0
-                      ? 'bg-amber-50/90 text-amber-800 border-amber-200/80'
-                      : 'bg-slate-50 text-slate-400 border-slate-100 opacity-50'
+                      ? 'bg-amber-50 text-amber-800 border-amber-300/90 shadow-2xs'
+                      : 'bg-white/80 text-slate-400 border-slate-200/70 opacity-55'
                   }" title="${pendingStudy} aula(s) a estudar">
                     ${UI_ICONS.book}
                     <span>${pendingStudy}</span>
                   </div>
 
                   <!-- Revisões Pendentes -->
-                  <div class="tabular-nums flex-1 px-2 py-1 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1 border transition-colors ${
+                  <div class="tabular-nums flex-1 px-2 py-1 rounded-xl text-[11px] font-extrabold flex items-center justify-center gap-1 border transition-colors ${
                     pendingReviews > 0
-                      ? 'bg-rose-50/90 text-rose-700 border-rose-200/80 animate-soft-pulse'
-                      : 'bg-slate-50 text-slate-400 border-slate-100 opacity-50'
+                      ? 'bg-rose-50 text-rose-700 border-rose-300/90 shadow-2xs animate-soft-pulse'
+                      : 'bg-white/80 text-slate-400 border-slate-200/70 opacity-55'
                   }" title="${pendingReviews} revisão(ões) pendente(s)">
                     ${UI_ICONS.repeat}
                     <span>${pendingReviews}</span>
                   </div>
                 </div>
 
-                <!-- Barra de Progresso Única e Suave -->
-                <div class="w-full rounded-full h-1.5 overflow-hidden" style="background-color: ${colorObj.track};">
+                <!-- Barra de Progresso Única e Vibrante -->
+                <div class="w-full rounded-full h-2 overflow-hidden" style="background-color: ${colorObj.track};">
                   <div class="h-full rounded-full transition-[width] duration-500" style="width: ${percent}%; background-color: ${colorObj.hex};"></div>
                 </div>
               </div>
@@ -2561,49 +2588,52 @@
           const colorObj = getColorConfig(mod.colorKey);
 
           return `
-            <div onclick="openModuleDetail('${mod.id}')" style="--stagger-idx: ${Math.min(idx, 10)};" class="cv-card card-stagger group relative bg-white border border-slate-200/85 hover:border-slate-300 rounded-[26px] p-3.5 space-y-2.5 shadow-[0_6px_20px_-6px_rgba(15,23,42,0.05)] active:bg-slate-50/70 active:scale-[0.99] transition-[transform,background-color,border-color] cursor-pointer overflow-hidden">
+            <div onclick="openModuleDetail('${mod.id}')" style="--stagger-idx: ${Math.min(idx, 10)}; background: linear-gradient(155deg, ${colorObj.bg}80 0%, #ffffff 48%, #ffffff 100%); border-color: ${colorObj.border}; box-shadow: 0 8px 22px -8px ${colorObj.hex}26;" class="cv-card card-stagger group relative border-[1.5px] rounded-[26px] p-3.5 space-y-2.5 active:scale-[0.99] transition-[transform,border-color,box-shadow] cursor-pointer overflow-hidden">
               <div class="flex items-center justify-between gap-2">
                 <div class="flex items-center gap-3 min-w-0">
-                  <div class="med-icon-squircle w-11 h-11 rounded-[16px] flex items-center justify-center shrink-0 border" style="${getIconSquircleStyle(colorObj, mod.iconKey)}">
+                  <div class="med-icon-squircle w-11 h-11 rounded-[16px] flex items-center justify-center shrink-0 border-[1.5px]" style="${getIconSquircleStyle(colorObj, mod.iconKey)}">
                     ${getMedicalIconHTML(mod.iconKey, 'w-7 h-7')}
                   </div>
                   <div class="min-w-0">
-                    <h3 class="text-[14px] font-extrabold text-slate-900 truncate leading-snug tracking-tight">${mod.name}</h3>
-                    <p class="tabular-nums text-[11px] text-slate-400 font-semibold">${studiedCount}/${totalCount} aula${totalCount === 1 ? '' : 's'}</p>
+                    <div class="flex items-center gap-1.5 min-w-0">
+                      <span class="w-1 h-3.5 rounded-full shrink-0" style="background-color: ${colorObj.hex};"></span>
+                      <h3 class="text-[14px] font-black text-slate-900 truncate leading-snug tracking-tight">${mod.name}</h3>
+                    </div>
+                    <p class="tabular-nums text-[11px] text-slate-500 font-semibold pl-2.5">${studiedCount}/${totalCount} aula${totalCount === 1 ? '' : 's'}</p>
                   </div>
                 </div>
 
                 <div class="flex items-center gap-1.5 shrink-0">
-                  <div class="tabular-nums px-2 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1 border ${
+                  <div class="tabular-nums px-2 py-1 rounded-xl text-[11px] font-extrabold flex items-center gap-1 border ${
                     pendingStudy > 0
-                      ? 'bg-amber-50/90 text-amber-800 border-amber-200/80'
-                      : 'bg-slate-50 text-slate-400 border-slate-100 opacity-50'
+                      ? 'bg-amber-50 text-amber-800 border-amber-300/90'
+                      : 'bg-white/80 text-slate-400 border-slate-200/70 opacity-55'
                   }" title="${pendingStudy} aula(s) a estudar">
                     ${UI_ICONS.book}
                     <span>${pendingStudy}</span>
                   </div>
 
-                  <div class="tabular-nums px-2 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1 border ${
+                  <div class="tabular-nums px-2 py-1 rounded-xl text-[11px] font-extrabold flex items-center gap-1 border ${
                     pendingReviews > 0
-                      ? 'bg-rose-50/90 text-rose-700 border-rose-200/80 animate-soft-pulse'
-                      : 'bg-slate-50 text-slate-400 border-slate-100 opacity-50'
+                      ? 'bg-rose-50 text-rose-700 border-rose-300/90 animate-soft-pulse'
+                      : 'bg-white/80 text-slate-400 border-slate-200/70 opacity-55'
                   }" title="${pendingReviews} revisão(ões) pendente(s)">
                     ${UI_ICONS.repeat}
                     <span>${pendingReviews}</span>
                   </div>
 
-                  <span class="tabular-nums text-[11px] font-extrabold px-2 py-0.5 rounded-full border" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
+                  <span class="tabular-nums text-[11px] font-black px-2 py-0.5 rounded-full border shadow-2xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
                     ${percent}%
                   </span>
 
-                  <button type="button" aria-label="Adicionar aula em ${mod.name}" onclick="event.stopPropagation(); openLessonSheet('${mod.id}')" class="touch-target w-7 h-7 rounded-xl bg-slate-50 hover:bg-slate-900 hover:text-white text-slate-600 border border-slate-200/80 hover:border-slate-900 flex items-center justify-center text-sm font-bold active:scale-90 transition-[transform,background-color,color,border-color]" title="Adicionar Aula neste Módulo">
+                  <button type="button" aria-label="Adicionar aula em ${mod.name}" onclick="event.stopPropagation(); openLessonSheet('${mod.id}')" class="touch-target w-7 h-7 rounded-xl border flex items-center justify-center text-sm font-black active:scale-90 transition-transform shadow-2xs" style="background-color: #ffffff; border-color: ${colorObj.border}; color: ${colorObj.text};" title="Adicionar Aula neste Módulo">
                     +
                   </button>
                 </div>
               </div>
 
-              <!-- Barra de Progresso Única e Suave -->
-              <div class="w-full rounded-full h-1.5 overflow-hidden" style="background-color: ${colorObj.track};">
+              <!-- Barra de Progresso Única e Vibrante -->
+              <div class="w-full rounded-full h-2 overflow-hidden" style="background-color: ${colorObj.track};">
                 <div class="h-full rounded-full transition-[width] duration-500" style="width: ${percent}%; background-color: ${colorObj.hex};"></div>
               </div>
             </div>
@@ -2652,27 +2682,31 @@
       const colorObj = getColorConfig(mod.colorKey);
       const todayStr = getTodayStr();
 
+      summaryCard.setAttribute('style', `background: linear-gradient(155deg, ${colorObj.bg}80 0%, #ffffff 50%, #ffffff 100%); border-color: ${colorObj.border}; box-shadow: 0 8px 22px -8px ${colorObj.hex}26;`);
       summaryCard.innerHTML = `
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3 min-w-0">
-            <div class="med-icon-squircle w-11 h-11 rounded-[16px] flex items-center justify-center border shrink-0" style="${getIconSquircleStyle(colorObj, mod.iconKey)}">
+            <div class="med-icon-squircle w-11 h-11 rounded-[16px] flex items-center justify-center border-[1.5px] shrink-0" style="${getIconSquircleStyle(colorObj, mod.iconKey)}">
               ${getMedicalIconHTML(mod.iconKey, 'w-7 h-7')}
             </div>
             <div class="min-w-0">
-              <h2 class="text-base font-extrabold text-slate-900 tracking-tight truncate">${mod.name}</h2>
-              <p class="tabular-nums text-[11px] text-slate-500 font-semibold">${studiedCount} de ${totalCount} estudadas (${percent}%)</p>
+              <div class="flex items-center gap-1.5 min-w-0">
+                <span class="w-1 h-4 rounded-full shrink-0" style="background-color: ${colorObj.hex};"></span>
+                <h2 class="text-base font-black text-slate-900 tracking-tight truncate">${mod.name}</h2>
+              </div>
+              <p class="tabular-nums text-[11px] text-slate-500 font-semibold pl-2.5">${studiedCount} de ${totalCount} estudadas (${percent}%)</p>
             </div>
           </div>
 
           <div class="flex items-center gap-1.5 shrink-0">
-            <button type="button" onclick="setModuleLessonFilter(AppState.moduleLessonFilter === 'unstudied' ? 'all' : 'unstudied')" class="tabular-nums px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1 border active:scale-95 transition-transform ${
-              pendingStudy > 0 ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-slate-50 text-slate-400 border-slate-100'
+            <button type="button" onclick="setModuleLessonFilter(AppState.moduleLessonFilter === 'unstudied' ? 'all' : 'unstudied')" class="tabular-nums px-2.5 py-1 rounded-xl text-xs font-extrabold flex items-center gap-1 border active:scale-95 transition-transform ${
+              pendingStudy > 0 ? 'bg-amber-50 text-amber-800 border-amber-300' : 'bg-white/80 text-slate-400 border-slate-200'
             }" title="Filtrar aulas a estudar">
               ${UI_ICONS.book}
               <span>${pendingStudy}</span>
             </button>
-            <button type="button" onclick="setModuleLessonFilter(AppState.moduleLessonFilter === 'review' ? 'all' : 'review')" class="tabular-nums px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1 border active:scale-95 transition-transform ${
-              pendingReviews > 0 ? 'bg-rose-50 text-rose-700 border-rose-200 animate-soft-pulse' : 'bg-slate-50 text-slate-400 border-slate-100'
+            <button type="button" onclick="setModuleLessonFilter(AppState.moduleLessonFilter === 'review' ? 'all' : 'review')" class="tabular-nums px-2.5 py-1 rounded-xl text-xs font-extrabold flex items-center gap-1 border active:scale-95 transition-transform ${
+              pendingReviews > 0 ? 'bg-rose-50 text-rose-700 border-rose-300 animate-soft-pulse' : 'bg-white/80 text-slate-400 border-slate-200'
             }" title="Filtrar revisões pendentes">
               ${UI_ICONS.repeat}
               <span>${pendingReviews}</span>
@@ -2680,7 +2714,7 @@
           </div>
         </div>
 
-        <div class="w-full rounded-full h-1.5 overflow-hidden mt-1" style="background-color: ${colorObj.track};">
+        <div class="w-full rounded-full h-2 overflow-hidden mt-1" style="background-color: ${colorObj.track};">
           <div class="h-full rounded-full transition-[width] duration-500" style="width: ${percent}%; background-color: ${colorObj.hex};"></div>
         </div>
       `;
@@ -3032,7 +3066,7 @@
       if (AppState.exams.length === 0) {
         container.innerHTML = `
           <div class="bg-white border border-slate-200/80 rounded-[28px] p-6 text-center space-y-3 shadow-xs">
-            <div class="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 border border-brand-200/70 mx-auto flex items-center justify-center">
+            <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 border border-rose-200/80 mx-auto flex items-center justify-center shadow-xs">
               ${UI_ICONS.calendar}
             </div>
             <div>
@@ -3041,7 +3075,7 @@
                 Cadastre datas de provas para acompanhar a contagem regressiva e a cobertura de aulas estudadas.
               </p>
             </div>
-            <button onclick="openExamModal()" class="px-4 py-2.5 rounded-2xl bg-brand-500 text-white font-bold text-xs shadow-md shadow-brand-500/20 active:scale-95 transition-transform inline-flex items-center gap-1.5">
+            <button onclick="openExamModal()" class="px-4 py-2.5 rounded-2xl bg-brand-600 text-white font-bold text-xs shadow-md shadow-brand-600/20 active:scale-95 transition-transform inline-flex items-center gap-1.5">
               <span>+</span> Cadastrar Prova
             </button>
           </div>
@@ -3053,6 +3087,7 @@
 
       container.innerHTML = sortedExams.map(exam => {
         const mod = getModule(exam.moduleId);
+        const p = mod ? getPalette(mod.color) : getPalette('brand');
         const days = daysDiff(exam.date);
         const linkedLessons = AppState.lessons.filter(l => (exam.lessonIds || []).includes(l.id));
         const studiedLinked = linkedLessons.filter(l => l.isStudied).length;
@@ -3064,35 +3099,55 @@
 
         if (days < 0) {
           badgeText = "Realizada";
-          badgeClass = "bg-slate-100 text-slate-500 border-slate-200";
+          badgeClass = "bg-slate-100 text-slate-500 border-slate-200 font-bold";
         } else if (days === 0) {
           badgeText = "É HOJE! 🎯";
-          badgeClass = "bg-rose-100 text-rose-700 border-rose-300 font-extrabold animate-soft-pulse";
+          badgeClass = "bg-rose-600 text-white border-rose-700 font-extrabold shadow-sm shadow-rose-600/30 animate-soft-pulse";
         } else if (days === 1) {
           badgeText = "Amanhã!";
-          badgeClass = "bg-amber-100 text-amber-800 border-amber-300 font-bold";
+          badgeClass = "bg-rose-600 text-white border-rose-700 font-extrabold shadow-xs shadow-rose-600/25";
+        } else if (days <= 7) {
+          badgeText = `Faltam ${days} dias`;
+          badgeClass = "bg-rose-600 text-white border-rose-700 font-bold shadow-2xs";
         } else {
           badgeText = `Faltam ${days} dias`;
-          badgeClass = "bg-blue-50 text-blue-700 border-blue-200 font-semibold";
+          badgeClass = "bg-rose-50 text-rose-700 border-rose-200 font-bold";
         }
 
         return `
-          <div class="cv-card bg-white border border-slate-200/80 rounded-[26px] p-3.5 space-y-3 shadow-[0_2px_12px_rgba(15,23,42,0.03)]">
-            <div class="flex items-start justify-between">
-              <div>
-                <div class="flex items-center gap-1.5">
-                  <span class="tabular-nums text-[10px] px-2 py-0.5 rounded-full font-bold border ${badgeClass}">
-                    ${badgeText}
-                  </span>
-                  <span class="text-[10px] text-slate-500 font-medium">
-                    ${formatDateFull(exam.date)}
-                  </span>
+          <div class="cv-card bg-white rounded-[26px] p-3.5 space-y-3 relative overflow-hidden" style="border: 1.5px solid ${p.border}; background-image: linear-gradient(145deg, #ffffff 68%, ${p.surface} 100%); box-shadow: 0 4px 16px -4px rgba(15,23,42,0.06);">
+            <div class="w-1.5 h-10 rounded-r-full absolute left-0 top-4" style="background-color: ${p.hex};"></div>
+            <div class="flex items-start justify-between gap-2.5 pl-1">
+              <div class="flex items-start gap-2.5 min-w-0">
+                ${mod ? `
+                  <div class="w-10 h-10 rounded-[13px] flex items-center justify-center shrink-0 mt-0.5 shadow-sm" style="${getIconSquircleStyle(p, mod.icon)}">
+                    ${getMedicalIcon(mod.icon, "w-6 h-6")}
+                  </div>
+                ` : `
+                  <div class="w-10 h-10 rounded-[13px] bg-rose-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
+                    ${UI_ICONS.calendar}
+                  </div>
+                `}
+                <div class="min-w-0">
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="tabular-nums text-[10px] px-2.5 py-0.5 rounded-full border ${badgeClass}">
+                      ${badgeText}
+                    </span>
+                    <span class="text-[10.5px] text-slate-500 font-bold">
+                      ${formatDateFull(exam.date)}
+                    </span>
+                  </div>
+                  <h3 class="text-sm font-extrabold text-slate-900 mt-1 truncate">${exam.name}</h3>
+                  <div class="mt-0.5">
+                    <span class="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-md border" style="background-color: ${p.surface}; color: ${p.text}; border-color: ${p.border};">
+                      <span class="w-1.5 h-1.5 rounded-full" style="background-color: ${p.hex};"></span>
+                      ${mod ? mod.name : 'Geral'}
+                    </span>
+                  </div>
                 </div>
-                <h3 class="text-sm font-bold text-slate-900 mt-1">${exam.name}</h3>
-                <p class="text-[11px] text-slate-500">${mod ? mod.name : 'Geral'}</p>
               </div>
 
-              <div class="flex items-center gap-1">
+              <div class="flex items-center gap-1 shrink-0">
                 <button aria-label="Editar prova ${exam.name}" onclick="openExamModal('${exam.id}')" class="touch-target p-1.5 text-slate-400 hover:text-slate-800 rounded-lg hover:bg-slate-100 active:scale-90 transition-transform" title="Editar">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                 </button>
@@ -3102,27 +3157,27 @@
               </div>
             </div>
 
-            <div>
+            <div class="pl-1">
               <div class="flex items-center justify-between text-xs mb-1">
-                <span class="text-slate-500 text-[11px]">Conteúdo Estudado</span>
-                <span class="tabular-nums font-bold ${percent === 100 ? 'text-brand-600' : 'text-slate-700'}">
+                <span class="text-slate-600 text-[11px] font-semibold">Conteúdo Estudado</span>
+                <span class="tabular-nums font-extrabold text-[11px]" style="color: ${p.text};">
                   ${studiedLinked}/${totalLinked} aulas (${percent}%)
                 </span>
               </div>
-              <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
-                <div class="h-full rounded-full bg-brand-500 transition-[width] duration-500" style="width: ${percent}%;"></div>
+              <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden p-[1px] border border-slate-200/60">
+                <div class="h-full rounded-full transition-[width] duration-500" style="width: ${percent}%; background-color: ${p.hex};"></div>
               </div>
             </div>
 
             ${totalLinked > 0 ? `
-              <details class="text-xs text-slate-600 pt-1 border-t border-slate-100">
-                <summary class="cursor-pointer text-[10.5px] font-semibold text-slate-500 hover:text-slate-800 py-1">
+              <details class="text-xs text-slate-600 pt-1 border-t border-slate-100 pl-1">
+                <summary class="cursor-pointer text-[10.5px] font-bold text-slate-600 hover:text-slate-900 py-1">
                   Ver ${totalLinked} aulas desta prova
                 </summary>
                 <div class="space-y-1.5 pt-1.5 max-h-36 overflow-y-auto">
                   ${linkedLessons.map(l => `
-                    <div class="flex items-center justify-between p-1.5 rounded-xl bg-slate-50 border border-slate-200 text-[11px]">
-                      <span class="truncate flex-1 font-medium cursor-pointer" onclick="openViewLessonModal('${l.id}')">Aula ${String(l.number).padStart(2, '0')}: ${l.title}</span>
+                    <div class="flex items-center justify-between p-1.5 rounded-xl bg-white/90 border border-slate-200/90 text-[11px]">
+                      <span class="truncate flex-1 font-semibold text-slate-800 cursor-pointer" onclick="openViewLessonModal('${l.id}')">Aula ${String(l.number).padStart(2, '0')}: ${l.title}</span>
                       <button onclick="toggleLessonStudied('${l.id}')" class="px-2 py-0.5 rounded-lg text-[10px] font-bold ${l.isStudied ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-amber-100 text-amber-800 border border-amber-200'}">
                         ${l.isStudied ? '✓ Feita' : 'Pendente'}
                       </button>
