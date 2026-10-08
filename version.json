@@ -1,6 +1,5 @@
 {
-  "version": "2.2.0",
-  "buildTime": "2026-10-04T23:55:00.000Z",
-  "notes": "v2.2.0: Auditoria Mobile UI/UX & 120Hz (Galaxy A54): restauração de rolagem sem pulos ao voltar de módulos ou trocar chips, gestos de uma mão (arrastar para baixo para fechar gavetas/modais e deslizar para a direita para voltar), modais ancorados na base (estilo One UI) e otimização de performance 120Hz com View Transitions."
+  "version": "2.3.0",
+  "buildTime": "2026-10-08T15:40:00.000Z",
+  "notes": "v2.3.0: Unificação de todos os 21 ícones médicos e do ícone do app (icon.svg) na estética Dark-Slate & Anatomia Branca 3D (padrão Reumatologia), barra superior modernizada com busca rápida global e status ao vivo, desfazer em 1 toque (Undo), filtros inteligentes e correções de sincronização Prova/Aula."
 }
-
