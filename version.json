@@ -1,5 +1,6 @@
 {
-  "version": "2.3.0",
-  "buildTime": "2026-10-08T15:40:00.000Z",
-  "notes": "v2.3.0: Unificação de todos os 21 ícones médicos e do ícone do app (icon.svg) na estética Dark-Slate & Anatomia Branca 3D (padrão Reumatologia), barra superior modernizada com busca rápida global e status ao vivo, desfazer em 1 toque (Undo), filtros inteligentes e correções de sincronização Prova/Aula."
+  "version": "2.3.1",
+  "buildTime": "2026-10-08T16:18:00.000Z",
+  "buildLabel": "08/10/2026 às 13:18",
+  "notes": "v2.3.1: Novo ícone minimalista acadêmico (Capelo + Livro Aberto em Azul Marinho sobre Squircle Perolado, sem margens brancas excedentes) e novo tema principal Azul Marinho / Escuro (#162654) harmonizado em todo o app."
 }
