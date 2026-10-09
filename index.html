@@ -437,13 +437,17 @@
     </section>
 
     <!-- ==================== ABA 1.1: DETALHE DO MÓDULO (AULAS) ==================== -->
-    <section id="tab-modulo-detail" class="tab-pane hidden space-y-3">
+    <section id="tab-modulo-detail" class="tab-pane hidden space-y-3 pb-14">
       <div class="flex items-center justify-between">
         <button id="btn-back-to-modules" class="touch-target tap-smooth flex items-center gap-1 text-xs font-bold text-slate-600 hover:text-slate-900 py-1.5 pr-2">
           <svg class="w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
           <span>Módulos</span>
         </button>
         <div class="flex items-center gap-1.5">
+          <button id="btn-top-add-lesson-in-module" aria-label="Adicionar Aula neste Módulo" class="touch-target tap-smooth px-3 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-extrabold shadow-xs flex items-center gap-1" title="Adicionar Aula">
+            <span class="text-sm leading-none font-black" aria-hidden="true">+</span>
+            <span>Aula</span>
+          </button>
           <button id="btn-edit-current-module" aria-label="Editar Módulo" class="touch-target tap-smooth p-2 text-slate-500 hover:text-slate-800 rounded-xl hover:bg-slate-100" title="Editar Módulo">
             <svg class="w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
           </button>
@@ -463,7 +467,7 @@
         <div class="flex items-center justify-between">
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Aulas do Módulo</h3>
           <button id="btn-add-lesson-in-module" class="tap-smooth px-3.5 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold shadow-sm flex items-center gap-1">
-            <span aria-hidden="true">+</span> Adicionar Aula
+            <span class="text-sm leading-none font-black" aria-hidden="true">+</span> Adicionar Aula
           </button>
         </div>
         <div id="module-detail-filters" class="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-0.5">
@@ -475,6 +479,11 @@
       <div id="module-lessons-list" class="space-y-2">
         <!-- Rendered dynamically -->
       </div>
+
+      <!-- Botão Flutuante (+) Ergonomia 1-Mão dentro da Matéria -->
+      <button id="btn-fab-add-lesson-in-module" type="button" aria-label="Adicionar nova aula" title="Adicionar Aula" class="tap-smooth fixed bottom-[76px] right-4 z-20 w-12 h-12 rounded-2xl bg-gradient-to-br from-[#162654] to-[#1e3a8a] text-white shadow-lg shadow-brand-900/30 border border-white/15 flex items-center justify-center text-2xl font-black active:scale-90 transition-transform">
+        +
+      </button>
     </section>
 
     <!-- ==================== ABA 2: ESTUDO & REVISÕES ==================== -->
@@ -708,7 +717,7 @@
   </div>
 
   <!-- ==================== MODAL: CRIAR / EDITAR MÓDULO (ONE UI BOTTOM-ANCHORED) ==================== -->
-  <dialog id="modal-module" class="bg-transparent p-0 w-full max-w-md mt-auto mb-0 sm:m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm" closedby="any">
+  <dialog id="modal-module" class="bg-transparent p-0 w-full max-w-md mt-auto mb-0 sm:m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm">
     <div class="dialog-sheet-card bg-white border-t sm:border border-slate-200/90 rounded-t-[32px] sm:rounded-[32px] p-5 pb-safe shadow-2xl space-y-3.5 sm:mx-3 max-h-[90vh] flex flex-col">
       <div data-dialog-drag class="touch-none select-none -mt-2 pt-1 pb-1.5 border-b border-slate-100 shrink-0">
         <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-2.5 sm:hidden"></div>
@@ -756,7 +765,7 @@
   </dialog>
 
   <!-- ==================== MODAL: CRIAR / EDITAR PROVA (ONE UI BOTTOM-ANCHORED) ==================== -->
-  <dialog id="modal-exam" class="bg-transparent p-0 w-full max-w-md mt-auto mb-0 sm:m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm" closedby="any">
+  <dialog id="modal-exam" class="bg-transparent p-0 w-full max-w-md mt-auto mb-0 sm:m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm">
     <div class="dialog-sheet-card bg-white border-t sm:border border-slate-200 rounded-t-[32px] sm:rounded-[32px] p-5 pb-safe shadow-2xl space-y-3 sm:mx-3 max-h-[88vh] flex flex-col">
       <div data-dialog-drag class="touch-none select-none -mt-2 pt-1 pb-1.5 border-b border-slate-100 shrink-0">
         <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-2.5 sm:hidden"></div>
@@ -806,7 +815,7 @@
   </dialog>
 
   <!-- ==================== MODAL: DETALHES DA AULA / LEITOR (ONE UI BOTTOM-ANCHORED) ==================== -->
-  <dialog id="modal-view-lesson" class="bg-transparent p-0 w-full max-w-md mt-auto mb-0 sm:m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm" closedby="any">
+  <dialog id="modal-view-lesson" class="bg-transparent p-0 w-full max-w-md mt-auto mb-0 sm:m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm">
     <div class="dialog-sheet-card bg-white border-t sm:border border-slate-200 rounded-t-[32px] sm:rounded-[32px] p-5 pb-safe shadow-2xl space-y-3.5 sm:mx-3 max-h-[88vh] flex flex-col">
       <div data-dialog-drag class="touch-none select-none -mt-2 pt-1 pb-1.5 border-b border-slate-100 shrink-0">
         <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-2.5 sm:hidden"></div>
@@ -815,7 +824,7 @@
             <span id="view-lesson-badge" class="tabular-nums text-[10.5px] px-2 py-0.5 rounded-md font-bold bg-brand-50 text-brand-700 border border-brand-200">
               Aula 01
             </span>
-            <span id="view-lesson-module-tag" class="text-[11px] font-semibold text-slate-600"></span>
+            <button type="button" id="view-lesson-module-tag" class="text-[11px] font-bold text-slate-600 hover:text-brand-600 underline decoration-slate-300 underline-offset-2 active:scale-95 transition-transform" title="Abrir Módulo"></button>
           </div>
           <button type="button" id="btn-close-view-lesson" aria-label="Fechar detalhes da aula" class="touch-target w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs active:scale-90 transition-transform">✕</button>
         </div>
@@ -864,7 +873,7 @@
   </dialog>
 
   <!-- ==================== MODAL: CONFIGURAÇÕES, BACKUP & VERSÃO (ONE UI BOTTOM-ANCHORED) ==================== -->
-  <dialog id="modal-settings" class="bg-transparent p-0 w-full max-w-sm mt-auto mb-0 sm:m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm" closedby="any">
+  <dialog id="modal-settings" class="bg-transparent p-0 w-full max-w-sm mt-auto mb-0 sm:m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm">
     <div class="dialog-sheet-card bg-white border-t sm:border border-slate-200/90 rounded-t-[32px] sm:rounded-[32px] p-5 pb-safe shadow-2xl space-y-3.5 sm:mx-3">
       <div data-dialog-drag class="touch-none select-none -mt-2 pt-1 pb-1.5 border-b border-slate-100">
         <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-2.5 sm:hidden"></div>
@@ -919,11 +928,11 @@
       <div class="pt-2 border-t border-slate-100 space-y-1.5">
         <div class="flex items-center justify-between">
           <span class="text-[10.5px] font-bold uppercase tracking-wider text-slate-500">Versão do Aplicativo</span>
-          <span id="settings-version-label" class="tabular-nums text-[10px] font-bold px-1.5 py-0.5 rounded bg-brand-50 text-brand-700 border border-brand-200">v2.4.1</span>
+          <span id="settings-version-label" class="tabular-nums text-[10px] font-bold px-1.5 py-0.5 rounded bg-brand-50 text-brand-700 border border-brand-200">v2.4.2</span>
         </div>
         <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-2.5 flex items-center justify-between">
           <div>
-            <span id="settings-build-label" class="tabular-nums text-xs font-semibold text-slate-800 block">08/10/2026 às 15:00</span>
+            <span id="settings-build-label" class="tabular-nums text-xs font-semibold text-slate-800 block">08/10/2026 às 22:35</span>
             <span id="settings-update-status" class="text-[10px] text-slate-500">Sincronizado com Vercel</span>
           </div>
           <button id="btn-check-update-manual" class="touch-target px-2.5 py-1 rounded-xl bg-white border border-slate-200 text-slate-700 hover:text-brand-600 text-xs font-bold active:scale-90 transition-transform shadow-2xs">
@@ -941,7 +950,7 @@
   </dialog>
 
   <!-- ==================== MODAL: BUSCA RÁPIDA GLOBAL (1-TOQUE, ZERO ESFORÇO COGNITIVO) ==================== -->
-  <dialog id="modal-search" class="bg-transparent p-0 w-full max-w-md mt-auto mb-0 sm:m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm" closedby="any">
+  <dialog id="modal-search" class="bg-transparent p-0 w-full max-w-md mt-auto mb-0 sm:m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm">
     <div class="dialog-sheet-card bg-white border-t sm:border border-slate-200/90 rounded-t-[32px] sm:rounded-[32px] p-4 pb-safe shadow-2xl space-y-3 sm:mx-3 max-h-[86vh] flex flex-col">
       <div data-dialog-drag class="touch-none select-none -mt-1 pt-1 pb-1 border-b border-slate-100 shrink-0">
         <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-2 sm:hidden"></div>
@@ -972,7 +981,7 @@
   </dialog>
 
   <!-- ==================== MODAL: CONFIRMAÇÃO NATIVA ONE UI (SEM WINDOW.CONFIRM) ==================== -->
-  <dialog id="modal-confirm" class="bg-transparent p-0 w-full max-w-sm mt-auto mb-0 sm:m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm" closedby="any">
+  <dialog id="modal-confirm" class="bg-transparent p-0 w-full max-w-sm mt-auto mb-0 sm:m-auto backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm">
     <div class="dialog-sheet-card bg-white border-t sm:border border-slate-200/90 rounded-t-[32px] sm:rounded-[32px] p-5 pb-safe shadow-2xl space-y-3.5 sm:mx-3">
       <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-1 sm:hidden"></div>
       <div class="space-y-1.5 text-center sm:text-left">
@@ -1004,11 +1013,34 @@
   <!-- ==================== APPLICATION LOGIC ==================== -->
   <script>
     // --- APP VERSION & AUTO-UPDATE DETECTOR ---
-    const CURRENT_APP_VERSION = '2.4.1';
-    const CURRENT_BUILD_TIMESTAMP = '2026-10-08T18:00:00.000Z';
-    const CURRENT_BUILD_LABEL = '08/10/2026 às 15:00';
+    const CURRENT_APP_VERSION = '2.4.2';
+    const CURRENT_BUILD_TIMESTAMP = '2026-10-08T22:35:00.000Z';
+    const CURRENT_BUILD_LABEL = '08/10/2026 às 22:35';
 
     let pendingServerUpdate = null;
+
+    // --- CHROME ANDROID USER-ACTIVATED HISTORY GUARD ---
+    let needsUserGestureGuard = true;
+    let appHistoryDepth = 0;
+
+    function pushAppHistory(step = 'nav') {
+      try {
+        if (needsUserGestureGuard) {
+          history.replaceState({ app: 'meu-estudo', step: 'root', activated: true, ts: Date.now() }, '');
+          history.pushState({ app: 'meu-estudo', step: 'guard', activated: true, ts: Date.now() }, '');
+          needsUserGestureGuard = false;
+          appHistoryDepth = Math.max(appHistoryDepth, 1);
+        }
+        if (step !== 'guard') {
+          if (appHistoryDepth < 6) {
+            history.pushState({ app: 'meu-estudo', step: step, activated: true, ts: Date.now() }, '');
+            appHistoryDepth++;
+          } else {
+            history.replaceState({ app: 'meu-estudo', step: step, activated: true, ts: Date.now() }, '');
+          }
+        }
+      } catch (e) {}
+    }
 
     async function checkServerVersion(isManual = false) {
       if (!isManual && document.hidden) return;
@@ -1125,7 +1157,7 @@
     });
 
     // --- ONE UI CUSTOM CONFIRMATION DIALOG ---
-    function askConfirmation({ title = "Confirmar Ação", message = "Deseja continuar?", confirmText = "Confirmar", isDanger = true } = {}) {
+    function askConfirmation({ title = "Confirmar Ação", message = "Deseja continuar?", confirmText = "Confirmar", isDanger = true, danger } = {}) {
       return new Promise((resolve) => {
         const dlg = document.getElementById('modal-confirm');
         const titleEl = document.getElementById('confirm-modal-title');
@@ -1138,10 +1170,11 @@
           return;
         }
 
+        const dangerFlag = typeof danger === 'boolean' ? danger : isDanger;
         titleEl.textContent = title;
         msgEl.textContent = message;
         btnOk.textContent = confirmText;
-        btnOk.className = isDanger
+        btnOk.className = dangerFlag
           ? "tap-smooth flex-1 py-2.5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm"
           : "tap-smooth flex-1 py-2.5 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs shadow-sm";
 
@@ -1165,6 +1198,7 @@
         dlg.addEventListener('close', onClose);
 
         vibrate(10);
+        pushAppHistory('modal-confirm');
         dlg.showModal();
       });
     }
@@ -1652,10 +1686,14 @@
       return safe;
     }
 
-    function switchTab(tabId) {
+    function switchTab(tabId, skipHistory = false) {
       vibrate(10);
       const mainEl = document.getElementById('main-content');
       const prevTab = AppState.activeTab;
+
+      if (!skipHistory && tabId !== 'tab-modulos' && prevTab !== tabId) {
+        pushAppHistory(tabId);
+      }
 
       if (mainEl && prevTab && prevTab !== 'tab-modulo-detail') {
         AppState.scrollPositions[prevTab] = mainEl.scrollTop;
@@ -1728,7 +1766,7 @@
     }
 
     // --- BOTTOM SHEET CONTROLS ---
-    function openLessonSheet(preselectedModuleId = null, editLessonId = null) {
+    function openLessonSheet(preselectedModuleId = null, editLessonId = null, preselectedExamId = null) {
       vibrate(15);
       const sheet = document.getElementById('sheet-lesson');
       const drawer = document.getElementById('sheet-lesson-drawer');
@@ -1753,7 +1791,7 @@
       }
 
       form.reset();
-      populateExamSelect(examSelect);
+      populateExamSelect(examSelect, preselectedExamId || '');
 
       if (AppState.modules.length === 0) {
         showToast("Crie seu primeiro Módulo antes de adicionar aulas.", "ℹ️");
@@ -1783,6 +1821,9 @@
         const nextNum = getNextLessonNumber(activeModuleId);
         numInput.value = nextNum;
         studiedToggle.checked = false;
+        if (preselectedExamId) {
+          examSelect.value = preselectedExamId;
+        }
         if (btnSaveAndNext) btnSaveAndNext.classList.remove('hidden');
       }
 
@@ -1790,6 +1831,9 @@
       updateLessonNumberDisplay();
       autoResizeNotesTextarea();
 
+      if (!sheet.classList.contains('sheet-open')) {
+        pushAppHistory('sheet-lesson');
+      }
       sheet.classList.add('sheet-open');
       setTimeout(() => {
         try {
@@ -1940,7 +1984,10 @@
       renderColorPicker();
       updateModuleLivePreview();
 
-      modal.showModal();
+      if (!modal.open) {
+        pushAppHistory('modal-module');
+        modal.showModal();
+      }
       setTimeout(() => nameInput.focus(), 150);
     }
 
@@ -2044,7 +2091,10 @@
         renderExamLessonsChecklist(defaultModId, []);
       }
 
-      modal.showModal();
+      if (!modal.open) {
+        pushAppHistory('modal-exam');
+        modal.showModal();
+      }
     }
 
     function renderExamLessonsChecklist(moduleId, selectedLessonIds = []) {
@@ -2086,7 +2136,14 @@
       const modal = document.getElementById('modal-view-lesson');
 
       document.getElementById('view-lesson-badge').textContent = `Aula ${String(lesson.number).padStart(2, '0')}`;
-      document.getElementById('view-lesson-module-tag').textContent = mod ? mod.name : '';
+      const modTagBtn = document.getElementById('view-lesson-module-tag');
+      if (modTagBtn) {
+        modTagBtn.textContent = mod ? mod.name : '';
+        modTagBtn.onclick = mod ? () => {
+          modal.close();
+          openModuleDetail(mod.id);
+        } : null;
+      }
       document.getElementById('view-lesson-title').textContent = lesson.title;
       document.getElementById('view-lesson-notes-content').innerHTML = formatNotesHTML(lesson.notes);
 
@@ -2135,7 +2192,10 @@
         `;
       }
 
-      if (!modal.open) modal.showModal();
+      if (!modal.open) {
+        pushAppHistory('modal-view-lesson');
+        modal.showModal();
+      }
     }
 
     function toggleReviewStage(lessonId, stageKey) {
@@ -2644,11 +2704,12 @@
 
     function openModuleDetail(moduleId) {
       vibrate(10);
+      pushAppHistory('module-detail');
       runViewTransition(() => {
         AppState.currentModuleId = moduleId;
         AppState.moduleLessonFilter = 'all';
         renderModuloDetailTab(moduleId);
-        switchTab('tab-modulo-detail');
+        switchTab('tab-modulo-detail', true);
       });
     }
 
@@ -2684,7 +2745,7 @@
 
       summaryCard.setAttribute('style', `background: linear-gradient(155deg, ${colorObj.bg}80 0%, #ffffff 50%, #ffffff 100%); border-color: ${colorObj.border}; box-shadow: 0 8px 22px -8px ${colorObj.hex}26;`);
       summaryCard.innerHTML = `
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between gap-2">
           <div class="flex items-center gap-3 min-w-0">
             <div class="med-icon-squircle w-11 h-11 rounded-[16px] flex items-center justify-center border-[1.5px] shrink-0" style="${getIconSquircleStyle(colorObj, mod.iconKey)}">
               ${getMedicalIconHTML(mod.iconKey, 'w-7 h-7')}
@@ -2699,17 +2760,20 @@
           </div>
 
           <div class="flex items-center gap-1.5 shrink-0">
-            <button type="button" onclick="setModuleLessonFilter(AppState.moduleLessonFilter === 'unstudied' ? 'all' : 'unstudied')" class="tabular-nums px-2.5 py-1 rounded-xl text-xs font-extrabold flex items-center gap-1 border active:scale-95 transition-transform ${
+            <button type="button" onclick="setModuleLessonFilter(AppState.moduleLessonFilter === 'unstudied' ? 'all' : 'unstudied')" class="tabular-nums px-2 py-1 rounded-xl text-xs font-extrabold flex items-center gap-1 border active:scale-95 transition-transform ${
               pendingStudy > 0 ? 'bg-amber-50 text-amber-800 border-amber-300' : 'bg-white/80 text-slate-400 border-slate-200'
             }" title="Filtrar aulas a estudar">
               ${UI_ICONS.book}
               <span>${pendingStudy}</span>
             </button>
-            <button type="button" onclick="setModuleLessonFilter(AppState.moduleLessonFilter === 'review' ? 'all' : 'review')" class="tabular-nums px-2.5 py-1 rounded-xl text-xs font-extrabold flex items-center gap-1 border active:scale-95 transition-transform ${
+            <button type="button" onclick="setModuleLessonFilter(AppState.moduleLessonFilter === 'review' ? 'all' : 'review')" class="tabular-nums px-2 py-1 rounded-xl text-xs font-extrabold flex items-center gap-1 border active:scale-95 transition-transform ${
               pendingReviews > 0 ? 'bg-rose-50 text-rose-700 border-rose-300 animate-soft-pulse' : 'bg-white/80 text-slate-400 border-slate-200'
             }" title="Filtrar revisões pendentes">
               ${UI_ICONS.repeat}
               <span>${pendingReviews}</span>
+            </button>
+            <button type="button" aria-label="Adicionar aula em ${mod.name}" onclick="openLessonSheet('${mod.id}')" class="touch-target w-8 h-8 rounded-xl border-[1.5px] flex items-center justify-center text-base font-black active:scale-90 transition-transform shadow-xs" style="background-color: ${colorObj.hex}; border-color: ${colorObj.hex}; color: #ffffff;" title="Adicionar Aula neste Módulo">
+              +
             </button>
           </div>
         </div>
@@ -2730,7 +2794,7 @@
               ${getMedicalIconHTML(mod.iconKey, 'w-6 h-6')}
             </div>
             <p class="text-xs text-slate-500 font-medium">Nenhuma aula cadastrada neste módulo.</p>
-            <button onclick="openLessonSheet('${mod.id}')" class="px-3.5 py-2 rounded-2xl bg-brand-500 text-white font-bold text-xs shadow-sm active:scale-95 transition-transform inline-flex items-center gap-1">
+            <button onclick="openLessonSheet('${mod.id}')" class="px-3.5 py-2 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs shadow-sm active:scale-95 transition-transform inline-flex items-center gap-1">
               <span>+</span> Adicionar Aula 01
             </button>
           </div>
@@ -2850,6 +2914,12 @@
       if (AppState.currentModuleId) deleteModule(AppState.currentModuleId);
     });
     document.getElementById('btn-add-lesson-in-module').addEventListener('click', () => {
+      if (AppState.currentModuleId) openLessonSheet(AppState.currentModuleId);
+    });
+    document.getElementById('btn-top-add-lesson-in-module')?.addEventListener('click', () => {
+      if (AppState.currentModuleId) openLessonSheet(AppState.currentModuleId);
+    });
+    document.getElementById('btn-fab-add-lesson-in-module')?.addEventListener('click', () => {
       if (AppState.currentModuleId) openLessonSheet(AppState.currentModuleId);
     });
 
@@ -3006,13 +3076,19 @@
       // 2. Estudar Pane
       const estListEl = document.getElementById('estudo-pendentes-list');
       if (unstudiedLessons.length === 0) {
+        const targetModId = (activeModFilter && activeModFilter !== 'all') ? activeModFilter : '';
         estListEl.innerHTML = `
-          <div class="bg-white border border-slate-200/80 rounded-[28px] p-6 text-center space-y-2.5 shadow-xs">
+          <div class="bg-white border border-slate-200/80 rounded-[28px] p-6 text-center space-y-3 shadow-xs">
             <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200/70 mx-auto flex items-center justify-center">
               ${UI_ICONS.check}
             </div>
-            <h3 class="text-sm font-bold text-slate-900">Todas as aulas foram estudadas!</h3>
-            <p class="text-xs text-slate-500 max-w-xs mx-auto">Cadastre novas aulas ou acompanhe as revisões espaçadas programadas.</p>
+            <div>
+              <h3 class="text-sm font-bold text-slate-900">Todas as aulas foram estudadas!</h3>
+              <p class="text-xs text-slate-500 mt-1 max-w-xs mx-auto">Cadastre novas aulas ou acompanhe as revisões espaçadas programadas.</p>
+            </div>
+            <button type="button" onclick="openLessonSheet('${targetModId}')" class="px-4 py-2 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs shadow-sm active:scale-95 transition-transform inline-flex items-center gap-1.5">
+              <span>+</span> Adicionar Nova Aula
+            </button>
           </div>
         `;
       } else {
@@ -3087,7 +3163,7 @@
 
       container.innerHTML = sortedExams.map(exam => {
         const mod = getModule(exam.moduleId);
-        const p = mod ? getPalette(mod.color) : getPalette('brand');
+        const colorObj = mod ? getColorConfig(mod.colorKey) : getColorConfig('navy');
         const days = daysDiff(exam.date);
         const linkedLessons = AppState.lessons.filter(l => (exam.lessonIds || []).includes(l.id));
         const studiedLinked = linkedLessons.filter(l => l.isStudied).length;
@@ -3115,16 +3191,16 @@
         }
 
         return `
-          <div class="cv-card bg-white rounded-[26px] p-3.5 space-y-3 relative overflow-hidden" style="border: 1.5px solid ${p.border}; background-image: linear-gradient(145deg, #ffffff 68%, ${p.surface} 100%); box-shadow: 0 4px 16px -4px rgba(15,23,42,0.06);">
-            <div class="w-1.5 h-10 rounded-r-full absolute left-0 top-4" style="background-color: ${p.hex};"></div>
+          <div class="cv-card bg-white rounded-[26px] p-3.5 space-y-3 relative overflow-hidden" style="border: 1.5px solid ${colorObj.border}; background-image: linear-gradient(145deg, #ffffff 68%, ${colorObj.bg} 100%); box-shadow: 0 4px 16px -4px rgba(15,23,42,0.06);">
+            <div class="w-1.5 h-10 rounded-r-full absolute left-0 top-4" style="background-color: ${colorObj.hex};"></div>
             <div class="flex items-start justify-between gap-2.5 pl-1">
               <div class="flex items-start gap-2.5 min-w-0">
                 ${mod ? `
-                  <div class="w-10 h-10 rounded-[13px] flex items-center justify-center shrink-0 mt-0.5 shadow-sm" style="${getIconSquircleStyle(p, mod.icon)}">
-                    ${getMedicalIcon(mod.icon, "w-6 h-6")}
+                  <div onclick="openModuleDetail('${mod.id}')" class="med-icon-squircle w-10 h-10 rounded-[14px] flex items-center justify-center shrink-0 mt-0.5 shadow-sm border cursor-pointer active:scale-95 transition-transform" style="${getIconSquircleStyle(colorObj, mod.iconKey)}">
+                    ${getMedicalIconHTML(mod.iconKey, "w-6 h-6")}
                   </div>
                 ` : `
-                  <div class="w-10 h-10 rounded-[13px] bg-rose-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
+                  <div class="w-10 h-10 rounded-[14px] bg-rose-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
                     ${UI_ICONS.calendar}
                   </div>
                 `}
@@ -3139,15 +3215,20 @@
                   </div>
                   <h3 class="text-sm font-extrabold text-slate-900 mt-1 truncate">${exam.name}</h3>
                   <div class="mt-0.5">
-                    <span class="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-md border" style="background-color: ${p.surface}; color: ${p.text}; border-color: ${p.border};">
-                      <span class="w-1.5 h-1.5 rounded-full" style="background-color: ${p.hex};"></span>
-                      ${mod ? mod.name : 'Geral'}
-                    </span>
+                    <button type="button" ${mod ? `onclick="openModuleDetail('${mod.id}')"` : ''} class="inline-flex items-center gap-1 text-[10px] font-extrabold px-2 py-0.5 rounded-md border active:scale-95 transition-transform" style="background-color: ${colorObj.bg}; color: ${colorObj.text}; border-color: ${colorObj.border};">
+                      <span class="w-1.5 h-1.5 rounded-full" style="background-color: ${colorObj.hex};"></span>
+                      <span>${mod ? mod.name : 'Geral'}</span>
+                    </button>
                   </div>
                 </div>
               </div>
 
               <div class="flex items-center gap-1 shrink-0">
+                ${mod ? `
+                  <button type="button" aria-label="Adicionar aula na prova ${exam.name}" onclick="openLessonSheet('${mod.id}', null, '${exam.id}')" class="touch-target w-7 h-7 rounded-xl border flex items-center justify-center text-sm font-black active:scale-90 transition-transform shadow-2xs" style="background-color: #ffffff; border-color: ${colorObj.border}; color: ${colorObj.text};" title="Adicionar Aula nesta Prova">
+                    +
+                  </button>
+                ` : ''}
                 <button aria-label="Editar prova ${exam.name}" onclick="openExamModal('${exam.id}')" class="touch-target p-1.5 text-slate-400 hover:text-slate-800 rounded-lg hover:bg-slate-100 active:scale-90 transition-transform" title="Editar">
                   <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                 </button>
@@ -3160,12 +3241,12 @@
             <div class="pl-1">
               <div class="flex items-center justify-between text-xs mb-1">
                 <span class="text-slate-600 text-[11px] font-semibold">Conteúdo Estudado</span>
-                <span class="tabular-nums font-extrabold text-[11px]" style="color: ${p.text};">
+                <span class="tabular-nums font-extrabold text-[11px]" style="color: ${colorObj.text};">
                   ${studiedLinked}/${totalLinked} aulas (${percent}%)
                 </span>
               </div>
               <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden p-[1px] border border-slate-200/60">
-                <div class="h-full rounded-full transition-[width] duration-500" style="width: ${percent}%; background-color: ${p.hex};"></div>
+                <div class="h-full rounded-full transition-[width] duration-500" style="width: ${percent}%; background-color: ${colorObj.hex};"></div>
               </div>
             </div>
 
@@ -3544,7 +3625,10 @@
         else clearBtn.classList.add('hidden');
       }
       renderGlobalSearchResults(initialQuery);
-      if (!modal.open) modal.showModal();
+      if (!modal.open) {
+        pushAppHistory('modal-search');
+        modal.showModal();
+      }
       setTimeout(() => input.focus(), 100);
     }
 
@@ -3706,7 +3790,11 @@
 
     document.getElementById('btn-open-settings').addEventListener('click', () => {
       vibrate(10);
-      document.getElementById('modal-settings').showModal();
+      const dlg = document.getElementById('modal-settings');
+      if (dlg && !dlg.open) {
+        pushAppHistory('modal-settings');
+        dlg.showModal();
+      }
     });
     document.getElementById('btn-close-modal-settings').addEventListener('click', () => document.getElementById('modal-settings').close());
 
@@ -3812,25 +3900,21 @@
       e.target.value = "";
     });
 
-    // Dialog Light Dismiss Fallback & Style Cleanup
+    // Dialog Light Dismiss, Cancel Override & Style Cleanup
     document.querySelectorAll('dialog').forEach(dlg => {
       dlg.addEventListener('close', () => {
         dlg.style.transition = '';
         dlg.style.transform = '';
       });
-      if (!('closedBy' in HTMLDialogElement.prototype)) {
-        dlg.addEventListener('click', (event) => {
-          if (event.target !== dlg) return;
-          const rect = dlg.getBoundingClientRect();
-          const isInside = (
-            rect.top <= event.clientY &&
-            event.clientY <= rect.top + rect.height &&
-            rect.left <= event.clientX &&
-            event.clientX <= rect.left + rect.width
-          );
-          if (!isInside) dlg.close();
-        });
-      }
+      dlg.addEventListener('cancel', (event) => {
+        event.preventDefault();
+        dlg.close();
+      });
+      dlg.addEventListener('click', (event) => {
+        if (event.target === dlg) {
+          dlg.close();
+        }
+      });
     });
 
     // --- 120HZ ONE-HANDED TOUCH GESTURES (GALAXY A54 ERGONOMICS) ---
@@ -3968,7 +4052,7 @@
           if (deltaX > 75 && deltaY < 48 && elapsed < 500) {
             runViewTransition(() => {
               AppState.currentModuleId = null;
-              switchTab('tab-modulos');
+              switchTab('tab-modulos', true);
             });
           }
         }, { passive: true });
@@ -3981,20 +4065,42 @@
 
     function initAndroidBackHandler() {
       try {
-        history.replaceState({ app: 'meu-estudo', step: 'root' }, '');
-        history.pushState({ app: 'meu-estudo', step: 'guard' }, '');
+        history.replaceState({ app: 'meu-estudo', step: 'root', ts: Date.now() }, '');
+        history.pushState({ app: 'meu-estudo', step: 'guard', ts: Date.now() }, '');
+        appHistoryDepth = 1;
+        needsUserGestureGuard = true;
       } catch (e) {
         console.warn('History API not supported', e);
       }
 
+      // Garante que o primeiro toque do usuário arme entradas user-activated no Chrome Android
+      const armHistoryOnGesture = () => {
+        if (needsUserGestureGuard && !isExitingApp) {
+          pushAppHistory('guard');
+        }
+      };
+      window.addEventListener('pointerdown', armHistoryOnGesture, { capture: true, passive: true });
+      window.addEventListener('touchstart', armHistoryOnGesture, { capture: true, passive: true });
+      window.addEventListener('click', armHistoryOnGesture, { capture: true, passive: true });
+
       window.addEventListener('popstate', (event) => {
         if (isExitingApp) return;
+
+        appHistoryDepth = Math.max(0, appHistoryDepth - 1);
+        needsUserGestureGuard = true;
+
+        const rearmGuard = () => {
+          try {
+            history.pushState({ app: 'meu-estudo', step: 'guard', ts: Date.now() }, '');
+            appHistoryDepth = Math.max(1, appHistoryDepth);
+          } catch (e) {}
+        };
 
         // 1. Se Bottom Sheet de Aula estiver aberta, fecha suavemente
         const sheet = document.getElementById('sheet-lesson');
         if (sheet && sheet.classList.contains('sheet-open')) {
           closeLessonSheet();
-          history.pushState({ app: 'meu-estudo', step: 'guard' }, '');
+          rearmGuard();
           return;
         }
 
@@ -4002,7 +4108,7 @@
         const openDialog = document.querySelector('dialog[open]');
         if (openDialog) {
           openDialog.close();
-          history.pushState({ app: 'meu-estudo', step: 'guard' }, '');
+          rearmGuard();
           return;
         }
 
@@ -4010,16 +4116,16 @@
         if (AppState.activeTab === 'tab-modulo-detail') {
           runViewTransition(() => {
             AppState.currentModuleId = null;
-            switchTab('tab-modulos');
+            switchTab('tab-modulos', true);
           });
-          history.pushState({ app: 'meu-estudo', step: 'guard' }, '');
+          rearmGuard();
           return;
         }
 
         // 4. Se estiver em abas secundárias (Estudo ou Provas), volta para a aba Módulos
         if (AppState.activeTab !== 'tab-modulos') {
-          switchTab('tab-modulos');
-          history.pushState({ app: 'meu-estudo', step: 'guard' }, '');
+          switchTab('tab-modulos', true);
+          rearmGuard();
           return;
         }
 
@@ -4027,14 +4133,18 @@
         const now = Date.now();
         if (now - lastBackPressTime < 2000) {
           isExitingApp = true;
-          history.back();
+          try {
+            history.go(-(appHistoryDepth + 2));
+          } catch (err) {
+            history.back();
+          }
           setTimeout(() => {
             try { window.close(); } catch (err) {}
           }, 120);
         } else {
           lastBackPressTime = now;
           showToast("Pressione voltar novamente para sair", "👋");
-          history.pushState({ app: 'meu-estudo', step: 'guard' }, '');
+          rearmGuard();
         }
       });
     }
@@ -4048,11 +4158,15 @@
 
     // Init & Polling for Updates
     document.addEventListener('DOMContentLoaded', () => {
-      loadState();
-      updateUI();
-      switchTab('tab-modulos');
       initAndroidBackHandler();
       initTouchGestures();
+      loadState();
+      try {
+        updateUI();
+      } catch (err) {
+        console.error("Erro ao renderizar UI inicial:", err);
+      }
+      switchTab('tab-modulos', true);
 
       checkServerVersion(false);
 
