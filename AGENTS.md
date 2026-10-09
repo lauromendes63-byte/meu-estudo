@@ -1,4 +1,4 @@
-# Meu Estudo — Contexto do Projeto & Diretrizes Arquiteturais (v2.4.2)
+# Meu Estudo — Contexto do Projeto & Diretrizes Arquiteturais (v2.4.3)
 
 Este arquivo preserva todo o histórico de decisões visuais, técnicas e de UX tomadas ao longo do desenvolvimento do **Meu Estudo** (Caderno Pessoal de Estudos Médicos com Revisões Espaçadas `D+1`, `D+7`, `D+30` e Gestão de Provas), otimizado para o **Samsung Galaxy A54 (120Hz, Offline-First PWA)**.
 
@@ -7,7 +7,7 @@ Este arquivo preserva todo o histórico de decisões visuais, técnicas e de UX 
 ## 1. Regras de Ouro (O que NUNCA deve ser quebrado ou alterado sem pedido explícito)
 
 1. **Identidade Visual & Tema Azul Marinho (`#162654`):**
-   - **Ícone Oficial (`icon.svg` & Brasão do App):** Capelo de formatura + livro aberto com duas páginas curvas em traço contínuo Azul Marinho Profundo (`#162654` / `#132147`) centralizado sobre um *squircle* perolado suave (`#fff9f2` → `#f8fafc` → `#e6f2ff`), sem margens brancas externas ("zoom out").
+   - **Ícone Oficial (`icon.svg` & Brasão do App):** Capelo de formatura + livro aberto com duas páginas curvas em traço contínuo Azul Marinho Profundo (`#162654` / `#132147`) centralizado com proporção minimalista equilibrada (`scale(0.76)`) sobre um *squircle* perolado suave (`#fff9f2` → `#f8fafc` → `#e6f2ff`), sem margens externas ("zoom out") e sem corte/zoom excessivo (`purpose: "any"` no `manifest.json`).
    - **Tema Principal:** Paleta `brand` em Azul Marinho / Escuro (`brand-600: #162654`, `brand-500: #1e3a8a`, `brand-700: #111c40`), harmonizando cabeçalho, abas, botões de ação, toasts e estados vazios com o novo ícone.
 2. **Barra Superior (Header) e Barra de Navegação Inferior (3 Abas) em Azul Marinho Escuro:**
    - Tanto o `<header>` quanto o `<nav>` inferior possuem fundo Azul Marinho Profundo (`from-[#0f1a38] via-[#132147] to-[#162654]`) contrastando com textos e ícones brancos nítidos.
@@ -23,19 +23,20 @@ Este arquivo preserva todo o histórico de decisões visuais, técnicas e de UX 
    - **Diferenciação Cromática entre Módulos:** Enquanto `reuma` mantém seu fundo `#303b4d` travado, cada módulo exibe seu próprio brilho cromático radial no squircle do ícone (`getIconSquircleStyle`), borda colorida (`1.5px`), barra de acento lateral e barra de progresso `h-2` viva.
 5. **Fluxo de Cadastro de Módulos e Aulas (Fricção Zero & UI 2026):**
    - **Smart Auto-Match:** Ao digitar o nome do módulo (ex: *Cardio*, *Endócrino*, *Gineco*, *Gastro*, *Reumato*, *Ped*), seleciona automaticamente o ícone e a cor correspondente.
-   - **Botões `+` em Todos os Níveis de Matéria:** Tanto nos cards de `Módulos` quanto dentro do detalhe da matéria (`#tab-modulo-detail`: no canto direito do `#module-summary-card`, no topo `+ Aula`, na barra `+ Adicionar Aula` e no botão flutuante `+` inferior direito) e nos cards de `Provas`.
+   - **Visualização em Lista por Padrão (`moduleViewMode: 'list'`) & Botão `+` Único e Limpo:** A aba `Módulos` abre em formato de lista vertical limpa por padrão (com botão `+` em cada matéria). Dentro do detalhe da matéria (`#tab-modulo-detail`), há **apenas um único** botão `+ Adicionar Aula` (`#btn-add-lesson-in-module`), sem botões duplicados no topo/card ou FAB flutuante sobrepondo as aulas.
    - **Novas Aulas (`#sheet-lesson`):** Layout moderno com seletor numérico integrado (`-` / `+`), card unificado de anotações com botão `• Lista` sem quebra de linha e barra horizontal de *pills* clínicos rápidos (`Alerta`, `Padrão-Ouro`, `Fisiopato`, `Diagnóstico`, `Conduta`, `Conceito`).
    - **Botão "Salvar e +1":** Permite cadastrar várias aulas seguidas mantendo o *bottom sheet* aberto na numeração seguinte.
-6. **Ergonomia Mobile & Performance 120Hz (v2.2.0 – v2.4.2):**
+6. **Ergonomia Mobile & Performance 120Hz (v2.2.0 – v2.4.3):**
    - Preservação cirúrgica da posição de rolagem (*scroll restoration*) ao marcar aulas ou revisões.
    - Botão **Desfazer (Undo)** integrado ao Toast em ações frequentes e modal de confirmação estilo One UI ancorado na base (substituindo `window.confirm` bloqueante).
    - Ciclos `D+1`, `D+7` e `D+30` interativos diretamente no leitor da aula.
-   - Suporte nativo ao botão "Voltar" do Android (`pushAppHistory` com ativação por gesto do usuário compatível com Chrome Android + `popstate`) e gestos de *swipe* para uso com uma mão no celular.
+   - Suporte nativo ao botão "Voltar" do Android (`pushAppHistory` 1-para-1 em eventos de clique reais sem `pushState` no `DOMContentLoaded`, evitando a intervenção de histórico do Chromium + `popstate`) e gestos de *swipe* para uso com uma mão no celular.
 
 ---
 
 ## 2. Histórico de Versões Recentes (Git Log)
-- **v2.4.2 (08/10/2026):** Correção definitiva do botão Voltar no Android (histórico `pushAppHistory` ativado por gesto do usuário + remoção de conflito `CloseWatcher` + correção de runtime em `renderProvasTab`) e adição dos botões `+` de nova aula dentro da matéria (no card principal de resumo, no topo, na listagem e botão flutuante FAB).
+- **v2.4.3 (08/10/2026):** Ajuste fino da proporção minimalista do ícone (`icon.svg` + `manifest.json` com `purpose: "any"` sem zoom excessivo), visualização em Lista como padrão nos Módulos, remoção dos 3 botões `+` redundantes/sobrepostos dentro da matéria (mantendo apenas o botão único `+ Adicionar Aula`) e correção da pilha de histórico 1-para-1 para o botão Voltar no Chrome Android.
+- **v2.4.2 (08/10/2026):** Correção de runtime em `renderProvasTab` e ajustes iniciais de navegação.
 - **v2.4.1 (08/10/2026):** Restauração da Tireoide 3D pura para Endocrinologia, osso único com fratura angulada para Ortopedia e coração 3D com pulso ECG para Cardiologia.
 - **v2.4.0 (08/10/2026):** Header e Barra Inferior em Azul Marinho Escuro com texto branco e badge vermelho vibrante nas Provas; novos ícones 3D para Cardio, Endócrino, Ortopedia, Pediatria, Dermato, Geriatria e Psiquiatria; alto contraste cromático entre módulos; e redesign moderno da folha de criação de aulas (`#sheet-lesson`).
 - **v2.3.1 – v2.3.2 (08/10/2026):** Adaptação do novo ícone minimalista acadêmico (`icon.svg` e brasões internos com Capelo + Livro Aberto em Azul Marinho sobre Squircle Perolado) e transição do tema principal do app para Azul Marinho / Escuro (`#162654`).

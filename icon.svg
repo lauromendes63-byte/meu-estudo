@@ -34,25 +34,27 @@
   <!-- Borda Interna Sutil de Acabamento -->
   <rect x="6" y="6" width="500" height="500" rx="110" fill="none" stroke="#e2e8f0" stroke-width="4" stroke-opacity="0.8" />
 
-  <!-- Símbolo Minimalista: Capelo Acadêmico + Livro Aberto em Azul Marinho (#162654) -->
-  <g fill="none" stroke="url(#navyStroke)" stroke-width="30" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Topo do Capelo (Losango Superior) -->
-    <path d="M 256 96 L 424 174 L 256 252 L 88 174 Z" />
+  <!-- Símbolo Minimalista: Capelo Acadêmico + Livro Aberto em Azul Marinho (#162654) com Proporção Equilibrada -->
+  <g transform="translate(256, 256) scale(0.76) translate(-256, -268)">
+    <g fill="none" stroke="url(#navyStroke)" stroke-width="30" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Topo do Capelo (Losango Superior) -->
+      <path d="M 256 96 L 424 174 L 256 252 L 88 174 Z" />
 
-    <!-- Base do Capelo (Coroa com Curvatura Central em V) -->
-    <path d="M 164 210 V 284 C 198 290, 230 308, 256 332 C 282 308, 314 290, 348 284 V 210" />
+      <!-- Base do Capelo (Coroa com Curvatura Central em V) -->
+      <path d="M 164 210 V 284 C 198 290, 230 308, 256 332 C 282 308, 314 290, 348 284 V 210" />
 
-    <!-- Cordão do Pendente (Direita) -->
-    <path d="M 398 187 V 256" stroke-width="24" />
+      <!-- Cordão do Pendente (Direita) -->
+      <path d="M 398 187 V 256" stroke-width="24" />
 
-    <!-- Livro Aberto: Par Superior de Páginas -->
-    <path d="M 86 346 C 154 338, 222 364, 256 416 C 290 364, 358 338, 426 346" />
+      <!-- Livro Aberto: Par Superior de Páginas -->
+      <path d="M 86 346 C 154 338, 222 364, 256 416 C 290 364, 358 338, 426 346" />
 
-    <!-- Livro Aberto: Par Inferior de Páginas + Lombada Central -->
-    <path d="M 86 402 C 152 394, 212 410, 242 432 Q 256 440 270 432 C 300 410, 360 394, 426 402" />
-    <line x1="256" y1="410" x2="256" y2="434" />
+      <!-- Livro Aberto: Par Inferior de Páginas + Lombada Central -->
+      <path d="M 86 402 C 152 394, 212 410, 242 432 Q 256 440 270 432 C 300 410, 360 394, 426 402" />
+      <line x1="256" y1="410" x2="256" y2="434" />
+    </g>
+
+    <!-- Cápsula Final do Pendente do Capelo -->
+    <rect x="383" y="242" width="30" height="44" rx="13" fill="url(#navyStroke)" />
   </g>
-
-  <!-- Cápsula Final do Pendente do Capelo -->
-  <rect x="383" y="242" width="30" height="44" rx="13" fill="url(#navyStroke)" />
 </svg>

@@ -340,14 +340,16 @@
     <div class="flex items-center gap-2.5 min-w-0">
       <div class="w-8 h-8 rounded-xl app-crest-squircle border flex items-center justify-center shrink-0" aria-hidden="true">
         <svg viewBox="0 0 512 512" class="w-6 h-6" fill="none">
-          <g stroke="#162654" stroke-width="34" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M 256 96 L 424 174 L 256 252 L 88 174 Z" />
-            <path d="M 164 210 V 284 C 198 290, 230 308, 256 332 C 282 308, 314 290, 348 284 V 210" />
-            <path d="M 398 187 V 256" stroke-width="26" />
-            <path d="M 86 346 C 154 338, 222 364, 256 416 C 290 364, 358 338, 426 346" />
-            <path d="M 86 402 C 152 394, 212 410, 242 432 Q 256 440 270 432 C 300 410, 360 394, 426 402" />
+          <g transform="translate(256, 256) scale(0.76) translate(-256, -268)">
+            <g stroke="#162654" stroke-width="34" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M 256 96 L 424 174 L 256 252 L 88 174 Z" />
+              <path d="M 164 210 V 284 C 198 290, 230 308, 256 332 C 282 308, 314 290, 348 284 V 210" />
+              <path d="M 398 187 V 256" stroke-width="26" />
+              <path d="M 86 346 C 154 338, 222 364, 256 416 C 290 364, 358 338, 426 346" />
+              <path d="M 86 402 C 152 394, 212 410, 242 432 Q 256 440 270 432 C 300 410, 360 394, 426 402" />
+            </g>
+            <rect x="382" y="242" width="32" height="44" rx="13" fill="#162654" />
           </g>
-          <rect x="382" y="242" width="32" height="44" rx="13" fill="#162654" />
         </svg>
       </div>
       <div class="min-w-0">
@@ -370,17 +372,19 @@
     <!-- Bloco Central: Símbolo Minimalista Capelo + Livro em Azul Marinho sobre Squircle Perolado & Título Branco -->
     <button type="button" id="btn-header-center-status" class="tap-smooth flex flex-col items-center justify-center text-center px-3 py-0.5 rounded-2xl">
       <div class="flex items-center gap-2">
-        <!-- Mini Símbolo do App: Capelo + Livro Aberto em Azul Marinho sobre Fundo Perolado -->
+        <!-- Mini Símbolo do App: Capelo + Livro Aberto em Azul Marinho sobre Fundo Perolado (Proporção Equilibrada) -->
         <div class="w-6 h-6 rounded-[8px] app-crest-squircle border flex items-center justify-center shrink-0" aria-hidden="true">
-          <svg viewBox="0 0 512 512" class="w-4 h-4" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g stroke="#162654" stroke-width="36" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M 256 96 L 424 174 L 256 252 L 88 174 Z" />
-              <path d="M 164 210 V 284 C 198 290, 230 308, 256 332 C 282 308, 314 290, 348 284 V 210" />
-              <path d="M 398 187 V 256" stroke-width="28" />
-              <path d="M 86 346 C 154 338, 222 364, 256 416 C 290 364, 358 338, 426 346" />
-              <path d="M 86 402 C 152 394, 212 410, 242 432 Q 256 440 270 432 C 300 410, 360 394, 426 402" />
+          <svg viewBox="0 0 512 512" class="w-5 h-5" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(256, 256) scale(0.76) translate(-256, -268)">
+              <g stroke="#162654" stroke-width="34" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M 256 96 L 424 174 L 256 252 L 88 174 Z" />
+                <path d="M 164 210 V 284 C 198 290, 230 308, 256 332 C 282 308, 314 290, 348 284 V 210" />
+                <path d="M 398 187 V 256" stroke-width="26" />
+                <path d="M 86 346 C 154 338, 222 364, 256 416 C 290 364, 358 338, 426 346" />
+                <path d="M 86 402 C 152 394, 212 410, 242 432 Q 256 440 270 432 C 300 410, 360 394, 426 402" />
+              </g>
+              <rect x="380" y="242" width="34" height="46" rx="14" fill="#162654" />
             </g>
-            <rect x="380" y="242" width="34" height="46" rx="14" fill="#162654" />
           </svg>
         </div>
         <h1 class="font-black text-[16px] tracking-tight text-white leading-none drop-shadow-2xs">Meu Estudo</h1>
@@ -437,17 +441,13 @@
     </section>
 
     <!-- ==================== ABA 1.1: DETALHE DO MÓDULO (AULAS) ==================== -->
-    <section id="tab-modulo-detail" class="tab-pane hidden space-y-3 pb-14">
+    <section id="tab-modulo-detail" class="tab-pane hidden space-y-3">
       <div class="flex items-center justify-between">
         <button id="btn-back-to-modules" class="touch-target tap-smooth flex items-center gap-1 text-xs font-bold text-slate-600 hover:text-slate-900 py-1.5 pr-2">
           <svg class="w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
           <span>Módulos</span>
         </button>
-        <div class="flex items-center gap-1.5">
-          <button id="btn-top-add-lesson-in-module" aria-label="Adicionar Aula neste Módulo" class="touch-target tap-smooth px-3 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-extrabold shadow-xs flex items-center gap-1" title="Adicionar Aula">
-            <span class="text-sm leading-none font-black" aria-hidden="true">+</span>
-            <span>Aula</span>
-          </button>
+        <div class="flex items-center gap-1">
           <button id="btn-edit-current-module" aria-label="Editar Módulo" class="touch-target tap-smooth p-2 text-slate-500 hover:text-slate-800 rounded-xl hover:bg-slate-100" title="Editar Módulo">
             <svg class="w-4 h-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
           </button>
@@ -479,11 +479,6 @@
       <div id="module-lessons-list" class="space-y-2">
         <!-- Rendered dynamically -->
       </div>
-
-      <!-- Botão Flutuante (+) Ergonomia 1-Mão dentro da Matéria -->
-      <button id="btn-fab-add-lesson-in-module" type="button" aria-label="Adicionar nova aula" title="Adicionar Aula" class="tap-smooth fixed bottom-[76px] right-4 z-20 w-12 h-12 rounded-2xl bg-gradient-to-br from-[#162654] to-[#1e3a8a] text-white shadow-lg shadow-brand-900/30 border border-white/15 flex items-center justify-center text-2xl font-black active:scale-90 transition-transform">
-        +
-      </button>
     </section>
 
     <!-- ==================== ABA 2: ESTUDO & REVISÕES ==================== -->
@@ -1013,33 +1008,82 @@
   <!-- ==================== APPLICATION LOGIC ==================== -->
   <script>
     // --- APP VERSION & AUTO-UPDATE DETECTOR ---
-    const CURRENT_APP_VERSION = '2.4.2';
-    const CURRENT_BUILD_TIMESTAMP = '2026-10-08T22:35:00.000Z';
-    const CURRENT_BUILD_LABEL = '08/10/2026 às 22:35';
+    const CURRENT_APP_VERSION = '2.4.3';
+    const CURRENT_BUILD_TIMESTAMP = '2026-10-08T23:15:00.000Z';
+    const CURRENT_BUILD_LABEL = '08/10/2026 às 23:15';
 
     let pendingServerUpdate = null;
 
-    // --- CHROME ANDROID USER-ACTIVATED HISTORY GUARD ---
-    let needsUserGestureGuard = true;
-    let appHistoryDepth = 0;
+    // --- CHROME ANDROID 1-TO-1 USER-ACTIVATED HISTORY NAVIGATION ---
+    let suppressNextPopState = false;
+    let isHandlingPopState = false;
+    let overlayCleanupTimer = null;
 
-    function pushAppHistory(step = 'nav') {
+    function isAnyOverlayOpen() {
+      const sheet = document.getElementById('sheet-lesson');
+      if (sheet && sheet.classList.contains('sheet-open')) return true;
+      if (document.querySelector('dialog[open]')) return true;
+      return false;
+    }
+
+    function pushAppHistory(step = 'overlay') {
+      if (isHandlingPopState) return;
+      if (overlayCleanupTimer) {
+        clearTimeout(overlayCleanupTimer);
+        overlayCleanupTimer = null;
+      }
       try {
-        if (needsUserGestureGuard) {
-          history.replaceState({ app: 'meu-estudo', step: 'root', activated: true, ts: Date.now() }, '');
-          history.pushState({ app: 'meu-estudo', step: 'guard', activated: true, ts: Date.now() }, '');
-          needsUserGestureGuard = false;
-          appHistoryDepth = Math.max(appHistoryDepth, 1);
-        }
-        if (step !== 'guard') {
-          if (appHistoryDepth < 6) {
-            history.pushState({ app: 'meu-estudo', step: step, activated: true, ts: Date.now() }, '');
-            appHistoryDepth++;
+        const curLayer = (history.state && history.state.layer) ? history.state.layer : 'home';
+        const isModuleLayer = step === 'module-detail';
+        const isSubTabLayer = step === 'tab-estudo' || step === 'tab-provas' || step === 'subtab';
+
+        if (isModuleLayer) {
+          if (curLayer === 'overlay' || curLayer === 'module-detail' || curLayer === 'subtab') {
+            history.replaceState({ app: 'meu-estudo', layer: 'module-detail', ts: Date.now() }, '', '#materia');
           } else {
-            history.replaceState({ app: 'meu-estudo', step: step, activated: true, ts: Date.now() }, '');
+            history.pushState({ app: 'meu-estudo', layer: 'module-detail', ts: Date.now() }, '', '#materia');
+          }
+        } else if (isSubTabLayer) {
+          if (curLayer === 'overlay' || curLayer === 'subtab' || curLayer === 'module-detail') {
+            history.replaceState({ app: 'meu-estudo', layer: 'subtab', ts: Date.now() }, '', '#aba');
+          } else {
+            history.pushState({ app: 'meu-estudo', layer: 'subtab', ts: Date.now() }, '', '#aba');
+          }
+        } else {
+          // Overlay (sheet-lesson or dialog)
+          if (curLayer !== 'overlay') {
+            history.pushState({ app: 'meu-estudo', layer: 'overlay', parentLayer: curLayer, ts: Date.now() }, '', '#modal');
           }
         }
       } catch (e) {}
+    }
+
+    function scheduleOverlayHistoryCleanup() {
+      if (isHandlingPopState) return;
+      if (overlayCleanupTimer) clearTimeout(overlayCleanupTimer);
+      overlayCleanupTimer = setTimeout(() => {
+        overlayCleanupTimer = null;
+        if (!isAnyOverlayOpen() && history.state && history.state.layer === 'overlay') {
+          suppressNextPopState = true;
+          try {
+            history.back();
+          } catch (e) {
+            suppressNextPopState = false;
+          }
+        }
+      }, 25);
+    }
+
+    function popToHomeHistoryIfNeeded() {
+      if (isHandlingPopState) return;
+      if (history.state && (history.state.layer === 'module-detail' || history.state.layer === 'subtab')) {
+        suppressNextPopState = true;
+        try {
+          history.back();
+        } catch (e) {
+          suppressNextPopState = false;
+        }
+      }
     }
 
     async function checkServerVersion(isManual = false) {
@@ -1489,7 +1533,7 @@
 
     // --- APPLICATION STATE ---
     const STORAGE_KEY = 'meu_estudo_data_v1';
-    const VIEW_MODE_KEY = 'meu_estudo_view_mode';
+    const VIEW_MODE_KEY = 'meu_estudo_view_mode_v2';
 
     let AppState = {
       modules: [],
@@ -1500,7 +1544,7 @@
       estudoModuleFilter: 'all', // 'all' | moduleId
       activeTab: 'tab-modulos',
       studySubTab: 'revisar',
-      moduleViewMode: localStorage.getItem(VIEW_MODE_KEY) || 'grid', // 'grid' | 'list'
+      moduleViewMode: localStorage.getItem(VIEW_MODE_KEY) || 'list', // 'list' | 'grid'
       scrollPositions: {
         'tab-modulos': 0,
         'tab-estudo': 0,
@@ -1691,8 +1735,12 @@
       const mainEl = document.getElementById('main-content');
       const prevTab = AppState.activeTab;
 
-      if (!skipHistory && tabId !== 'tab-modulos' && prevTab !== tabId) {
-        pushAppHistory(tabId);
+      if (!skipHistory) {
+        if (tabId === 'tab-modulos') {
+          popToHomeHistoryIfNeeded();
+        } else if (tabId !== 'tab-modulos' && prevTab !== tabId) {
+          pushAppHistory(tabId);
+        }
       }
 
       if (mainEl && prevTab && prevTab !== 'tab-modulo-detail') {
@@ -1861,6 +1909,7 @@
         overlay.style.opacity = '';
       }
       sheet.classList.remove('sheet-open');
+      scheduleOverlayHistoryCleanup();
     }
 
     function renderModuleSelectorChips(selectedModuleId, shouldScrollIntoView = false) {
@@ -2659,7 +2708,7 @@
                       <span class="w-1 h-3.5 rounded-full shrink-0" style="background-color: ${colorObj.hex};"></span>
                       <h3 class="text-[14px] font-black text-slate-900 truncate leading-snug tracking-tight">${mod.name}</h3>
                     </div>
-                    <p class="tabular-nums text-[11px] text-slate-500 font-semibold pl-2.5">${studiedCount}/${totalCount} aula${totalCount === 1 ? '' : 's'}</p>
+                    <p class="tabular-nums text-[11px] text-slate-500 font-semibold pl-2.5">${studiedCount}/${totalCount} aula${totalCount === 1 ? '' : 's'} (${percent}%)</p>
                   </div>
                 </div>
 
@@ -2682,11 +2731,7 @@
                     <span>${pendingReviews}</span>
                   </div>
 
-                  <span class="tabular-nums text-[11px] font-black px-2 py-0.5 rounded-full border shadow-2xs" style="background-color: ${colorObj.bg}; border-color: ${colorObj.border}; color: ${colorObj.text};">
-                    ${percent}%
-                  </span>
-
-                  <button type="button" aria-label="Adicionar aula em ${mod.name}" onclick="event.stopPropagation(); openLessonSheet('${mod.id}')" class="touch-target w-7 h-7 rounded-xl border flex items-center justify-center text-sm font-black active:scale-90 transition-transform shadow-2xs" style="background-color: #ffffff; border-color: ${colorObj.border}; color: ${colorObj.text};" title="Adicionar Aula neste Módulo">
+                  <button type="button" aria-label="Adicionar aula em ${mod.name}" onclick="event.stopPropagation(); openLessonSheet('${mod.id}')" class="touch-target w-8 h-8 rounded-xl border-[1.5px] flex items-center justify-center text-base font-black active:scale-90 transition-transform shadow-2xs" style="background-color: #ffffff; border-color: ${colorObj.border}; color: ${colorObj.text};" title="Adicionar Aula neste Módulo">
                     +
                   </button>
                 </div>
@@ -2771,9 +2816,6 @@
             }" title="Filtrar revisões pendentes">
               ${UI_ICONS.repeat}
               <span>${pendingReviews}</span>
-            </button>
-            <button type="button" aria-label="Adicionar aula em ${mod.name}" onclick="openLessonSheet('${mod.id}')" class="touch-target w-8 h-8 rounded-xl border-[1.5px] flex items-center justify-center text-base font-black active:scale-90 transition-transform shadow-xs" style="background-color: ${colorObj.hex}; border-color: ${colorObj.hex}; color: #ffffff;" title="Adicionar Aula neste Módulo">
-              +
             </button>
           </div>
         </div>
@@ -2914,12 +2956,6 @@
       if (AppState.currentModuleId) deleteModule(AppState.currentModuleId);
     });
     document.getElementById('btn-add-lesson-in-module').addEventListener('click', () => {
-      if (AppState.currentModuleId) openLessonSheet(AppState.currentModuleId);
-    });
-    document.getElementById('btn-top-add-lesson-in-module')?.addEventListener('click', () => {
-      if (AppState.currentModuleId) openLessonSheet(AppState.currentModuleId);
-    });
-    document.getElementById('btn-fab-add-lesson-in-module')?.addEventListener('click', () => {
       if (AppState.currentModuleId) openLessonSheet(AppState.currentModuleId);
     });
 
@@ -3905,6 +3941,7 @@
       dlg.addEventListener('close', () => {
         dlg.style.transition = '';
         dlg.style.transform = '';
+        scheduleOverlayHistoryCleanup();
       });
       dlg.addEventListener('cancel', (event) => {
         event.preventDefault();
@@ -4052,7 +4089,7 @@
           if (deltaX > 75 && deltaY < 48 && elapsed < 500) {
             runViewTransition(() => {
               AppState.currentModuleId = null;
-              switchTab('tab-modulos', true);
+              switchTab('tab-modulos');
             });
           }
         }, { passive: true });
@@ -4060,91 +4097,52 @@
     }
 
     // --- ANDROID HARDWARE & GESTURE BACK BUTTON NAVIGATION ---
-    let lastBackPressTime = 0;
-    let isExitingApp = false;
-
     function initAndroidBackHandler() {
       try {
-        history.replaceState({ app: 'meu-estudo', step: 'root', ts: Date.now() }, '');
-        history.pushState({ app: 'meu-estudo', step: 'guard', ts: Date.now() }, '');
-        appHistoryDepth = 1;
-        needsUserGestureGuard = true;
+        const cleanUrl = window.location.pathname + window.location.search;
+        history.replaceState({ app: 'meu-estudo', layer: 'home', ts: Date.now() }, '', cleanUrl);
       } catch (e) {
         console.warn('History API not supported', e);
       }
 
-      // Garante que o primeiro toque do usuário arme entradas user-activated no Chrome Android
-      const armHistoryOnGesture = () => {
-        if (needsUserGestureGuard && !isExitingApp) {
-          pushAppHistory('guard');
-        }
-      };
-      window.addEventListener('pointerdown', armHistoryOnGesture, { capture: true, passive: true });
-      window.addEventListener('touchstart', armHistoryOnGesture, { capture: true, passive: true });
-      window.addEventListener('click', armHistoryOnGesture, { capture: true, passive: true });
-
-      window.addEventListener('popstate', (event) => {
-        if (isExitingApp) return;
-
-        appHistoryDepth = Math.max(0, appHistoryDepth - 1);
-        needsUserGestureGuard = true;
-
-        const rearmGuard = () => {
-          try {
-            history.pushState({ app: 'meu-estudo', step: 'guard', ts: Date.now() }, '');
-            appHistoryDepth = Math.max(1, appHistoryDepth);
-          } catch (e) {}
-        };
-
-        // 1. Se Bottom Sheet de Aula estiver aberta, fecha suavemente
-        const sheet = document.getElementById('sheet-lesson');
-        if (sheet && sheet.classList.contains('sheet-open')) {
-          closeLessonSheet();
-          rearmGuard();
+      window.addEventListener('popstate', () => {
+        if (suppressNextPopState) {
+          suppressNextPopState = false;
           return;
         }
 
-        // 2. Se houver algum modal (<dialog>) aberto, fecha
-        const openDialog = document.querySelector('dialog[open]');
-        if (openDialog) {
-          openDialog.close();
-          rearmGuard();
-          return;
-        }
-
-        // 3. Se estiver na visualização detalhada de um Módulo, volta para lista de Módulos
-        if (AppState.activeTab === 'tab-modulo-detail') {
-          runViewTransition(() => {
-            AppState.currentModuleId = null;
-            switchTab('tab-modulos', true);
-          });
-          rearmGuard();
-          return;
-        }
-
-        // 4. Se estiver em abas secundárias (Estudo ou Provas), volta para a aba Módulos
-        if (AppState.activeTab !== 'tab-modulos') {
-          switchTab('tab-modulos', true);
-          rearmGuard();
-          return;
-        }
-
-        // 5. Na tela inicial (Módulos): proteção contra encerramento acidental (toque duplo em 2s)
-        const now = Date.now();
-        if (now - lastBackPressTime < 2000) {
-          isExitingApp = true;
-          try {
-            history.go(-(appHistoryDepth + 2));
-          } catch (err) {
-            history.back();
+        isHandlingPopState = true;
+        try {
+          // 1. Se Bottom Sheet de Aula estiver aberta, fecha suavemente
+          const sheet = document.getElementById('sheet-lesson');
+          if (sheet && sheet.classList.contains('sheet-open')) {
+            closeLessonSheet();
+            return;
           }
-          setTimeout(() => {
-            try { window.close(); } catch (err) {}
-          }, 120);
-        } else {
-          lastBackPressTime = now;
-          showToast("Pressione voltar novamente para sair", "👋");
-          rearmGuard();
+
+          // 2. Se houver algum modal (<dialog>) aberto, fecha
+          const openDialog = document.querySelector('dialog[open]');
+          if (openDialog) {
+            openDialog.close();
+            return;
+          }
+
+          // 3. Se estiver na visualização detalhada de um Módulo, volta para lista de Módulos
+          if (AppState.activeTab === 'tab-modulo-detail') {
+            runViewTransition(() => {
+              AppState.currentModuleId = null;
+              switchTab('tab-modulos', true);
+            });
+            return;
+          }
+
+          // 4. Se estiver em abas secundárias (Estudo ou Provas), volta para a aba Módulos
+          if (AppState.activeTab !== 'tab-modulos') {
+            switchTab('tab-modulos', true);
+            return;
+          }
+        } finally {
+          isHandlingPopState = false;
         }
       });
     }
