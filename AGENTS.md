@@ -1,4 +1,4 @@
-# Meu Estudo — Contexto do Projeto & Diretrizes Arquiteturais (v2.5.0)
+# Meu Estudo — Contexto do Projeto & Diretrizes Arquiteturais (v2.5.1)
 
 Este arquivo preserva todo o histórico de decisões visuais, técnicas e de UX tomadas ao longo do desenvolvimento do **Meu Estudo** (Caderno Pessoal de Estudos Médicos com Revisões Espaçadas `D+1`, `D+7`, `D+30` e Gestão de Provas), otimizado para o **Samsung Galaxy A54 (120Hz, Offline-First PWA)**.
 
@@ -35,6 +35,7 @@ Este arquivo preserva todo o histórico de decisões visuais, técnicas e de UX 
 ---
 
 ## 2. Histórico de Versões Recentes (Git Log)
+- **v2.5.1 (23/10/2026):** Correção do loop no banner de atualização (sincronização do timestamp interno em `index.html` com `version.json`), limpeza agressiva de cache HTTP no reload e botão de fechar (`✕`) no banner flutuante.
 - **v2.5.0 (23/10/2026):** Ícone full-bleed adaptativo para Android One UI (eliminação definitiva do ícone minúsculo e resolução do aviso de segurança do Chrome), transições laterais One UI a 120Hz no detalhe do módulo, física elástica com arrasto contínuo no Bottom Sheet (`#sheet-lesson`), resposta tátil calibrada em botões e celebrações fluidas nas revisões de estudo.
 - **v2.4.3 (08/10/2026):** Ajuste fino da proporção minimalista do ícone (`icon.svg` + `manifest.json` com `purpose: "any"` sem zoom excessivo), visualização em Lista como padrão nos Módulos, remoção dos 3 botões `+` redundantes/sobrepostos dentro da matéria (mantendo apenas o botão único `+ Adicionar Aula`) e correção da pilha de histórico 1-para-1 para o botão Voltar no Chrome Android.
 - **v2.4.2 (08/10/2026):** Correção de runtime em `renderProvasTab` e ajustes iniciais de navegação.

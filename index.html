@@ -380,9 +380,14 @@
         <p id="update-banner-label" class="text-[10px] text-slate-300 truncate">Toque para atualizar</p>
       </div>
     </div>
-    <button id="btn-apply-update" class="px-3.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-[#162654] font-extrabold text-xs shrink-0 shadow-sm active:scale-95 transition-transform">
-      Atualizar
-    </button>
+    <div class="flex items-center gap-1.5 shrink-0">
+      <button id="btn-apply-update" class="px-3.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-[#162654] font-extrabold text-xs shadow-sm active:scale-95 transition-transform">
+        Atualizar
+      </button>
+      <button type="button" id="btn-dismiss-update" class="w-7 h-7 rounded-lg text-slate-300 hover:text-white flex items-center justify-center text-sm font-bold active:scale-90 transition-transform" aria-label="Dispensar aviso">
+        ✕
+      </button>
+    </div>
   </div>
 
   <!-- ==================== HEADER MODERNIZADO (FUNDO AZUL MARINHO PROFUNDO, TEXTO BRANCO DE ALTO CONTRASTE & BUSCA RÁPIDA) ==================== -->
@@ -1031,9 +1036,9 @@
   <!-- ==================== APPLICATION LOGIC ==================== -->
   <script>
     // --- APP VERSION & AUTO-UPDATE DETECTOR ---
-    const CURRENT_APP_VERSION = '2.4.3';
-    const CURRENT_BUILD_TIMESTAMP = '2026-10-08T23:15:00.000Z';
-    const CURRENT_BUILD_LABEL = '08/10/2026 às 23:15';
+    const CURRENT_APP_VERSION = '2.5.1';
+    const CURRENT_BUILD_TIMESTAMP = '2026-10-23T23:58:00.000Z';
+    const CURRENT_BUILD_LABEL = '23/10/2026 às 23:58';
 
     let pendingServerUpdate = null;
 
@@ -1146,8 +1151,10 @@
     }
 
     async function forceAppUpdate() {
-      showToast("Atualizando aplicativo...", "⏳");
-      vibrate(20);
+      const banner = document.getElementById('update-banner');
+      if (banner) banner.classList.add('hidden');
+      showToast("Atualizando para versão mais recente...", "⏳");
+      vibrate(25);
 
       try {
         if ('caches' in window) {
@@ -1161,12 +1168,13 @@
         if (typeof sessionStorage !== 'undefined') {
           sessionStorage.clear();
         }
+        await fetch('./index.html?_flush=' + Date.now(), { cache: 'reload' }).catch(() => {});
       } catch (e) {
         console.warn("Erro ao limpar caches:", e);
       }
 
-      const cleanUrl = window.location.href.split('?')[0];
-      window.location.href = `${cleanUrl}?updated=${Date.now()}`;
+      const cleanUrl = window.location.pathname;
+      window.location.replace(`${cleanUrl}?v=${Date.now()}`);
     }
 
     // --- HAPTIC VIBRATION ---
@@ -3992,6 +4000,9 @@
 
     // Update banner & settings button
     document.getElementById('btn-apply-update').addEventListener('click', forceAppUpdate);
+    document.getElementById('btn-dismiss-update')?.addEventListener('click', () => {
+      document.getElementById('update-banner').classList.add('hidden');
+    });
     document.getElementById('btn-check-update-manual').addEventListener('click', () => checkServerVersion(true));
 
     // Backup

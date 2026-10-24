@@ -1,6 +1,6 @@
 {
-  "version": "2.5.0",
-  "buildTime": "2026-10-23T21:05:00.000Z",
-  "buildLabel": "23/10/2026 às 21:05",
-  "notes": "v2.5.0: Ícone full-bleed com suporte nativo a adaptive/maskable no One UI (eliminação do ícone minúsculo e resolução do aviso de segurança do Chrome), transições deslizantes nativas One UI / Android a 120Hz entre telas, física elástica contínua no Bottom Sheet com gesto de arrasto em tempo real, feedback tátil One UI nos toques e recompensas visuais fluidas nas revisões."
+  "version": "2.5.1",
+  "buildTime": "2026-10-23T23:58:00.000Z",
+  "buildLabel": "23/10/2026 às 23:58",
+  "notes": "v2.5.1: Correção definitiva do loop de atualização (sincronização do timestamp interno com version.json), limpeza agressiva de cache HTTP no hard-reload e botão de dispensar no banner de atualização."
 }
