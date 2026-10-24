@@ -1,11 +1,12 @@
 {
+  "id": "./index.html",
   "name": "Meu Estudo - Caderno Médico",
   "short_name": "Meu Estudo",
   "description": "Caderno Pessoal de Estudos Médicos com Automação de Revisões Espaçadas e Gestão de Provas",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f8fafc",
-  "theme_color": "#132147",
+  "theme_color": "#111c40",
   "orientation": "portrait-primary",
   "lang": "pt-BR",
   "icons": [
@@ -14,6 +15,12 @@
       "sizes": "192x192 512x512",
       "type": "image/svg+xml",
       "purpose": "any"
+    },
+    {
+      "src": "./icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
     }
   ],
   "categories": ["education", "medical", "productivity"]

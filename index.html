@@ -158,22 +158,44 @@
       }
     }
 
-    /* Native View Transitions API (120Hz Smooth Morph) */
-    ::view-transition-old(root),
-    ::view-transition-new(root) {
-      animation-duration: 0.18s;
-      animation-timing-function: var(--ease-out);
+    /* One UI Native Master-Detail Slide Transition (120Hz GPU Compositor) */
+    #tab-modulo-detail.tab-pane {
+      animation: none;
+    }
+    .slide-enter-active {
+      animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+      will-change: transform;
+    }
+    .slide-exit-active {
+      animation: slideOutRight 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+      will-change: transform;
+    }
+    @keyframes slideInRight {
+      from {
+        transform: translate3d(100%, 0, 0);
+      }
+      to {
+        transform: translate3d(0, 0, 0);
+      }
+    }
+    @keyframes slideOutRight {
+      from {
+        transform: translate3d(0, 0, 0);
+      }
+      to {
+        transform: translate3d(100%, 0, 0);
+      }
     }
 
-    /* Tab entrance smooth animation (GPU Accelerated) */
+    /* Micro-transição suave entre Abas Principais (120Hz Instantânea sem travadinhas) */
     .tab-pane {
-      animation: tabEnter 0.19s var(--ease-out) forwards;
-      will-change: transform, opacity;
+      animation: tabFadeIn 0.15s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+      will-change: opacity, transform;
     }
-    @keyframes tabEnter {
+    @keyframes tabFadeIn {
       from {
         opacity: 0;
-        transform: translate3d(0, 5px, 0);
+        transform: translate3d(0, 3px, 0);
       }
       to {
         opacity: 1;
@@ -183,12 +205,12 @@
 
     /* Subtle Stagger Entrance for Cards (30ms cascade, never blocks touch) */
     .card-stagger {
-      animation: cardFadeUp 0.22s var(--ease-out) both;
+      animation: cardFadeUp 0.18s var(--ease-out) both;
     }
     @keyframes cardFadeUp {
       from {
         opacity: 0;
-        transform: translate3d(0, 6px, 0) scale(0.985);
+        transform: translate3d(0, 4px, 0) scale(0.99);
       }
       to {
         opacity: 1;
@@ -196,13 +218,14 @@
       }
     }
 
-    /* Micro-interactions táteis e suaves sem consumo de CPU (Compositor GPU) */
+    /* Micro-interactions táteis e suaves One UI (Resposta Imediata sem Atraso de Toque) */
     .tap-smooth {
-      transition: transform 0.15s var(--ease-out), border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+      transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.4, 1), border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
       will-change: transform;
+      touch-action: manipulation;
     }
     .tap-smooth:active {
-      transform: scale3d(0.97, 0.97, 1);
+      transform: scale3d(0.965, 0.965, 1);
     }
 
     /* Hit-target invisível de 44x44px para botões minimalistas (Ergonomia de 1 mão) */
@@ -1553,15 +1576,6 @@
     };
 
     function runViewTransition(updateFn) {
-      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (document.startViewTransition && !prefersReduced) {
-        try {
-          document.startViewTransition(() => {
-            updateFn();
-          });
-          return;
-        } catch (e) {}
-      }
       updateFn();
     }
 
@@ -1730,6 +1744,29 @@
       return safe;
     }
 
+    function updateNavTabUI(activeTabId) {
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+        const target = btn.getAttribute('data-tab');
+        const labelSpan = btn.querySelector('span:last-child');
+        const isSelected = target === activeTabId || (activeTabId === 'tab-modulo-detail' && target === 'tab-modulos');
+        if (isSelected) {
+          btn.classList.add('text-white', 'bg-white/14', 'shadow-2xs');
+          btn.classList.remove('text-slate-400', 'hover:text-white/90');
+          if (labelSpan) {
+            labelSpan.classList.add('font-extrabold');
+            labelSpan.classList.remove('font-semibold');
+          }
+        } else {
+          btn.classList.remove('text-white', 'bg-white/14', 'shadow-2xs');
+          btn.classList.add('text-slate-400', 'hover:text-white/90');
+          if (labelSpan) {
+            labelSpan.classList.remove('font-extrabold');
+            labelSpan.classList.add('font-semibold');
+          }
+        }
+      });
+    }
+
     function switchTab(tabId, skipHistory = false) {
       vibrate(10);
       const mainEl = document.getElementById('main-content');
@@ -1747,35 +1784,28 @@
         AppState.scrollPositions[prevTab] = mainEl.scrollTop;
       }
 
+      if (prevTab === 'tab-modulo-detail' && tabId !== 'tab-modulo-detail') {
+        const detailEl = document.getElementById('tab-modulo-detail');
+        if (detailEl) {
+          detailEl.classList.add('hidden');
+          detailEl.classList.remove('slide-enter-active', 'slide-exit-active');
+        }
+        AppState.currentModuleId = null;
+      }
+
       AppState.activeTab = tabId;
 
       if (tabId === 'tab-modulos') renderModulosTab();
       else if (tabId === 'tab-estudo') renderEstudoTab();
       else if (tabId === 'tab-provas') renderProvasTab();
 
-      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-pane').forEach(el => {
+        if (el.id !== tabId) el.classList.add('hidden');
+      });
       const activeEl = document.getElementById(tabId);
       if (activeEl) activeEl.classList.remove('hidden');
 
-      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
-        const target = btn.getAttribute('data-tab');
-        const labelSpan = btn.querySelector('span:last-child');
-        if (target === tabId || (tabId === 'tab-modulo-detail' && target === 'tab-modulos')) {
-          btn.classList.add('text-white', 'bg-white/14', 'shadow-2xs');
-          btn.classList.remove('text-slate-400', 'hover:text-white/90');
-          if (labelSpan) {
-            labelSpan.classList.add('font-extrabold');
-            labelSpan.classList.remove('font-semibold');
-          }
-        } else {
-          btn.classList.remove('text-white', 'bg-white/14', 'shadow-2xs');
-          btn.classList.add('text-slate-400', 'hover:text-white/90');
-          if (labelSpan) {
-            labelSpan.classList.remove('font-extrabold');
-            labelSpan.classList.add('font-semibold');
-          }
-        }
-      });
+      updateNavTabUI(tabId);
 
       if (mainEl) {
         if (tabId === 'tab-modulo-detail') {
@@ -1813,9 +1843,12 @@
       if (formEl) formEl.scrollTop = prevFormScroll;
     }
 
+    let isClosingSheet = false;
+
     // --- BOTTOM SHEET CONTROLS ---
     function openLessonSheet(preselectedModuleId = null, editLessonId = null, preselectedExamId = null) {
       vibrate(15);
+      isClosingSheet = false;
       const sheet = document.getElementById('sheet-lesson');
       const drawer = document.getElementById('sheet-lesson-drawer');
       const overlay = document.getElementById('sheet-lesson-overlay');
@@ -1893,6 +1926,7 @@
     }
 
     function closeLessonSheet() {
+      if (isClosingSheet) return;
       vibrate(8);
       if (document.activeElement && typeof document.activeElement.blur === 'function') {
         document.activeElement.blur();
@@ -1900,16 +1934,32 @@
       const sheet = document.getElementById('sheet-lesson');
       const drawer = document.getElementById('sheet-lesson-drawer');
       const overlay = document.getElementById('sheet-lesson-overlay');
+
+      if (!sheet || !sheet.classList.contains('sheet-open')) return;
+
+      isClosingSheet = true;
       if (drawer) {
-        drawer.style.transition = '';
-        drawer.style.transform = '';
+        drawer.style.transition = 'transform 0.24s cubic-bezier(0.22, 1, 0.36, 1)';
+        drawer.style.transform = 'translate3d(0, 100%, 0)';
       }
       if (overlay) {
-        overlay.style.transition = '';
-        overlay.style.opacity = '';
+        overlay.style.transition = 'opacity 0.22s ease';
+        overlay.style.opacity = '0';
       }
-      sheet.classList.remove('sheet-open');
-      scheduleOverlayHistoryCleanup();
+
+      setTimeout(() => {
+        sheet.classList.remove('sheet-open');
+        if (drawer) {
+          drawer.style.transition = '';
+          drawer.style.transform = '';
+        }
+        if (overlay) {
+          overlay.style.transition = '';
+          overlay.style.opacity = '';
+        }
+        isClosingSheet = false;
+        scheduleOverlayHistoryCleanup();
+      }, 240);
     }
 
     function renderModuleSelectorChips(selectedModuleId, shouldScrollIntoView = false) {
@@ -2256,6 +2306,7 @@
       rev.doneAt = rev.done ? getTodayStr() : null;
       saveState();
       if (rev.done) {
+        triggerCelebration();
         showToast(`Revisão ${stageKey.toUpperCase()} marcada como concluída!`, "🎯");
       } else {
         showToast(`Revisão ${stageKey.toUpperCase()} reaberta.`, "↩");
@@ -2335,24 +2386,39 @@
       const lesson = AppState.lessons.find(l => l.id === lessonId);
       if (!lesson || !lesson.reviews || !lesson.reviews[stageKey]) return;
 
-      lesson.reviews[stageKey].done = true;
-      lesson.reviews[stageKey].doneAt = getTodayStr();
-      saveState();
+      const finishCheck = () => {
+        lesson.reviews[stageKey].done = true;
+        lesson.reviews[stageKey].doneAt = getTodayStr();
+        saveState();
 
-      const remainingToday = getReviewsDueToday().length + getReviewsOverdue().length;
-      if (remainingToday === 0) {
         triggerCelebration();
-        showToast("Todas as revisões de hoje concluídas! 🎉", "🌟", false, () => {
-          lesson.reviews[stageKey].done = false;
-          lesson.reviews[stageKey].doneAt = null;
-          saveState();
-        });
+
+        const remainingToday = getReviewsDueToday().length + getReviewsOverdue().length;
+        if (remainingToday === 0) {
+          showToast("Todas as revisões de hoje concluídas! 🎉", "🌟", false, () => {
+            lesson.reviews[stageKey].done = false;
+            lesson.reviews[stageKey].doneAt = null;
+            saveState();
+          });
+        } else {
+          showToast(`Revisão ${stageKey.toUpperCase()} concluída!`, "🎯", false, () => {
+            lesson.reviews[stageKey].done = false;
+            lesson.reviews[stageKey].doneAt = null;
+            saveState();
+          });
+        }
+      };
+
+      const clickedBtn = (typeof event !== 'undefined' && event && event.currentTarget) ? event.currentTarget : null;
+      const cardEl = clickedBtn ? clickedBtn.closest('.cv-card') : null;
+
+      if (cardEl) {
+        cardEl.style.transition = 'transform 0.22s var(--ease-out), opacity 0.20s ease';
+        cardEl.style.transform = 'translate3d(60px, 0, 0)';
+        cardEl.style.opacity = '0';
+        setTimeout(finishCheck, 210);
       } else {
-        showToast(`Revisão ${stageKey.toUpperCase()} concluída!`, "🎯", false, () => {
-          lesson.reviews[stageKey].done = false;
-          lesson.reviews[stageKey].doneAt = null;
-          saveState();
-        });
+        finishCheck();
       }
     }
 
@@ -2747,15 +2813,76 @@
       }
     }
 
+    let isNavigatingDetail = false;
+
     function openModuleDetail(moduleId) {
-      vibrate(10);
+      if (isNavigatingDetail) return;
+      vibrate(12);
       pushAppHistory('module-detail');
-      runViewTransition(() => {
-        AppState.currentModuleId = moduleId;
-        AppState.moduleLessonFilter = 'all';
-        renderModuloDetailTab(moduleId);
-        switchTab('tab-modulo-detail', true);
-      });
+
+      const modulosTab = document.getElementById('tab-modulos');
+      const detailTab = document.getElementById('tab-modulo-detail');
+      const mainEl = document.getElementById('main-content');
+
+      if (mainEl) {
+        AppState.scrollPositions['tab-modulos'] = mainEl.scrollTop;
+      }
+
+      AppState.currentModuleId = moduleId;
+      AppState.moduleLessonFilter = 'all';
+      renderModuloDetailTab(moduleId);
+
+      AppState.activeTab = 'tab-modulo-detail';
+      updateNavTabUI('tab-modulo-detail');
+
+      if (detailTab) {
+        isNavigatingDetail = true;
+        detailTab.classList.remove('hidden', 'slide-exit-active');
+        detailTab.classList.add('slide-enter-active');
+
+        if (mainEl) mainEl.scrollTop = 0;
+
+        setTimeout(() => {
+          if (modulosTab && AppState.activeTab === 'tab-modulo-detail') {
+            modulosTab.classList.add('hidden');
+          }
+          detailTab.classList.remove('slide-enter-active');
+          isNavigatingDetail = false;
+        }, 260);
+      }
+    }
+
+    function closeModuleDetail(skipHistory = false) {
+      if (isNavigatingDetail) return;
+      const modulosTab = document.getElementById('tab-modulos');
+      const detailTab = document.getElementById('tab-modulo-detail');
+      const mainEl = document.getElementById('main-content');
+
+      vibrate(10);
+      if (!skipHistory) {
+        popToHomeHistoryIfNeeded();
+      }
+
+      AppState.currentModuleId = null;
+      AppState.activeTab = 'tab-modulos';
+      updateNavTabUI('tab-modulos');
+
+      if (modulosTab) {
+        modulosTab.classList.remove('hidden');
+        if (mainEl) mainEl.scrollTop = AppState.scrollPositions['tab-modulos'] || 0;
+      }
+
+      if (detailTab) {
+        isNavigatingDetail = true;
+        detailTab.classList.remove('slide-enter-active');
+        detailTab.classList.add('slide-exit-active');
+
+        setTimeout(() => {
+          detailTab.classList.add('hidden');
+          detailTab.classList.remove('slide-exit-active');
+          isNavigatingDetail = false;
+        }, 220);
+      }
     }
 
     function setModuleLessonFilter(filterKey) {
@@ -2944,10 +3071,7 @@
     }
 
     document.getElementById('btn-back-to-modules').addEventListener('click', () => {
-      runViewTransition(() => {
-        AppState.currentModuleId = null;
-        switchTab('tab-modulos');
-      });
+      closeModuleDetail();
     });
     document.getElementById('btn-edit-current-module').addEventListener('click', () => {
       if (AppState.currentModuleId) openModuleModal(AppState.currentModuleId);
@@ -3834,19 +3958,17 @@
     });
     document.getElementById('btn-close-modal-settings').addEventListener('click', () => document.getElementById('modal-settings').close());
 
-    // View Mode Toggle (Grid vs List) with View Transitions
+    // View Mode Toggle (Grid vs List) Instantâneo e Fluido
     document.getElementById('btn-view-list').addEventListener('click', () => {
       if (AppState.moduleViewMode === 'list') return;
       vibrate(10);
       const mainEl = document.getElementById('main-content');
       const savedScroll = mainEl ? mainEl.scrollTop : 0;
-      runViewTransition(() => {
-        AppState.moduleViewMode = 'list';
-        localStorage.setItem(VIEW_MODE_KEY, 'list');
-        updateViewToggleButtons();
-        renderModulosTab();
-        if (mainEl) mainEl.scrollTop = savedScroll;
-      });
+      AppState.moduleViewMode = 'list';
+      localStorage.setItem(VIEW_MODE_KEY, 'list');
+      updateViewToggleButtons();
+      renderModulosTab();
+      if (mainEl) mainEl.scrollTop = savedScroll;
     });
 
     document.getElementById('btn-view-grid').addEventListener('click', () => {
@@ -3854,13 +3976,11 @@
       vibrate(10);
       const mainEl = document.getElementById('main-content');
       const savedScroll = mainEl ? mainEl.scrollTop : 0;
-      runViewTransition(() => {
-        AppState.moduleViewMode = 'grid';
-        localStorage.setItem(VIEW_MODE_KEY, 'grid');
-        updateViewToggleButtons();
-        renderModulosTab();
-        if (mainEl) mainEl.scrollTop = savedScroll;
-      });
+      AppState.moduleViewMode = 'grid';
+      localStorage.setItem(VIEW_MODE_KEY, 'grid');
+      updateViewToggleButtons();
+      renderModulosTab();
+      if (mainEl) mainEl.scrollTop = savedScroll;
     });
 
     document.querySelectorAll('.nav-tab-btn').forEach(btn => {
@@ -3979,17 +4099,18 @@
 
         sheetDragHeader.addEventListener('touchmove', (e) => {
           if (!isDragging || e.touches.length !== 1) return;
-          const deltaY = e.touches[0].clientY - startY;
-          if (deltaY > 0) {
-            currentDeltaY = deltaY;
-            sheetDrawer.style.transform = `translate3d(0, ${deltaY}px, 0)`;
+          const rawDeltaY = e.touches[0].clientY - startY;
+          if (rawDeltaY > 0) {
+            currentDeltaY = rawDeltaY;
+            sheetDrawer.style.transform = `translate3d(0, ${rawDeltaY}px, 0)`;
             if (sheetOverlay) {
-              const progress = Math.min(deltaY / 280, 1);
+              const progress = Math.min(rawDeltaY / 280, 1);
               sheetOverlay.style.opacity = String(Math.max(1 - progress * 0.85, 0));
             }
           } else {
             currentDeltaY = 0;
-            sheetDrawer.style.transform = 'translate3d(0, 0, 0)';
+            const rubber = rawDeltaY * 0.18;
+            sheetDrawer.style.transform = `translate3d(0, ${rubber}px, 0)`;
           }
         }, { passive: true });
 
@@ -3999,14 +4120,19 @@
           const elapsed = Math.max(performance.now() - startTime, 1);
           const velocity = currentDeltaY / elapsed; // px/ms
 
-          sheetDrawer.style.transition = 'transform 0.28s cubic-bezier(0.22, 1, 0.36, 1)';
-          if (sheetOverlay) sheetOverlay.style.transition = 'opacity 0.24s ease';
-
-          if (currentDeltaY > 85 || (currentDeltaY > 35 && velocity > 0.55)) {
+          if (currentDeltaY > 80 || (currentDeltaY > 30 && velocity > 0.45)) {
             closeLessonSheet();
           } else {
-            sheetDrawer.style.transform = '';
-            if (sheetOverlay) sheetOverlay.style.opacity = '';
+            sheetDrawer.style.transition = 'transform 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            if (sheetOverlay) {
+              sheetOverlay.style.transition = 'opacity 0.22s ease';
+              sheetOverlay.style.opacity = '1';
+            }
+            sheetDrawer.style.transform = 'translate3d(0, 0, 0)';
+            setTimeout(() => {
+              sheetDrawer.style.transition = '';
+              if (sheetOverlay) sheetOverlay.style.transition = '';
+            }, 290);
           }
           currentDeltaY = 0;
         };
@@ -4072,25 +4198,55 @@
         let touchStartX = 0;
         let touchStartY = 0;
         let touchStartTime = 0;
+        let isSwiping = false;
 
         detailPane.addEventListener('touchstart', (e) => {
-          if (e.touches.length !== 1) return;
+          if (e.touches.length !== 1 || isNavigatingDetail) return;
           touchStartX = e.touches[0].clientX;
           touchStartY = e.touches[0].clientY;
           touchStartTime = performance.now();
+          if (touchStartX <= 110) {
+            isSwiping = true;
+          }
+        }, { passive: true });
+
+        detailPane.addEventListener('touchmove', (e) => {
+          if (!isSwiping || e.touches.length !== 1) return;
+          const deltaX = e.touches[0].clientX - touchStartX;
+          const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
+
+          if (deltaX > 8 && deltaX > deltaY) {
+            const modulosTab = document.getElementById('tab-modulos');
+            if (modulosTab && modulosTab.classList.contains('hidden')) {
+              modulosTab.classList.remove('hidden');
+            }
+            detailPane.style.transition = 'none';
+            detailPane.style.transform = `translate3d(${deltaX}px, 0, 0)`;
+          }
         }, { passive: true });
 
         detailPane.addEventListener('touchend', (e) => {
+          if (!isSwiping) return;
+          isSwiping = false;
           if (AppState.activeTab !== 'tab-modulo-detail' || e.changedTouches.length !== 1) return;
           const deltaX = e.changedTouches[0].clientX - touchStartX;
           const deltaY = Math.abs(e.changedTouches[0].clientY - touchStartY);
           const elapsed = performance.now() - touchStartTime;
+          const velocity = deltaX / elapsed;
 
-          if (deltaX > 75 && deltaY < 48 && elapsed < 500) {
-            runViewTransition(() => {
-              AppState.currentModuleId = null;
-              switchTab('tab-modulos');
-            });
+          if (deltaX > 80 || (deltaX > 35 && velocity > 0.45 && deltaY < 50)) {
+            closeModuleDetail();
+          } else {
+            detailPane.style.transition = 'transform 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            detailPane.style.transform = 'translate3d(0, 0, 0)';
+            setTimeout(() => {
+              const modulosTab = document.getElementById('tab-modulos');
+              if (modulosTab && AppState.activeTab === 'tab-modulo-detail') {
+                modulosTab.classList.add('hidden');
+              }
+              detailPane.style.transition = '';
+              detailPane.style.transform = '';
+            }, 250);
           }
         }, { passive: true });
       }
@@ -4127,12 +4283,9 @@
             return;
           }
 
-          // 3. Se estiver na visualização detalhada de um Módulo, volta para lista de Módulos
+          // 3. Se estiver na visualização detalhada de um Módulo, volta para lista de Módulos com slide One UI
           if (AppState.activeTab === 'tab-modulo-detail') {
-            runViewTransition(() => {
-              AppState.currentModuleId = null;
-              switchTab('tab-modulos', true);
-            });
+            closeModuleDetail(true);
             return;
           }
 

@@ -1,4 +1,4 @@
-# Meu Estudo — Contexto do Projeto & Diretrizes Arquiteturais (v2.4.3)
+# Meu Estudo — Contexto do Projeto & Diretrizes Arquiteturais (v2.5.0)
 
 Este arquivo preserva todo o histórico de decisões visuais, técnicas e de UX tomadas ao longo do desenvolvimento do **Meu Estudo** (Caderno Pessoal de Estudos Médicos com Revisões Espaçadas `D+1`, `D+7`, `D+30` e Gestão de Provas), otimizado para o **Samsung Galaxy A54 (120Hz, Offline-First PWA)**.
 
@@ -7,7 +7,7 @@ Este arquivo preserva todo o histórico de decisões visuais, técnicas e de UX 
 ## 1. Regras de Ouro (O que NUNCA deve ser quebrado ou alterado sem pedido explícito)
 
 1. **Identidade Visual & Tema Azul Marinho (`#162654`):**
-   - **Ícone Oficial (`icon.svg` & Brasão do App):** Capelo de formatura + livro aberto com duas páginas curvas em traço contínuo Azul Marinho Profundo (`#162654` / `#132147`) centralizado com proporção minimalista equilibrada (`scale(0.76)`) sobre um *squircle* perolado suave (`#fff9f2` → `#f8fafc` → `#e6f2ff`), sem margens externas ("zoom out") e sem corte/zoom excessivo (`purpose: "any"` no `manifest.json`).
+   - **Ícone Oficial (`icon.svg` & Brasão do App):** Capelo de formatura + livro aberto com duas páginas curvas em traço contínuo Azul Marinho Profundo (`#162654` / `#132147`) centralizado na safe-zone (`scale(0.74)`) sobre gradiente perolado suave Full-Bleed (`#fff9f2` → `#f8fafc` → `#e6f2ff`), sem squircle interno no SVG para preenchimento de borda a borda no Android One UI (`purpose: "any maskable"` com `id: "./index.html"` no `manifest.json`), evitando ícones encolhidos em miniatura ou alertas de identidade.
    - **Tema Principal:** Paleta `brand` em Azul Marinho / Escuro (`brand-600: #162654`, `brand-500: #1e3a8a`, `brand-700: #111c40`), harmonizando cabeçalho, abas, botões de ação, toasts e estados vazios com o novo ícone.
 2. **Barra Superior (Header) e Barra de Navegação Inferior (3 Abas) em Azul Marinho Escuro:**
    - Tanto o `<header>` quanto o `<nav>` inferior possuem fundo Azul Marinho Profundo (`from-[#0f1a38] via-[#132147] to-[#162654]`) contrastando com textos e ícones brancos nítidos.
@@ -19,22 +19,23 @@ Este arquivo preserva todo o histórico de decisões visuais, técnicas e de UX 
 4. **Sistema de Ícones Médicos (`32x32` Anatomia Branca 3D & Alto Contraste Cromático):**
    - Zero emojis nativos caricatos nas especialidades ou indicadores.
    - **Reumatologia (`reuma`):** Estilo original travado permanentemente em fundo *dark-slate* (`#303b4d`) com osso branco em visão anterolateral de joelho (30°) e halo de inflamação articular.
-   - **Especialidades Renovadas em v2.4.0 – v2.4.1:** Coração anatômico 3D com pulso ECG para Cardiologia (`heart`); Tireoide borboleta 3D pura (sem fundo de documento) para Endocrinologia (`endocrino`); osso anatômico 3D único com fratura angulada para Ortopedia (`bone`); rostinho de bebê com topete e chupeta para Pediatria (`baby`); corte histológico de pele 3D + folículo piloso + dermatoscópio para Dermatologia (`skin`); idoso com bengala curva e coração de cuidado para Geriatria (`geriatria`); e perfil humano nobre com símbolo Psi (`Ψ`) esculpido para Psiquiatria (`psiq`).
-   - **Diferenciação Cromática entre Módulos:** Enquanto `reuma` mantém seu fundo `#303b4d` travado, cada módulo exibe seu próprio brilho cromático radial no squircle do ícone (`getIconSquircleStyle`), borda colorida (`1.5px`), barra de acento lateral e barra de progresso `h-2` viva.
+   - **Especialidades Renovadas:** Coração anatômico 3D com pulso ECG para Cardiologia (`heart`); Tireoide borboleta 3D pura para Endocrinologia (`endocrino`); osso anatômico 3D único com fratura angulada para Ortopedia (`bone`); rostinho de bebê com topete e chupeta para Pediatria (`baby`); corte histológico de pele 3D + folículo piloso + dermatoscópio para Dermatologia (`skin`); idoso com bengala curva e coração de cuidado para Geriatria (`geriatria`); e perfil humano nobre com símbolo Psi (`Ψ`) esculpido para Psiquiatria (`psiq`).
+   - **Diferenciação Cromática entre Módulos:** Cada módulo exibe seu próprio brilho cromático radial no squircle do ícone (`getIconSquircleStyle`), borda colorida (`1.5px`), barra de acento lateral e barra de progresso `h-2` viva.
 5. **Fluxo de Cadastro de Módulos e Aulas (Fricção Zero & UI 2026):**
    - **Smart Auto-Match:** Ao digitar o nome do módulo (ex: *Cardio*, *Endócrino*, *Gineco*, *Gastro*, *Reumato*, *Ped*), seleciona automaticamente o ícone e a cor correspondente.
    - **Visualização em Lista por Padrão (`moduleViewMode: 'list'`) & Botão `+` Único e Limpo:** A aba `Módulos` abre em formato de lista vertical limpa por padrão (com botão `+` em cada matéria). Dentro do detalhe da matéria (`#tab-modulo-detail`), há **apenas um único** botão `+ Adicionar Aula` (`#btn-add-lesson-in-module`), sem botões duplicados no topo/card ou FAB flutuante sobrepondo as aulas.
    - **Novas Aulas (`#sheet-lesson`):** Layout moderno com seletor numérico integrado (`-` / `+`), card unificado de anotações com botão `• Lista` sem quebra de linha e barra horizontal de *pills* clínicos rápidos (`Alerta`, `Padrão-Ouro`, `Fisiopato`, `Diagnóstico`, `Conduta`, `Conceito`).
    - **Botão "Salvar e +1":** Permite cadastrar várias aulas seguidas mantendo o *bottom sheet* aberto na numeração seguinte.
-6. **Ergonomia Mobile & Performance 120Hz (v2.2.0 – v2.4.3):**
-   - Preservação cirúrgica da posição de rolagem (*scroll restoration*) ao marcar aulas ou revisões.
-   - Botão **Desfazer (Undo)** integrado ao Toast em ações frequentes e modal de confirmação estilo One UI ancorado na base (substituindo `window.confirm` bloqueante).
-   - Ciclos `D+1`, `D+7` e `D+30` interativos diretamente no leitor da aula.
-   - Suporte nativo ao botão "Voltar" do Android (`pushAppHistory` 1-para-1 em eventos de clique reais sem `pushState` no `DOMContentLoaded`, evitando a intervenção de histórico do Chromium + `popstate`) e gestos de *swipe* para uso com uma mão no celular.
+6. **Ergonomia Mobile & Fluidez 120Hz One UI (v2.5.0):**
+   - **Transições deslizantes nativas One UI / Android a 120Hz:** Deslize lateral suave e contínuo ao abrir a matéria e ao voltar via botão ou gesto de swipe direito com física elástica, sem congelamento de quadros da View Transition.
+   - **Bottom Sheet & Modais com Física Elástica em Tempo Real:** Acompanhamento do dedo milimétrico para baixo, resistência elástica para cima e retorno elástico tipo mola caso solto antes de 80px.
+   - **Micro-interações Táteis & Recompensas:** Toques com resposta imediata (`tap-smooth active:scale-[0.965]`), animação de saída suave ao concluir ciclos e celebração visual com confete leve nas revisões.
+   - Preservação cirúrgica da posição de rolagem (*scroll restoration*) e suporte 1-para-1 ao botão voltar físico do Android.
 
 ---
 
 ## 2. Histórico de Versões Recentes (Git Log)
+- **v2.5.0 (23/10/2026):** Ícone full-bleed adaptativo para Android One UI (eliminação definitiva do ícone minúsculo e resolução do aviso de segurança do Chrome), transições laterais One UI a 120Hz no detalhe do módulo, física elástica com arrasto contínuo no Bottom Sheet (`#sheet-lesson`), resposta tátil calibrada em botões e celebrações fluidas nas revisões de estudo.
 - **v2.4.3 (08/10/2026):** Ajuste fino da proporção minimalista do ícone (`icon.svg` + `manifest.json` com `purpose: "any"` sem zoom excessivo), visualização em Lista como padrão nos Módulos, remoção dos 3 botões `+` redundantes/sobrepostos dentro da matéria (mantendo apenas o botão único `+ Adicionar Aula`) e correção da pilha de histórico 1-para-1 para o botão Voltar no Chrome Android.
 - **v2.4.2 (08/10/2026):** Correção de runtime em `renderProvasTab` e ajustes iniciais de navegação.
 - **v2.4.1 (08/10/2026):** Restauração da Tireoide 3D pura para Endocrinologia, osso único com fratura angulada para Ortopedia e coração 3D com pulso ECG para Cardiologia.

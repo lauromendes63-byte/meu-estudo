@@ -1,6 +1,6 @@
 {
-  "version": "2.4.3",
-  "buildTime": "2026-10-08T23:15:00.000Z",
-  "buildLabel": "08/10/2026 às 23:15",
-  "notes": "v2.4.3: Proporção minimalista equilibrada no ícone do app (sem zoom excessivo), visualização em Lista como padrão nos Módulos, limpeza dos 4 botões '+' redundantes/sobrepostos dentro da matéria (mantendo apenas '+ Adicionar Aula' limpo) e histórico 1-para-1 compatível com o botão Voltar do Chrome Android."
+  "version": "2.5.0",
+  "buildTime": "2026-10-23T21:05:00.000Z",
+  "buildLabel": "23/10/2026 às 21:05",
+  "notes": "v2.5.0: Ícone full-bleed com suporte nativo a adaptive/maskable no One UI (eliminação do ícone minúsculo e resolução do aviso de segurança do Chrome), transições deslizantes nativas One UI / Android a 120Hz entre telas, física elástica contínua no Bottom Sheet com gesto de arrasto em tempo real, feedback tátil One UI nos toques e recompensas visuais fluidas nas revisões."
 }
