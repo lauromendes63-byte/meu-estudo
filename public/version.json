@@ -1,6 +1,6 @@
 {
   "version": "3.0.0",
-  "buildTime": "2026-11-12T01:50:00.000Z",
-  "buildLabel": "11/11/2026 às 22:50",
-  "notes": "v3.0.0: Remake editorial minimalista (#F7F6F3), novo emblema Caderno Médico + Pulso Clínico com ícones adaptativos PNG/SVG, arquitetura modular ES + Vite 100% offline, física 120Hz e 26 ícones anatômicos duotone."
+  "buildTime": "2026-11-12T02:02:00.000Z",
+  "buildLabel": "11/11/2026 às 23:02",
+  "notes": "v3.0.0: Correção de instalabilidade PWA/WebAPK (manifest PNG-only com start_url/scope raiz, registro imediato do Service Worker, botão Instalar App nas Configurações e headers explícitos na Vercel)."
 }

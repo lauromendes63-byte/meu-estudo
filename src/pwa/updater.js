@@ -9,11 +9,55 @@ export const BUILD_LABEL =
 
 export function createPwaUpdater() {
   let pendingServerData = null;
+  let deferredInstallPrompt = null;
+  const installListeners = new Set();
 
   const bannerEl = document.getElementById('update-banner');
   const labelEl = document.getElementById('update-banner-label');
   const btnApply = document.getElementById('btn-apply-update');
   const btnDismiss = document.getElementById('btn-dismiss-update');
+
+  function isStandaloneMode() {
+    if (typeof window === 'undefined') return false;
+    return Boolean(
+      window.matchMedia?.('(display-mode: standalone)').matches ||
+      window.navigator?.standalone === true
+    );
+  }
+
+  function getInstallState() {
+    if (isStandaloneMode()) return 'installed';
+    if (deferredInstallPrompt) return 'ready';
+    return 'browser';
+  }
+
+  function notifyInstallListeners() {
+    const state = getInstallState();
+    for (const cb of installListeners) {
+      cb(state);
+    }
+  }
+
+  async function promptInstall() {
+    if (!deferredInstallPrompt) {
+      return { outcome: 'unavailable' };
+    }
+    const promptEvent = deferredInstallPrompt;
+    deferredInstallPrompt = null;
+    notifyInstallListeners();
+    try {
+      await promptEvent.prompt();
+      const choice = await promptEvent.userChoice;
+      return { outcome: choice?.outcome || 'dismissed' };
+    } catch {
+      return { outcome: 'error' };
+    }
+  }
+
+  function subscribeInstall(listener) {
+    installListeners.add(listener);
+    return () => installListeners.delete(listener);
+  }
 
   async function applyUpdate() {
     if (btnApply) {
@@ -94,14 +138,32 @@ export function createPwaUpdater() {
     }
   }
 
-  function init() {
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' }).catch(() => {
-          // Dev servers or insecure origins may skip SW
-        });
+  function registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) return;
+    navigator.serviceWorker
+      .register('./sw.js', { scope: './', updateViaCache: 'none' })
+      .then((reg) => {
+        reg.update().catch(() => {});
+      })
+      .catch(() => {
+        // Dev servers or insecure origins may skip SW
       });
-    }
+  }
+
+  function init() {
+    registerServiceWorker();
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      notifyInstallListeners();
+    });
+
+    window.addEventListener('appinstalled', () => {
+      deferredInstallPrompt = null;
+      notifyInstallListeners();
+      showToast('Aplicativo instalado na tela inicial');
+    });
 
     setTimeout(() => checkForUpdates({ manual: false }), 2500);
     document.addEventListener('visibilitychange', () => {
@@ -117,6 +179,9 @@ export function createPwaUpdater() {
     buildLabel: BUILD_LABEL,
     init,
     checkForUpdates,
-    getPendingUpdate: () => pendingServerData
+    getPendingUpdate: () => pendingServerData,
+    getInstallState,
+    promptInstall,
+    subscribeInstall
   };
 }

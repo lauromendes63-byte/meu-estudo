@@ -1,5 +1,6 @@
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { chromium } from 'playwright-core';
 
@@ -76,6 +77,7 @@ async function run() {
       'icon.svg',
       'icon-192.png',
       'icon-512.png',
+      'icon-maskable-192.png',
       'icon-maskable-512.png',
       'apple-touch-icon.png',
       'sw.js'
@@ -90,9 +92,47 @@ async function run() {
       }
     }
     const manifestJson = await (await fetch(`${BASE_URL}manifest.json`)).json();
-    assert(manifestJson.icons.length === 4, `Expected 4 icons in manifest.json, got ${manifestJson.icons.length}`);
+    assert(manifestJson.icons.length === 4, `Expected 4 PNG icons in manifest.json, got ${manifestJson.icons.length}`);
+    assert(manifestJson.icons.every((i) => i.type === 'image/png'), 'manifest.json must declare only PNG icons for Android WebAPK');
+    assert(manifestJson.start_url === './' && manifestJson.id === './', 'manifest.json must use root ./ start_url and id');
     const versionJson = await (await fetch(`${BASE_URL}version.json`)).json();
     assert(versionJson.version === '3.0.0', `Expected version.json 3.0.0, got ${versionJson.version}`);
+
+    // 0b. Persistent WebAPK installability check via CDP
+    const auditProfileDir = fs.mkdtempSync(path.join(os.tmpdir(), 'meu-estudo-pwa-'));
+    try {
+      const persistentCtx = await chromium.launchPersistentContext(auditProfileDir, {
+        executablePath,
+        headless: true
+      });
+      const auditPage = persistentCtx.pages()[0] || (await persistentCtx.newPage());
+      await auditPage.addInitScript(() => {
+        window.addEventListener('beforeinstallprompt', (e) => {
+          e.preventDefault();
+          window.__e2eBipFired = true;
+        });
+      });
+      const cdp = await persistentCtx.newCDPSession(auditPage);
+      await auditPage.goto(BASE_URL, { waitUntil: 'networkidle' });
+      await auditPage.waitForTimeout(1000);
+      const cdpManifest = await cdp.send('Page.getAppManifest');
+      const cdpInstall = await cdp.send('Page.getInstallabilityErrors');
+      const bipFired = await auditPage.evaluate(() => !!window.__e2eBipFired);
+      const swReady = await auditPage.evaluate(async () => {
+        const reg = await navigator.serviceWorker.getRegistration();
+        return Boolean(reg && reg.active && reg.active.state === 'activated');
+      });
+      assert(cdpManifest.errors.length === 0, `CDP manifest errors: ${JSON.stringify(cdpManifest.errors)}`);
+      assert(
+        cdpInstall.installabilityErrors.length === 0,
+        `CDP installabilityErrors: ${JSON.stringify(cdpInstall.installabilityErrors)}`
+      );
+      assert(swReady, 'Service Worker did not activate promptly on first load');
+      assert(bipFired, 'beforeinstallprompt did not fire on clean browser context');
+      await persistentCtx.close();
+    } finally {
+      fs.rmSync(auditProfileDir, { recursive: true, force: true });
+    }
 
     browser = await chromium.launch({ executablePath, headless: true });
 

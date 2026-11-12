@@ -1,6 +1,6 @@
 // Service Worker - Meu Estudo (Offline-First Asset Strategy)
 const CACHE_NAME = '__SW_CACHE_VERSION__';
-const PRECACHE_ASSETS = /* __PRECACHE_MANIFEST__ */ ['./', './index.html', './manifest.json', './icon.svg', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
+const PRECACHE_ASSETS = /* __PRECACHE_MANIFEST__ */ ['./', './index.html', './manifest.json', './icon.svg', './icon-192.png', './icon-512.png', './icon-maskable-192.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -38,13 +38,13 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request)
         .then((res) => {
-          if (res && res.ok) {
+          if (res && res.ok && !res.redirected) {
             const copy = res.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put('./index.html', copy));
+            caches.open(CACHE_NAME).then((cache) => cache.put('./', copy));
           }
           return res;
         })
-        .catch(() => caches.match('./index.html') || caches.match('./'))
+        .catch(async () => (await caches.match('./')) || (await caches.match('./index.html')))
     );
     return;
   }
@@ -66,9 +66,9 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Remaining static assets (manifest, icon.svg): StaleWhileRevalidate
+  // Remaining static assets (manifest, icons): StaleWhileRevalidate
   event.respondWith(
-    caches.match(request).then((cached) => {
+    caches.match(request, { ignoreSearch: true }).then((cached) => {
       const networkFetch = fetch(request)
         .then((res) => {
           if (res && res.ok) {

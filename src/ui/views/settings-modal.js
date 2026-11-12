@@ -19,6 +19,39 @@ export function createSettingsModal({ engine, router, updater }) {
   const buildLabelEl = document.getElementById('settings-build-label');
   const updateStatusEl = document.getElementById('settings-update-status');
   const btnCheckUpdate = document.getElementById('btn-check-update-manual');
+  const installTitleEl = document.getElementById('settings-install-title');
+  const installDescEl = document.getElementById('settings-install-desc');
+  const btnInstallPwa = document.getElementById('btn-install-pwa');
+
+  function syncInstallUi(state) {
+    if (!installTitleEl || !installDescEl || !btnInstallPwa) return;
+    if (state === 'installed') {
+      installTitleEl.textContent = 'App Instalado';
+      installDescEl.textContent = 'Rodando em tela cheia como WebAPK offline';
+      btnInstallPwa.hidden = true;
+    } else if (state === 'ready') {
+      installTitleEl.textContent = 'Pronto para Instalar';
+      installDescEl.textContent = 'Cria aplicativo nativo sem barra do navegador';
+      btnInstallPwa.hidden = false;
+    } else {
+      installTitleEl.textContent = 'Instalação PWA';
+      installDescEl.textContent = 'No Chrome Android: menu ⋮ → Adicionar à tela inicial → Instalar';
+      btnInstallPwa.hidden = true;
+    }
+  }
+
+  updater?.subscribeInstall?.(syncInstallUi);
+
+  btnInstallPwa?.addEventListener('click', async () => {
+    if (!updater?.promptInstall) return;
+    vibrate(10);
+    const res = await updater.promptInstall();
+    if (res.outcome === 'accepted') {
+      syncInstallUi('installed');
+    } else if (res.outcome === 'unavailable') {
+      showToast('Use o menu ⋮ do Google Chrome e toque em Instalar');
+    }
+  });
 
   async function close() {
     await router.closeDialogOverlay(dlg);
@@ -97,6 +130,7 @@ export function createSettingsModal({ engine, router, updater }) {
     if (statExamsEl) statExamsEl.textContent = String(engine.state.exams.length);
     if (versionLabelEl && updater) versionLabelEl.textContent = `v${updater.version}`;
     if (buildLabelEl && updater) buildLabelEl.textContent = updater.buildLabel;
+    if (updater?.getInstallState) syncInstallUi(updater.getInstallState());
     router.openDialogOverlay(dlg);
   }
 

@@ -504,6 +504,17 @@
         </div>
 
         <div style="padding-top: 10px; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 8px;">
+          <span class="field-label">Instalação no Celular</span>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border-radius: 12px; background: var(--bg-canvas); border: 1px solid var(--border-subtle);">
+            <div style="min-width: 0;">
+              <span id="settings-install-title" style="font-size: 0.78rem; font-weight: 600; display: block;">Aplicativo Offline (PWA)</span>
+              <span id="settings-install-desc" style="font-size: 0.7rem; color: var(--ink-muted); display: block; line-height: 1.35;">Abra no Google Chrome e toque em Instalar</span>
+            </div>
+            <button type="button" id="btn-install-pwa" class="btn-primary" style="min-height: 36px; padding: 0 12px; flex-shrink: 0;" hidden>Instalar App</button>
+          </div>
+        </div>
+
+        <div style="padding-top: 10px; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 8px;">
           <div style="display: flex; align-items: center; justify-content: space-between;">
             <span class="field-label">Versão do Aplicativo</span>
             <span id="settings-version-label" class="badge-pill badge-pill--navy tabular-nums">v3.0.0</span>
