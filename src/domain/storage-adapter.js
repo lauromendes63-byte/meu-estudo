@@ -45,16 +45,39 @@ export function normalizeStateSnapshot(parsed) {
       createdAt: Number(l.createdAt) || Date.now()
     }));
 
+  const lessonModuleById = new Map(lessons.map((l) => [l.id, l.moduleId]));
+
   const exams = rawExams
     .filter((e) => e && typeof e === 'object' && e.id)
-    .map((e) => ({
-      id: String(e.id),
-      name: String(e.name || ''),
-      date: String(e.date || ''),
-      moduleId: String(e.moduleId || ''),
-      lessonIds: Array.isArray(e.lessonIds) ? e.lessonIds.map(String) : [],
-      createdAt: Number(e.createdAt) || Date.now()
-    }));
+    .map((e) => {
+      const lessonIds = Array.isArray(e.lessonIds)
+        ? Array.from(new Set(e.lessonIds.map((id) => String(id || '').trim()).filter(Boolean)))
+        : [];
+      const rawModuleIds = [];
+      if (Array.isArray(e.moduleIds)) {
+        for (const mid of e.moduleIds) {
+          if (mid) rawModuleIds.push(String(mid));
+        }
+      }
+      if (e.moduleId) {
+        rawModuleIds.push(String(e.moduleId));
+      }
+      for (const lid of lessonIds) {
+        const modId = lessonModuleById.get(lid);
+        if (modId) rawModuleIds.push(modId);
+      }
+      const moduleIds = Array.from(new Set(rawModuleIds));
+
+      return {
+        id: String(e.id),
+        name: String(e.name || ''),
+        date: String(e.date || ''),
+        moduleId: moduleIds[0] || '',
+        moduleIds,
+        lessonIds,
+        createdAt: Number(e.createdAt) || Date.now()
+      };
+    });
 
   return { modules, lessons, exams };
 }

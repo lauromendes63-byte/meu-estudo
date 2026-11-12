@@ -48,7 +48,7 @@
     --tone-purple-border: #decff2;
 
     /* Typography Families */
-    --font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+    --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 

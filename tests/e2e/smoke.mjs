@@ -237,7 +237,7 @@ async function run() {
     });
 
     assert(bootAudit.fontsLoaded, 'Bundled fonts failed to finish loading');
-    assert(bootAudit.headerFont.includes('Instrument Serif'), `Header font mismatch: ${bootAudit.headerFont}`);
+    assert(bootAudit.headerFont.includes('Plus Jakarta Sans'), `Header font mismatch: ${bootAudit.headerFont}`);
     assert(bootAudit.bodyFont.includes('Plus Jakarta Sans'), `Body font mismatch: ${bootAudit.bodyFont}`);
     assert(
       JSON.stringify(bootAudit.iconKeys) === JSON.stringify(['reuma', 'stethoscope', 'psiq']),
@@ -360,7 +360,7 @@ async function run() {
     await page.waitForTimeout(160);
     assert((await page.textContent('#subtab-count-revisar')) === '1', 'Undo did not restore review count');
 
-    // 7. Provas Tab + checklist
+    // 7. Provas Tab + checklist + Multi-module Exam Modal with Date Presets
     await page.click('.nav-tab-btn[data-tab="tab-provas"]');
     await page.waitForSelector('#tab-provas:not([hidden])');
     await page.locator('#provas-list details.exam-details summary').first().click();
@@ -368,6 +368,112 @@ async function run() {
       (await page.locator('#provas-list .exam-lesson-row', { hasText: 'Artrite Reumatoide' }).count()) === 1,
       'Exam checklist missing linked lesson'
     );
+
+    await page.click('#btn-open-create-exam');
+    await page.waitForSelector('#modal-exam[open]');
+    assert(
+      (await page.locator('#exam-date-presets .exam-date-preset-btn[data-offset="14"].is-active').count()) === 1,
+      'Default +14d date preset should be active'
+    );
+    await page.click('#exam-date-presets .exam-date-preset-btn[data-offset="7"]');
+    assert(
+      (await page.inputValue('#exam-date-input')) === getIsoDateOffset(7),
+      'Quick +7 dias preset did not update exam date'
+    );
+    await page.fill('#exam-name-input', 'Simulado Multidisciplinar');
+    await page.locator('#exam-modules-selector .module-select-chip', { hasText: 'Clínica Médica' }).click();
+    assert(
+      (await page.locator('#exam-lessons-checklist .exam-checklist-group').count()) === 2,
+      'Multi-module exam checklist should render groups for both selected modules'
+    );
+    assert(
+      (await page.locator('#exam-lessons-checklist input[type="checkbox"]:checked').count()) === 0,
+      'Lessons must stay unchecked until manually selected'
+    );
+    await page.locator('#exam-lessons-checklist label', { hasText: 'Artrite Reumatoide' }).click();
+    await page.locator('#exam-lessons-checklist label', { hasText: 'Insuficiência Cardíaca' }).click();
+    assert((await page.textContent('#exam-selected-count')) === '2 aulas', 'Selected exam lesson count mismatch');
+    await page.click('#form-exam button[type="submit"]');
+    await page.waitForSelector('#modal-exam:not([open])');
+
+    const multiExamCard = page.locator('#provas-list .exam-card', { hasText: 'Simulado Multidisciplinar' });
+    assert((await multiExamCard.count()) === 1, 'Multi-module exam card not rendered');
+    assert((await multiExamCard.locator('.exam-squircle-stack .exam-squircle-btn').count()) === 2, 'Expected 2 stacked squircles on multi-module exam card');
+    assert((await multiExamCard.locator('.exam-modules-row button', { hasText: 'Reumatologia' }).count()) === 1, 'Missing Reumatologia badge on multi-module exam card');
+    assert((await multiExamCard.locator('.exam-modules-row button', { hasText: 'Clínica Médica' }).count()) === 1, 'Missing Clínica Médica badge on multi-module exam card');
+    await multiExamCard.locator('details.exam-details summary').click();
+    assert((await multiExamCard.locator('.exam-lesson-row').count()) === 2, 'Expected 2 lessons in multi-module exam edital');
+    const provasOverflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+    assert(!provasOverflow, 'Horizontal overflow detected on tab-provas');
+
+    // 7b. Horizontal Touch Swipe Navigation across Módulos <-> Estudo <-> Provas
+    const touchCdp = await page.context().newCDPSession(page);
+    async function dispatchTouchSwipe(fromX, fromY, toX, toY, steps = 8) {
+      await touchCdp.send('Input.dispatchTouchEvent', {
+        type: 'touchStart',
+        touchPoints: [{ x: fromX, y: fromY, id: 1 }]
+      });
+      for (let i = 1; i <= steps; i++) {
+        const x = fromX + ((toX - fromX) * i) / steps;
+        const y = fromY + ((toY - fromY) * i) / steps;
+        await touchCdp.send('Input.dispatchTouchEvent', {
+          type: 'touchMove',
+          touchPoints: [{ x, y, id: 1 }]
+        });
+        await page.waitForTimeout(14);
+      }
+      await touchCdp.send('Input.dispatchTouchEvent', {
+        type: 'touchEnd',
+        touchPoints: []
+      });
+    }
+
+    await page.click('.nav-tab-btn[data-tab="tab-modulos"]');
+    await page.waitForSelector('#tab-modulos:not([hidden])');
+    await page.waitForTimeout(160);
+
+    // Swipe right-to-left: Módulos -> Estudo
+    await dispatchTouchSwipe(330, 118, 85, 118);
+    await page.waitForSelector('#tab-estudo:not([hidden])');
+    assert(
+      (await page.getAttribute('#app-dock', 'data-active-index')) === '1',
+      'Swipe left from Módulos did not navigate to Estudo'
+    );
+    await page.waitForTimeout(180);
+
+    // Swiping slightly inside .SwipeableList-item must NOT trigger whole-tab switch
+    const swipeItemBox = await page.locator('#estudo-revisoes-list .SwipeableList-content').first().boundingBox();
+    assert(swipeItemBox, 'Expected review swipe item bounding box');
+    await dispatchTouchSwipe(
+      swipeItemBox.x + swipeItemBox.width * 0.72,
+      swipeItemBox.y + swipeItemBox.height / 2,
+      swipeItemBox.x + swipeItemBox.width * 0.56,
+      swipeItemBox.y + swipeItemBox.height / 2,
+      6
+    );
+    await page.waitForTimeout(140);
+    assert(
+      (await page.getAttribute('#app-dock', 'data-active-index')) === '1',
+      'Horizontal swipe inside SwipeableList item wrongly switched main tab'
+    );
+
+    // Swipe right-to-left above list: Estudo -> Provas
+    await dispatchTouchSwipe(330, 118, 85, 118);
+    await page.waitForSelector('#tab-provas:not([hidden])');
+    assert(
+      (await page.getAttribute('#app-dock', 'data-active-index')) === '2',
+      'Swipe left from Estudo did not navigate to Provas'
+    );
+    await page.waitForTimeout(180);
+
+    // Swipe left-to-right: Provas -> Estudo
+    await dispatchTouchSwipe(85, 118, 330, 118);
+    await page.waitForSelector('#tab-estudo:not([hidden])');
+    assert(
+      (await page.getAttribute('#app-dock', 'data-active-index')) === '1',
+      'Swipe right from Provas did not navigate back to Estudo'
+    );
+    await touchCdp.detach();
 
     // 8. Global Search Modal
     await page.click('#btn-open-search');
@@ -386,7 +492,7 @@ async function run() {
     assert((await page.textContent('#settings-version-label')) === 'v3.0.0', 'Settings version mismatch');
     assert((await page.textContent('#stat-total-modules')) === '4', 'Settings modules metric mismatch');
     assert((await page.textContent('#stat-total-lessons')) === '4', 'Settings lessons metric mismatch');
-    assert((await page.textContent('#stat-total-exams')) === '1', 'Settings exams metric mismatch');
+    assert((await page.textContent('#stat-total-exams')) === '2', 'Settings exams metric mismatch');
     await page.click('#btn-close-modal-settings');
     await page.waitForSelector('#modal-settings:not([open])');
 

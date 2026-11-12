@@ -74,18 +74,23 @@ export function createRouter({
     });
   }
 
-  function showOnlyPane(paneId) {
+  function showOnlyPane(paneId, direction = null) {
+    const enterClass =
+      direction === 'next'
+        ? 'is-entering-next'
+        : direction === 'prev'
+          ? 'is-entering-prev'
+          : 'is-entering';
+
     for (const [id, getter] of Object.entries(panes)) {
       const el = getter();
       if (!el) continue;
       const shouldShow = id === paneId;
       el.hidden = !shouldShow;
+      el.classList.remove('is-entering', 'is-entering-next', 'is-entering-prev');
       if (shouldShow) {
-        el.classList.remove('is-entering');
         void el.offsetWidth;
-        el.classList.add('is-entering');
-      } else {
-        el.classList.remove('is-entering');
+        el.classList.add(enterClass);
       }
     }
   }
@@ -106,11 +111,35 @@ export function createRouter({
     });
   }
 
-  function switchTab(targetTabId) {
+  function getAdjacentTab(delta) {
+    const idx = TAB_ORDER.indexOf(engine.state.activeTab || 'tab-modulos');
+    if (idx === -1) return null;
+    return TAB_ORDER[idx + delta] || null;
+  }
+
+  function getActiveTabPane() {
+    if (engine.state.currentModuleId) {
+      return panes['tab-modulo-detail']?.() || null;
+    }
+    const active = engine.state.activeTab || 'tab-modulos';
+    return panes[active]?.() || null;
+  }
+
+  function switchTab(targetTabId, { direction = null } = {}) {
     if (!TAB_ORDER.includes(targetTabId)) return;
 
     saveCurrentMainScroll();
     const isReturningFromDetail = Boolean(engine.state.currentModuleId);
+    const prevTabId = engine.state.activeTab || 'tab-modulos';
+    const prevIdx = TAB_ORDER.indexOf(prevTabId);
+    const nextIdx = TAB_ORDER.indexOf(targetTabId);
+    const resolvedDirection =
+      direction ||
+      (!isReturningFromDetail && prevIdx !== -1 && nextIdx !== -1 && prevIdx !== nextIdx
+        ? nextIdx > prevIdx
+          ? 'next'
+          : 'prev'
+        : null);
 
     engine.state.activeTab = targetTabId;
     engine.state.currentModuleId = null;
@@ -119,7 +148,7 @@ export function createRouter({
       consumeTopHistoryStep();
     }
 
-    showOnlyPane(targetTabId);
+    showOnlyPane(targetTabId, resolvedDirection);
     renderAll();
     syncHeaderAndNav();
     restoreMainScroll(engine.state.scrollPositions[targetTabId] || 0);
@@ -266,6 +295,8 @@ export function createRouter({
 
   return {
     isOverlayOpen,
+    getAdjacentTab,
+    getActiveTabPane,
     switchTab,
     openModuleDetail,
     closeModuleDetail,

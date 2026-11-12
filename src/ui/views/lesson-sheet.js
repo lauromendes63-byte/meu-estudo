@@ -68,7 +68,7 @@ export function createLessonSheet({ engine, router, onNeedModule }) {
           onClick: () => {
             selectedModuleId = mod.id;
             renderModuleChips();
-            populateExamOptions();
+            populateExamOptions(examSelect?.value || '');
             if (!idInput?.value) {
               updateNumberPreview(engine.getNextLessonNumber(mod.id));
             }
@@ -93,8 +93,18 @@ export function createLessonSheet({ engine, router, onNeedModule }) {
       String(a.date).localeCompare(String(b.date))
     );
     for (const exam of sortedExams) {
-      const mod = engine.getModule(exam.moduleId);
-      const label = mod ? `${exam.name} (${mod.name})` : exam.name;
+      const examMods = engine
+        .getExamModuleIds(exam)
+        .map((id) => engine.getModule(id))
+        .filter(Boolean);
+      let label = exam.name;
+      if (examMods.length === 1) {
+        label = `${exam.name} (${examMods[0].name})`;
+      } else if (examMods.length === 2) {
+        label = `${exam.name} (${examMods[0].name} + ${examMods[1].name})`;
+      } else if (examMods.length > 2) {
+        label = `${exam.name} (${examMods[0].name} +${examMods.length - 1})`;
+      }
       const opt = el('option', { value: exam.id, textContent: label });
       if (exam.id === preselectedExamId) opt.selected = true;
       examSelect.appendChild(opt);

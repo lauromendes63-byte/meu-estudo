@@ -384,26 +384,36 @@
         </div>
 
         <div>
-          <label for="exam-date-input" class="field-label" style="margin-bottom: 6px;">Data do Exame</label>
+          <div class="field-label-row">
+            <label for="exam-date-input" class="field-label">Data do Exame</label>
+            <span id="exam-date-friendly" class="tabular-nums" style="font-size: 0.72rem; font-weight: 600; color: var(--accent-navy);"></span>
+          </div>
+          <div id="exam-date-presets" class="exam-date-presets scrollbar-none">
+            <button type="button" data-offset="1" class="exam-date-preset-btn">Amanhã</button>
+            <button type="button" data-offset="7" class="exam-date-preset-btn">+7 dias</button>
+            <button type="button" data-offset="14" class="exam-date-preset-btn">+14 dias</button>
+            <button type="button" data-offset="30" class="exam-date-preset-btn">+30 dias</button>
+          </div>
           <input type="date" id="exam-date-input" name="examDate" required class="field-input">
         </div>
 
         <div>
-          <label for="exam-module-select" class="field-label" style="margin-bottom: 6px;">Módulo Correspondente</label>
-          <div class="select-wrap">
-            <select id="exam-module-select" name="examModuleId" required class="field-select">
-              <option value="">Selecione o Módulo</option>
-            </select>
-            <svg viewBox="0 0 24 24" class="ui-icon select-chevron" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          <div class="field-label-row">
+            <span class="field-label">Módulos Cobrados</span>
+            <button type="button" id="btn-exam-toggle-all-modules" style="font-size: 0.72rem; font-weight: 600; color: var(--accent-navy);">Selecionar Todos</button>
           </div>
+          <div id="exam-modules-selector" class="exam-modules-grid"></div>
         </div>
 
         <div>
           <div class="field-label-row">
-            <span class="field-label">Conteúdo Cobrado</span>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span class="field-label">Conteúdo Cobrado</span>
+              <span id="exam-selected-count" class="badge-pill badge-pill--navy tabular-nums">0 aulas</span>
+            </div>
             <button type="button" id="btn-exam-select-all" style="font-size: 0.72rem; font-weight: 600; color: var(--accent-navy);">Selecionar Todas</button>
           </div>
-          <div id="exam-lessons-checklist" style="display: flex; flex-direction: column; gap: 6px; max-height: 170px; overflow-y: auto; padding: 8px; border-radius: 12px; background: var(--bg-canvas); border: 1px solid var(--border-subtle);"></div>
+          <div id="exam-lessons-checklist" class="exam-checklist-scroll"></div>
         </div>
 
         <button type="submit" class="btn-primary" style="width: 100%; min-height: 46px;">Salvar Prova</button>
@@ -428,7 +438,7 @@
       </div>
 
       <div class="dialog-scroll">
-        <h3 id="view-lesson-title" class="modal-heading" style="font-size: 1.55rem;"></h3>
+        <h3 id="view-lesson-title" class="modal-heading" style="font-size: 1.28rem; line-height: 1.25;"></h3>
 
         <div style="padding: 12px; border-radius: 14px; background: var(--bg-canvas); border: 1px solid var(--border-subtle);">
           <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">

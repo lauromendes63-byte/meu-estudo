@@ -18,12 +18,12 @@ Aplicação web mobile-first (**Offline-First PWA**) projetada para smartphones 
    - Ao concluir uma aula, o motor (`createStudyEngine`) agenda automaticamente os ciclos `D+1`, `D+7` e `D+30`.
    - Aba `Estudo` com listas deslizáveis nativas (`CSS Scroll Snap` + `IntersectionObserver`), botão acessível equivalente e Toast com **Desfazer (1 toque)**.
 
-4. **Gestão Integrada de Provas & Busca Global**:
-   - Cadastro de exames vinculados ao conteúdo programático com contagem regressiva e percentual de cobertura sincronizado bidirecionalmente.
-   - Busca rápida instantânea (`<search>`) por módulo, tema, aula pendente, revisão ou marcador clínico.
+4. **Gestão Integrada de Provas Multi-Módulo & Busca Global**:
+   - Cadastro ágil de exames cobrindo um ou mais módulos (`moduleIds`) com atalhos de data (`Amanhã`, `+7 dias`, `+14 dias`, `+30 dias`), contagem regressiva e cobertura percentual por edital sincronizada bidirecionalmente.
+   - Navegação horizontal por arrasto entre abas (`Módulos ↔ Estudo ↔ Provas`) e busca rápida instantânea (`<search>`) por módulo, tema, aula pendente, revisão ou marcador clínico.
 
 5. **PWA 100% Offline, Fontes Locais & Backup JSON**:
-   - Nenhuma dependência externa de CDN em runtime (`@fontsource/instrument-serif`, `@fontsource/plus-jakarta-sans`, `@fontsource/jetbrains-mono` e `canvas-confetti` empacotados localmente no bundle).
+   - Nenhuma dependência externa de CDN em runtime (`@fontsource/plus-jakarta-sans`, `@fontsource/jetbrains-mono` e `canvas-confetti` empacotados localmente no bundle).
    - Precache automático em `dist/sw.js` e exportação/restauração segura em JSON validado.
 
 ## Desenvolvimento & Testes

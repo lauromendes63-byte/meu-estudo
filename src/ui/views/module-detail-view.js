@@ -41,7 +41,7 @@ export function createModuleDetailView({
     if (!mod) return;
     const confirmed = await askConfirmation({
       title: `Excluir "${mod.name}"?`,
-      message: 'Todas as aulas e provas vinculadas a este módulo serão removidas permanentemente.',
+      message: 'As aulas deste módulo e seus vínculos exclusivos em provas serão removidos permanentemente.',
       confirmLabel: 'Excluir Módulo',
       danger: true
     });

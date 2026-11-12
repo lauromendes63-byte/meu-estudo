@@ -1,6 +1,6 @@
 {
   "version": "3.0.0",
-  "buildTime": "2026-11-12T02:02:00.000Z",
-  "buildLabel": "11/11/2026 às 23:02",
-  "notes": "v3.0.0: Correção de instalabilidade PWA/WebAPK (manifest PNG-only com start_url/scope raiz, registro imediato do Service Worker, botão Instalar App nas Configurações e headers explícitos na Vercel)."
+  "buildTime": "2026-11-12T02:50:39.435Z",
+  "buildLabel": "11/11/2026 às 23:50",
+  "notes": "v3.0.0: Tipografia Plus Jakarta Sans em títulos e cabeçalhos, provas multi-módulo com atalhos de data e navegação lateral por arrasto entre abas."
 }

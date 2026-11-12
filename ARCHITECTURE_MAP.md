@@ -39,8 +39,8 @@ flowchart TB
     REC["src/ui/reconcile.js<br/>reconcileKeyedList (Patch DOM por data-key)"]
     FEED["src/ui/feedback.js<br/>showToast (Undo) · triggerCelebration · vibrate"]
     OVL["src/ui/overlays.js<br/>openModalDialog · closeModalDialog · askConfirmation"]
-    GEST["src/ui/gestures.js<br/>attachSheetDrag · attachMasterDetailSwipeBack · createSwipeListController"]
-    RTR["src/ui/router.js<br/>createRouter (Tabs, Detail ViewTransition, 1:1 History)"]
+    GEST["src/ui/gestures.js<br/>attachSheetDrag · attachTabSwipe · attachMasterDetailSwipeBack · SwipeableList"]
+    RTR["src/ui/router.js<br/>createRouter (Tabs Direcionais, Detail ViewTransition, 1:1 History)"]
   end
 
   subgraph VIEWS["Controllers de Views (11 Módulos)"]
@@ -94,15 +94,15 @@ flowchart TB
 | Entry | [`src/main.js`](src/main.js) | Carrega fontes `@fontsource` locais + camadas CSS, instancia `StorageAdapter`, `StudyEngine`, `Router`, Views e `PwaUpdater` |
 | Domain | [`src/domain/dates.js`](src/domain/dates.js) | Aritmética determinística `YYYY-MM-DD`, diferença em dias (`daysDiff`) e formatação pt-BR sem risco de timezone |
 | Domain | [`src/domain/notes-parser.js`](src/domain/notes-parser.js) | Tokenizador puro de `**negrito**`, listas `• ` e marcadores clínicos `[Alerta:]`, `[Padrão-Ouro:]`, `[Fisiopato:]`, `[Diagnóstico:]`, `[Conduta:]`, `[Conceito:]` via nós DOM seguros (zero `innerHTML`) |
-| Domain | [`src/domain/storage-adapter.js`](src/domain/storage-adapter.js) | Persistência em `meu_estudo_data_v1` / `meu_estudo_view_mode_v2`, validação de backup JSON e migração automática de chaves legadas (`joint->reuma`, `general->stethoscope`, `brain+psiquiatria->psiq`) |
-| Domain | [`src/domain/study-engine.js`](src/domain/study-engine.js) | Estado reativo (`subscribe`/`emit`), CRUD de módulos/aulas/provas, ciclos `D+1`/`D+7`/`D+30`, callbacks `undo()` de 1 toque e busca global |
+| Domain | [`src/domain/storage-adapter.js`](src/domain/storage-adapter.js) | Persistência em `meu_estudo_data_v1` / `meu_estudo_view_mode_v2`, validação de backup JSON, normalização de provas multi-módulo (`moduleIds`) e migração automática de chaves legadas (`joint->reuma`, `general->stethoscope`, `brain+psiquiatria->psiq`) |
+| Domain | [`src/domain/study-engine.js`](src/domain/study-engine.js) | Estado reativo (`subscribe`/`emit`), CRUD de módulos/aulas/provas multi-módulo (`getExamModuleIds`), ciclos `D+1`/`D+7`/`D+30`, callbacks `undo()` de 1 toque e busca global |
 | Icons | [`src/icons/palette.js`](src/icons/palette.js) | 8 tons editoriais de alto contraste sobre `#FFFFFF` e `#F7F6F3` |
 | Icons | [`src/icons/medical-icons.js`](src/icons/medical-icons.js) | 26 anatomias SVG 32×32 (`#162654` ink + preenchimento pastel `currentColor`), `UI_ICONS`, `APP_CREST_SVG` e `matchSpecialtyByName` |
 | UI | [`src/ui/dom.js`](src/ui/dom.js) | Construtores DOM seguros (`el`, `clearChildren`, `createSquircleNode`) |
 | UI | [`src/ui/reconcile.js`](src/ui/reconcile.js) | `reconcileKeyedList`: atualização cirúrgica por `data-key` sem reconstruir nós não modificados |
 | UI | [`src/ui/overlays.js`](src/ui/overlays.js) | Integração top-layer com feature detection `canTransitionDisplay()` (`@starting-style` vs `[data-closing]`), `wireDialogBackdropDismiss` e `askConfirmation` |
-| UI | [`src/ui/gestures.js`](src/ui/gestures.js) | Arrasto interruptível WAAPI + `setPointerCapture` (`attachSheetDrag`), swipe-back na borda esquerda (`attachMasterDetailSwipeBack`) e `createSwipeListController` (CSS Scroll Snap + `IntersectionObserver`) |
-| UI | [`src/ui/router.js`](src/ui/router.js) | Roteamento de abas, `startViewTransition` direcional (`forward`/`backward`), pilha 1-para-1 `meuEstudoView` e sincronização de `close` nativo em `closedby="any"` |
+| UI | [`src/ui/gestures.js`](src/ui/gestures.js) | Arrasto interruptível WAAPI + `setPointerCapture` (`attachSheetDrag`), swipe horizontal entre abas (`attachTabSwipe`), swipe-back na borda esquerda (`attachMasterDetailSwipeBack`) e `createSwipeListController` (CSS Scroll Snap + `IntersectionObserver`) |
+| UI | [`src/ui/router.js`](src/ui/router.js) | Roteamento de abas com transições direcionais (`next`/`prev`), `startViewTransition` (`forward`/`backward`), pilha 1-para-1 `meuEstudoView` e sincronização de `close` nativo em `closedby="any"` |
 | PWA | [`src/pwa/updater.js`](src/pwa/updater.js) | Registro de `./sw.js`, polling `./version.json` no boot/`visibilitychange`, descarte por sessão (`sessionStorage`) e limpeza de cache HTTP |
 
 ---

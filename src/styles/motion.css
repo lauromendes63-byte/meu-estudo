@@ -54,10 +54,44 @@
     }
   }
 
+  .tab-pane.is-entering-next {
+    @media (prefers-reduced-motion: no-preference) {
+      animation: paneSlideInNext 190ms var(--ease-out) both;
+    }
+  }
+
+  .tab-pane.is-entering-prev {
+    @media (prefers-reduced-motion: no-preference) {
+      animation: paneSlideInPrev 190ms var(--ease-out) both;
+    }
+  }
+
   @keyframes paneFadeUp {
     from {
       opacity: 0;
       translate: 0 4px;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @keyframes paneSlideInNext {
+    from {
+      opacity: 0;
+      translate: 24px 0;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @keyframes paneSlideInPrev {
+    from {
+      opacity: 0;
+      translate: -24px 0;
     }
     to {
       opacity: 1;

@@ -51,13 +51,38 @@ export function createStudyEngine({ storageAdapter, todayFn = getTodayStr } = {}
     return saved;
   }
 
-  function syncLessonWithExams(lessonId, selectedExamId) {
+  function resolveExamModuleIds(exam) {
+    if (!exam) return [];
+    const ids = [];
+    if (Array.isArray(exam.moduleIds)) {
+      for (const mid of exam.moduleIds) {
+        if (mid && state.modules.some((m) => m.id === mid)) ids.push(mid);
+      }
+    }
+    if (exam.moduleId && state.modules.some((m) => m.id === exam.moduleId)) {
+      ids.push(exam.moduleId);
+    }
+    for (const lid of exam.lessonIds || []) {
+      const lesson = state.lessons.find((l) => l.id === lid);
+      if (lesson?.moduleId && state.modules.some((m) => m.id === lesson.moduleId)) {
+        ids.push(lesson.moduleId);
+      }
+    }
+    return Array.from(new Set(ids));
+  }
+
+  function syncLessonWithExams(lesson, selectedExamId) {
     for (const ex of state.exams) {
       if (!Array.isArray(ex.lessonIds)) ex.lessonIds = [];
+      if (!Array.isArray(ex.moduleIds)) ex.moduleIds = ex.moduleId ? [ex.moduleId] : [];
       if (ex.id === selectedExamId) {
-        if (!ex.lessonIds.includes(lessonId)) ex.lessonIds.push(lessonId);
+        if (!ex.lessonIds.includes(lesson.id)) ex.lessonIds.push(lesson.id);
+        if (lesson.moduleId && !ex.moduleIds.includes(lesson.moduleId)) {
+          ex.moduleIds.push(lesson.moduleId);
+        }
+        ex.moduleId = ex.moduleIds[0] || lesson.moduleId || '';
       } else {
-        ex.lessonIds = ex.lessonIds.filter((id) => id !== lessonId);
+        ex.lessonIds = ex.lessonIds.filter((id) => id !== lesson.id);
       }
     }
   }
@@ -88,6 +113,11 @@ export function createStudyEngine({ storageAdapter, todayFn = getTodayStr } = {}
 
     getExam(id) {
       return state.exams.find((e) => e.id === id) || null;
+    },
+
+    getExamModuleIds(examOrId) {
+      const exam = typeof examOrId === 'string' ? this.getExam(examOrId) : examOrId;
+      return resolveExamModuleIds(exam);
     },
 
     getLessonsForModule(moduleId) {
@@ -220,9 +250,29 @@ export function createStudyEngine({ storageAdapter, todayFn = getTodayStr } = {}
     deleteModule(moduleId) {
       const mod = this.getModule(moduleId);
       if (!mod) return false;
+      const removedLessonIds = new Set(
+        state.lessons.filter((l) => l.moduleId === moduleId).map((l) => l.id)
+      );
       state.modules = state.modules.filter((m) => m.id !== moduleId);
       state.lessons = state.lessons.filter((l) => l.moduleId !== moduleId);
-      state.exams = state.exams.filter((e) => e.moduleId !== moduleId);
+      state.exams = state.exams
+        .map((e) => {
+          const baseModIds =
+            Array.isArray(e.moduleIds) && e.moduleIds.length > 0
+              ? e.moduleIds
+              : e.moduleId
+                ? [e.moduleId]
+                : [];
+          const nextModIds = baseModIds.filter((id) => id !== moduleId);
+          if (nextModIds.length === 0) return null;
+          return {
+            ...e,
+            moduleIds: nextModIds,
+            moduleId: nextModIds[0],
+            lessonIds: (e.lessonIds || []).filter((id) => !removedLessonIds.has(id))
+          };
+        })
+        .filter(Boolean);
       if (state.currentModuleId === moduleId) {
         state.currentModuleId = null;
       }
@@ -259,7 +309,7 @@ export function createStudyEngine({ storageAdapter, todayFn = getTodayStr } = {}
           lesson.studiedAt = null;
           lesson.reviews = null;
         }
-        syncLessonWithExams(lesson.id, normalizedExamId);
+        syncLessonWithExams(lesson, normalizedExamId);
         persist('updateLesson');
         return { lesson, isNew: false };
       }
@@ -277,7 +327,7 @@ export function createStudyEngine({ storageAdapter, todayFn = getTodayStr } = {}
         createdAt: Date.now()
       };
       state.lessons.push(lesson);
-      syncLessonWithExams(lesson.id, normalizedExamId);
+      syncLessonWithExams(lesson, normalizedExamId);
       persist('createLesson');
       return { lesson, isNew: true };
     },
@@ -380,11 +430,32 @@ export function createStudyEngine({ storageAdapter, todayFn = getTodayStr } = {}
       };
     },
 
-    saveExam({ id, name, date, moduleId, lessonIds = [] }) {
+    saveExam({ id, name, date, moduleId, moduleIds, lessonIds = [] }) {
       const trimmedName = String(name || '').trim();
-      if (!trimmedName || !date || !moduleId) return null;
-      const checkedIds = Array.isArray(lessonIds) ? [...lessonIds] : [];
+      if (!trimmedName || !date) return null;
 
+      const checkedIds = Array.isArray(lessonIds)
+        ? Array.from(new Set(lessonIds.map((lid) => String(lid || '').trim()).filter(Boolean)))
+        : [];
+
+      const candidateModIds = [];
+      if (Array.isArray(moduleIds)) {
+        for (const mid of moduleIds) {
+          if (mid) candidateModIds.push(String(mid));
+        }
+      }
+      if (moduleId) {
+        candidateModIds.push(String(moduleId));
+      }
+      for (const lid of checkedIds) {
+        const lesson = this.getLesson(lid);
+        if (lesson?.moduleId) candidateModIds.push(lesson.moduleId);
+      }
+
+      const validModuleIds = Array.from(new Set(candidateModIds)).filter((mid) => this.getModule(mid));
+      if (validModuleIds.length === 0) return null;
+
+      const primaryModuleId = validModuleIds[0];
       let targetExamId = id || null;
       let isNew = false;
 
@@ -393,7 +464,8 @@ export function createStudyEngine({ storageAdapter, todayFn = getTodayStr } = {}
         if (!exam) return null;
         exam.name = trimmedName;
         exam.date = date;
-        exam.moduleId = moduleId;
+        exam.moduleId = primaryModuleId;
+        exam.moduleIds = validModuleIds;
         exam.lessonIds = checkedIds;
       } else {
         isNew = true;
@@ -402,7 +474,8 @@ export function createStudyEngine({ storageAdapter, todayFn = getTodayStr } = {}
           id: targetExamId,
           name: trimmedName,
           date,
-          moduleId,
+          moduleId: primaryModuleId,
+          moduleIds: validModuleIds,
           lessonIds: checkedIds,
           createdAt: Date.now()
         });

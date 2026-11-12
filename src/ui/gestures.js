@@ -281,6 +281,242 @@ export function attachMasterDetailSwipeBack({ pane, onCommitBack }) {
   };
 }
 
+export function attachTabSwipe({
+  container,
+  shouldIgnoreStart,
+  getAdjacentTab,
+  getActivePane,
+  onCommitTab
+} = {}) {
+  if (!container) return () => {};
+
+  let startX = 0;
+  let startY = 0;
+  let startTime = 0;
+  let lastX = 0;
+  let lastTime = 0;
+  let velocityX = 0;
+  let tracking = false;
+  let lockedHorizontal = false;
+  let activePane = null;
+  let activeAnim = null;
+
+  const cancelAnim = () => {
+    if (activeAnim) {
+      try {
+        activeAnim.cancel();
+      } catch {
+        // ignore
+      }
+      activeAnim = null;
+    }
+  };
+
+  const hasScrollableHorizontalAncestor = (target) => {
+    let node = target?.nodeType === 1 ? target : target?.parentElement;
+    while (node && node !== container) {
+      if (
+        node.matches?.('.SwipeableList-item.is-initialized, .SwipeableList-track, [data-no-tab-swipe]')
+      ) {
+        return true;
+      }
+      if (node.scrollWidth > node.clientWidth + 2) {
+        const overflowX = getComputedStyle(node).overflowX;
+        if (overflowX === 'auto' || overflowX === 'scroll') {
+          return true;
+        }
+      }
+      node = node.parentElement;
+    }
+    return false;
+  };
+
+  const onTouchStart = (event) => {
+    if (event.touches.length !== 1) return;
+    if (shouldIgnoreStart?.(event)) return;
+
+    const touch = event.touches[0];
+    const viewportWidth = window.innerWidth || container.clientWidth || 360;
+    if (touch.clientX < 24 || touch.clientX > viewportWidth - 24) return;
+    if (event.target?.closest?.('input, textarea, select, [contenteditable="true"]')) return;
+    if (hasScrollableHorizontalAncestor(event.target)) return;
+
+    cancelAnim();
+    startX = touch.clientX;
+    startY = touch.clientY;
+    startTime = performance.now();
+    lastX = startX;
+    lastTime = startTime;
+    velocityX = 0;
+    tracking = true;
+    lockedHorizontal = false;
+    activePane = null;
+  };
+
+  const onTouchMove = (event) => {
+    if (!tracking || event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    const dx = touch.clientX - startX;
+    const dy = touch.clientY - startY;
+
+    if (!lockedHorizontal) {
+      if (Math.abs(dx) <= 10 && Math.abs(dy) <= 10) return;
+      if (Math.abs(dy) >= Math.abs(dx) * 0.9) {
+        tracking = false;
+        return;
+      }
+      if (Math.abs(dx) > Math.abs(dy) * 1.15 && Math.abs(dx) > 14) {
+        lockedHorizontal = true;
+        activePane = getActivePane?.() || null;
+        cancelAnim();
+      } else {
+        return;
+      }
+    }
+
+    const now = performance.now();
+    const dt = Math.max(1, now - lastTime);
+    const instantVelocity = (touch.clientX - lastX) / dt;
+    velocityX = velocityX * 0.45 + instantVelocity * 0.55;
+    lastX = touch.clientX;
+    lastTime = now;
+
+    if (!activePane) return;
+
+    const delta = dx < 0 ? 1 : -1;
+    const hasTarget = Boolean(getAdjacentTab?.(delta));
+    const width = activePane.clientWidth || window.innerWidth || 360;
+
+    if (hasTarget) {
+      const visualDx = dx * 0.42;
+      const opacity = Math.max(0.72, 1 - Math.abs(dx) / (width * 1.5));
+      activePane.style.transform = `translate3d(${visualDx.toFixed(1)}px, 0, 0)`;
+      activePane.style.opacity = opacity.toFixed(3);
+    } else {
+      const rubberDx = Math.sign(dx) * Math.min(26, Math.pow(Math.abs(dx), 0.62));
+      activePane.style.transform = `translate3d(${rubberDx.toFixed(1)}px, 0, 0)`;
+      activePane.style.opacity = '';
+    }
+  };
+
+  const finishSwipe = async (event, cancelled = false) => {
+    if (!tracking) return;
+    tracking = false;
+
+    const pane = activePane;
+    activePane = null;
+
+    if (!lockedHorizontal) {
+      if (pane) {
+        pane.style.transform = '';
+        pane.style.opacity = '';
+      }
+      return;
+    }
+    lockedHorizontal = false;
+
+    const touch = event.changedTouches?.[0];
+    const dx = !cancelled && touch ? touch.clientX - startX : 0;
+    const dt = Math.max(1, performance.now() - startTime);
+    const avgVelocity = dx / dt;
+    const effectiveVelocity =
+      Math.abs(velocityX) > Math.abs(avgVelocity) && Math.sign(velocityX) === Math.sign(dx)
+        ? velocityX
+        : avgVelocity;
+
+    const delta = dx < 0 ? 1 : -1;
+    const targetTab = !cancelled && dx !== 0 ? getAdjacentTab?.(delta) : null;
+    const width = pane?.clientWidth || window.innerWidth || 360;
+    const shouldCommit =
+      Boolean(targetTab) &&
+      (Math.abs(dx) > Math.min(82, width * 0.24) ||
+        (Math.abs(effectiveVelocity) > 0.36 &&
+          Math.sign(effectiveVelocity) === Math.sign(dx) &&
+          Math.abs(dx) > 24));
+
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+
+    if (shouldCommit) {
+      if (pane && !reduced && typeof pane.animate === 'function') {
+        activeAnim = pane.animate(
+          [
+            {
+              transform: pane.style.transform || 'translate3d(0, 0, 0)',
+              opacity: pane.style.opacity || '1'
+            },
+            {
+              transform: `translate3d(${Math.sign(dx) * 32}px, 0, 0)`,
+              opacity: 0
+            }
+          ],
+          {
+            duration: 90,
+            easing: 'cubic-bezier(0.23, 1, 0.32, 1)',
+            fill: 'forwards'
+          }
+        );
+        try {
+          await activeAnim.finished;
+        } catch {
+          // ignore
+        }
+        cancelAnim();
+      }
+      if (pane) {
+        pane.style.transform = '';
+        pane.style.opacity = '';
+      }
+      onCommitTab?.(targetTab, delta > 0 ? 'next' : 'prev');
+      return;
+    }
+
+    if (pane) {
+      if (!reduced && typeof pane.animate === 'function' && pane.style.transform) {
+        activeAnim = pane.animate(
+          [
+            {
+              transform: pane.style.transform,
+              opacity: pane.style.opacity || '1'
+            },
+            {
+              transform: 'translate3d(0, 0, 0)',
+              opacity: 1
+            }
+          ],
+          {
+            duration: 180,
+            easing: 'cubic-bezier(0.23, 1, 0.32, 1)'
+          }
+        );
+        try {
+          await activeAnim.finished;
+        } catch {
+          // ignore
+        }
+        activeAnim = null;
+      }
+      pane.style.transform = '';
+      pane.style.opacity = '';
+    }
+  };
+
+  const onTouchEnd = (event) => finishSwipe(event, false);
+  const onTouchCancel = (event) => finishSwipe(event, true);
+
+  container.addEventListener('touchstart', onTouchStart, { passive: true });
+  container.addEventListener('touchmove', onTouchMove, { passive: true });
+  container.addEventListener('touchend', onTouchEnd, { passive: true });
+  container.addEventListener('touchcancel', onTouchCancel, { passive: true });
+
+  return () => {
+    cancelAnim();
+    container.removeEventListener('touchstart', onTouchStart);
+    container.removeEventListener('touchmove', onTouchMove);
+    container.removeEventListener('touchend', onTouchEnd);
+    container.removeEventListener('touchcancel', onTouchCancel);
+  };
+}
+
 /**
  * Controlador de SwipeableList via CSS Scroll Snap + IntersectionObserver,
  * seguindo a arquitetura moderna sem listeners manuais de drag/wheel.

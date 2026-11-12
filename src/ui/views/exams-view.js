@@ -69,34 +69,82 @@ export function createExamsView({
     const todayStr = engine.getTodayStr();
 
     for (const exam of exams) {
-      const mod = engine.getModule(exam.moduleId);
-      const colorObj = getColorConfig(mod?.colorKey);
+      const examModuleIds = engine.getExamModuleIds(exam);
+      const examModules = examModuleIds.map((id) => engine.getModule(id)).filter(Boolean);
+      const primaryMod = examModules[0] || null;
+      const colorObj = getColorConfig(primaryMod?.colorKey);
       const diff = daysDiff(exam.date, todayStr);
       const urgency = getUrgencyBadge(diff);
+      const modOrder = new Map(examModuleIds.map((id, idx) => [id, idx]));
 
       const linkedLessons = (exam.lessonIds || [])
         .map((id) => engine.getLesson(id))
         .filter(Boolean)
-        .sort((a, b) => Number(a.number) - Number(b.number));
+        .sort((a, b) => {
+          const modDiff = (modOrder.get(a.moduleId) ?? 999) - (modOrder.get(b.moduleId) ?? 999);
+          if (modDiff !== 0) return modDiff;
+          return Number(a.number) - Number(b.number);
+        });
       const studiedCount = linkedLessons.filter((l) => l.isStudied).length;
       const pct = linkedLessons.length > 0 ? Math.round((studiedCount / linkedLessons.length) * 100) : 0;
 
-      const squircleBtn = el(
-        'button',
-        {
-          type: 'button',
-          'aria-label': mod ? `Abrir módulo ${mod.name}` : 'Módulo',
-          onClick: () => mod && onOpenModuleDetail?.(mod.id)
-        },
-        createSquircleNode(getMedicalIconSvg(mod?.iconKey || 'heart'), colorObj)
-      );
+      const squircleVisual =
+        examModules.length <= 1
+          ? el(
+              'button',
+              {
+                type: 'button',
+                className: 'exam-squircle-btn',
+                'aria-label': primaryMod ? `Abrir módulo ${primaryMod.name}` : 'Módulo',
+                onClick: () => primaryMod && onOpenModuleDetail?.(primaryMod.id)
+              },
+              createSquircleNode(getMedicalIconSvg(primaryMod?.iconKey || 'heart'), colorObj)
+            )
+          : el(
+              'div',
+              { className: 'exam-squircle-stack' },
+              ...examModules.slice(0, 2).map((modItem, idx) => {
+                const modColor = getColorConfig(modItem.colorKey);
+                return el(
+                  'button',
+                  {
+                    type: 'button',
+                    className: 'exam-squircle-btn',
+                    style: `z-index: ${2 - idx};`,
+                    'aria-label': `Abrir módulo ${modItem.name}`,
+                    onClick: () => onOpenModuleDetail?.(modItem.id)
+                  },
+                  createSquircleNode(getMedicalIconSvg(modItem.iconKey), modColor)
+                );
+              }),
+              examModules.length > 2
+                ? el('span', {
+                    className: 'exam-squircle-extra tabular-nums',
+                    textContent: `+${examModules.length - 2}`
+                  })
+                : null
+            );
 
-      const moduleBadgeBtn = el('button', {
-        type: 'button',
-        className: 'badge-pill badge-pill--neutral',
-        textContent: mod ? mod.name : 'Módulo',
-        onClick: () => mod && onOpenModuleDetail?.(mod.id)
-      });
+      const moduleBadgeBtns =
+        examModules.length > 0
+          ? examModules.map((modItem) => {
+              const modColor = getColorConfig(modItem.colorKey);
+              return el(
+                'button',
+                {
+                  type: 'button',
+                  className: 'badge-pill badge-pill--neutral',
+                  onClick: () => onOpenModuleDetail?.(modItem.id)
+                },
+                el('span', {
+                  className: 'badge-dot',
+                  style: `color: ${modColor.hex};`,
+                  'aria-hidden': 'true'
+                }),
+                el('span', { textContent: modItem.name })
+              );
+            })
+          : [el('span', { className: 'badge-pill badge-pill--neutral', textContent: 'Módulo' })];
 
       const addLessonBtn = el('button', {
         type: 'button',
@@ -104,7 +152,7 @@ export function createExamsView({
         'aria-label': `Nova aula para ${exam.name}`,
         title: 'Adicionar aula vinculada',
         innerHTML: UI_ICONS.plus,
-        onClick: () => onQuickAddLessonForExam?.(exam.moduleId, exam.id)
+        onClick: () => onQuickAddLessonForExam?.(primaryMod?.id || exam.moduleId, exam.id)
       });
 
       const editBtn = el('button', {
@@ -135,6 +183,7 @@ export function createExamsView({
         }
       });
 
+      const isMultiModule = examModules.length > 1;
       const detailsSection =
         linkedLessons.length > 0
           ? el(
@@ -154,6 +203,9 @@ export function createExamsView({
                 'div',
                 { className: 'exam-checklist' },
                 ...linkedLessons.map((lesson) => {
+                  const lessonMod = engine.getModule(lesson.moduleId);
+                  const lessonModColor = getColorConfig(lessonMod?.colorKey);
+
                   const checkBtn = el('button', {
                     type: 'button',
                     className: `exam-lesson-check touch-target ${lesson.isStudied ? 'is-done' : ''}`,
@@ -185,7 +237,23 @@ export function createExamsView({
                     onClick: () => onViewLesson?.(lesson.id)
                   });
 
-                  return el('div', { className: 'exam-lesson-row' }, checkBtn, lessonTitleBtn);
+                  const lessonModTag =
+                    isMultiModule && lessonMod
+                      ? el(
+                          'span',
+                          {
+                            className: 'badge-pill badge-pill--neutral exam-lesson-mod-pill'
+                          },
+                          el('span', {
+                            className: 'badge-dot',
+                            style: `color: ${lessonModColor.hex};`,
+                            'aria-hidden': 'true'
+                          }),
+                          el('span', { textContent: lessonMod.name })
+                        )
+                      : null;
+
+                  return el('div', { className: 'exam-lesson-row' }, checkBtn, lessonTitleBtn, lessonModTag);
                 })
               )
             )
@@ -206,7 +274,7 @@ export function createExamsView({
           el(
             'div',
             { className: 'exam-card-left' },
-            squircleBtn,
+            squircleVisual,
             el(
               'div',
               { style: 'min-width: 0;' },
@@ -214,7 +282,6 @@ export function createExamsView({
               el(
                 'div',
                 { className: 'exam-meta' },
-                moduleBadgeBtn,
                 el('span', { className: 'tabular-nums', textContent: formatDateFull(exam.date) }),
                 el('span', { className: urgency.className, textContent: urgency.text })
               )
@@ -222,9 +289,10 @@ export function createExamsView({
           ),
           el('div', { className: 'lesson-card-actions' }, addLessonBtn, editBtn, deleteBtn)
         ),
+        el('div', { className: 'exam-modules-row' }, ...moduleBadgeBtns),
         el(
           'div',
-          { className: 'module-progress-track', style: 'margin-top: 12px;' },
+          { className: 'module-progress-track', style: 'margin-top: 10px;' },
           el('div', {
             className: 'module-progress-fill',
             style: `width: ${pct}%; background-color: ${colorObj.hex};`

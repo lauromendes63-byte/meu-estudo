@@ -1,5 +1,3 @@
-import '@fontsource/instrument-serif/latin-400.css';
-import '@fontsource/instrument-serif/latin-400-italic.css';
 import '@fontsource/plus-jakarta-sans/latin-400.css';
 import '@fontsource/plus-jakarta-sans/latin-500.css';
 import '@fontsource/plus-jakarta-sans/latin-600.css';
@@ -15,7 +13,7 @@ import './styles/motion.css';
 import { createLocalStorageAdapter } from './domain/storage-adapter.js';
 import { createStudyEngine } from './domain/study-engine.js';
 import { initToastListeners, vibrate } from './ui/feedback.js';
-import { attachMasterDetailSwipeBack } from './ui/gestures.js';
+import { attachMasterDetailSwipeBack, attachTabSwipe } from './ui/gestures.js';
 import { createRouter } from './ui/router.js';
 import { createPwaUpdater } from './pwa/updater.js';
 
@@ -170,6 +168,18 @@ function bootstrap() {
   attachMasterDetailSwipeBack({
     pane: document.getElementById('tab-modulo-detail'),
     onCommitBack: () => router.closeModuleDetail({ skipTransition: true })
+  });
+
+  // Wire horizontal swipe navigation between Módulos <-> Estudo <-> Provas
+  attachTabSwipe({
+    container: document.getElementById('main-content'),
+    shouldIgnoreStart: () => router.isOverlayOpen() || Boolean(engine.state.currentModuleId),
+    getAdjacentTab: (delta) => router.getAdjacentTab(delta),
+    getActivePane: () => router.getActiveTabPane(),
+    onCommitTab: (targetTabId, direction) => {
+      vibrate(6);
+      router.switchTab(targetTabId, { direction });
+    }
   });
 
   // Initial render & PWA setup
