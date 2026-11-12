@@ -1,6 +1,6 @@
 .DS_Store
 Thumbs.db
 node_modules
+dist
 .vercel
-
-.vercel
+*.log

@@ -1,0 +1,27 @@
+{
+  "name": "meu-estudo",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Caderno Pessoal de Estudos Médicos com Revisões Espaçadas D+1/D+7/D+30 e Gestão de Provas",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "node tests/e2e/smoke.mjs"
+  },
+  "dependencies": {
+    "@fontsource/instrument-serif": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "@fontsource/plus-jakarta-sans": "^5.2.8",
+    "canvas-confetti": "^1.9.4"
+  },
+  "devDependencies": {
+    "jsdom": "^29.0.0",
+    "playwright-core": "^1.59.1",
+    "vite": "^8.0.0",
+    "vitest": "^4.1.0"
+  }
+}

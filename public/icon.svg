@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <rect width="512" height="512" fill="#F7F6F3"/>
+  <g transform="translate(256, 256) scale(1.12) translate(-256, -255)">
+    <!-- Page block tucked flush inside front spine -->
+    <path d="M 350 144
+             C 368 144, 380 155, 380 172
+             L 380 364
+             C 380 381, 367 394, 350 394
+             L 170 394
+             C 151 394, 139 381, 139 364
+             L 139 344
+             L 350 344
+             Z"
+          fill="#ECEFF6"
+          stroke="#162654"
+          stroke-width="14"
+          stroke-linejoin="round"/>
+    <!-- Front Hardcover Codex (#162654) -->
+    <rect x="132" y="116" width="232" height="260" rx="28" fill="#162654"/>
+    <!-- Architectural Spine Binding Band (clean vector edge, zero AA halo) -->
+    <path d="M 160 116 L 178 116 L 178 376 L 160 376 C 144 376, 132 364, 132 348 L 132 144 C 132 128, 144 116, 160 116 Z"
+          fill="#223A7A"/>
+    <!-- Bookmark Ribbon Cutout (extends 2px above cover edge to prevent AA seam) -->
+    <path d="M 294 114 L 294 182 L 312 167 L 330 182 L 330 114 Z" fill="#F7F6F3"/>
+    <!-- Crisp Clinical P-QRS-T Pulse Waveform -->
+    <path d="M 194 258
+             L 216 258
+             L 228 232
+             L 246 292
+             L 268 192
+             L 289 298
+             L 304 244
+             L 318 258
+             L 342 258"
+          fill="none"
+          stroke="#F7F6F3"
+          stroke-width="19"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+  </g>
+</svg>

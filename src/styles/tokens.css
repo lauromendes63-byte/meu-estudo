@@ -1,0 +1,89 @@
+@layer reset, tokens, base, components, motion, utilities;
+
+@layer tokens {
+  :root {
+    /* Editorial Minimalist Claro Surface System */
+    --bg-canvas: #f7f6f3;
+    --bg-surface: #ffffff;
+    --bg-surface-subtle: #f1efe9;
+    --bg-surface-hover: #faf9f6;
+    --bg-surface-elevated: rgba(255, 255, 255, 0.92);
+
+    /* Borders & Hairlines */
+    --border-subtle: #e7e5df;
+    --border-strong: #d4d1c9;
+    --border-focus: #162654;
+
+    /* Ink Hierarchy (>= 4.5:1 Contrast on Canvas & White) */
+    --ink-primary: #141413;
+    --ink-secondary: #4a4945;
+    --ink-muted: #696862;
+    --ink-faint: #8e8c84;
+
+    /* Surgical Navy Signature Accent & Clinical Semantic Tones */
+    --accent-navy: #162654;
+    --accent-navy-hover: #1e3470;
+    --accent-navy-press: #101b3d;
+    --accent-navy-soft: #eceff6;
+    --accent-navy-border: #cfd7e6;
+
+    --tone-danger: #9f2f2d;
+    --tone-danger-bg: #fdebec;
+    --tone-danger-border: #f2c9cb;
+
+    --tone-warning: #8c5b00;
+    --tone-warning-bg: #fbf3db;
+    --tone-warning-border: #e9dba9;
+
+    --tone-success: #26542f;
+    --tone-success-bg: #edf3ec;
+    --tone-success-border: #cfe0cd;
+
+    --tone-info: #18547d;
+    --tone-info-bg: #e4f1fa;
+    --tone-info-border: #c5e0f3;
+
+    --tone-purple: #50357a;
+    --tone-purple-bg: #f3eefa;
+    --tone-purple-border: #decff2;
+
+    /* Typography Families */
+    --font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+    /* Radii & Spacing Scale */
+    --radius-xs: 8px;
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 18px;
+    --radius-xl: 24px;
+    --radius-pill: 9999px;
+
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+
+    /* Whisper Elevation (Flat Editorial Priority) */
+    --shadow-card: 0 1px 2px rgba(20, 20, 19, 0.03);
+    --shadow-dock: 0 8px 24px -6px rgba(20, 20, 19, 0.09), 0 1px 2px rgba(20, 20, 19, 0.04);
+    --shadow-sheet: 0 -10px 32px -8px rgba(20, 20, 19, 0.14);
+
+    /* Physics & Easing */
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+    --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+    --spring-subtle: linear(0, 0.45 15%, 1.04 38%, 0.99 65%, 1);
+    --dur-fast: 150ms;
+    --dur-normal: 240ms;
+    --dur-slow: 320ms;
+
+    /* Mobile Safe Area Layout Geometry */
+    --safe-top: max(12px, env(safe-area-inset-top));
+    --safe-bottom: max(12px, env(safe-area-inset-bottom));
+    --dock-height: 68px;
+  }
+}

@@ -1,4 +1,4 @@
-# Meu Estudo — Contexto do Projeto & Diretrizes Arquiteturais (v2.5.1)
+# Meu Estudo — Contexto do Projeto & Diretrizes Arquiteturais (v3.0.0)
 
 Este arquivo preserva todo o histórico de decisões visuais, técnicas e de UX tomadas ao longo do desenvolvimento do **Meu Estudo** (Caderno Pessoal de Estudos Médicos com Revisões Espaçadas `D+1`, `D+7`, `D+30` e Gestão de Provas), otimizado para o **Samsung Galaxy A54 (120Hz, Offline-First PWA)**.
 
@@ -6,46 +6,48 @@ Este arquivo preserva todo o histórico de decisões visuais, técnicas e de UX 
 
 ## 1. Regras de Ouro (O que NUNCA deve ser quebrado ou alterado sem pedido explícito)
 
-1. **Identidade Visual & Tema Azul Marinho (`#162654`):**
-   - **Ícone Oficial (`icon.svg` & Brasão do App):** Capelo de formatura + livro aberto com duas páginas curvas em traço contínuo Azul Marinho Profundo (`#162654` / `#132147`) centralizado na safe-zone (`scale(0.74)`) sobre gradiente perolado suave Full-Bleed (`#fff9f2` → `#f8fafc` → `#e6f2ff`), sem squircle interno no SVG para preenchimento de borda a borda no Android One UI (`purpose: "any maskable"` com `id: "./index.html"` no `manifest.json`), evitando ícones encolhidos em miniatura ou alertas de identidade.
-   - **Tema Principal:** Paleta `brand` em Azul Marinho / Escuro (`brand-600: #162654`, `brand-500: #1e3a8a`, `brand-700: #111c40`), harmonizando cabeçalho, abas, botões de ação, toasts e estados vazios com o novo ícone.
-2. **Barra Superior (Header) e Barra de Navegação Inferior (3 Abas) em Azul Marinho Escuro:**
-   - Tanto o `<header>` quanto o `<nav>` inferior possuem fundo Azul Marinho Profundo (`from-[#0f1a38] via-[#132147] to-[#162654]`) contrastando com textos e ícones brancos nítidos.
-   - O cabeçalho não possui bolinha amarela ao lado do dia da semana — o destaque central vem exclusivamente do brasão do App (Capelo + Livro Aberto) e da tipografia branca/celeste.
-   - Na barra inferior (`Módulos`, `Estudo`, `Provas`), o indicador de provas (`#nav-provas-badge`) é um círculo vermelho vibrante de alto contraste (`bg-rose-600 text-white`).
-3. **Arquitetura Single-File Offline-First:**
-   - Toda a aplicação principal reside em `index.html`, acompanhada por `sw.js` (Service Worker), `manifest.json`, `icon.svg` e `version.json`.
-   - Zero dependências externas pesadas de ícones; todos os ícones SVG são embutidos (`inline`) para carregamento instantâneo (`0ms`) offline.
-4. **Sistema de Ícones Médicos (`32x32` Anatomia Branca 3D & Alto Contraste Cromático):**
-   - Zero emojis nativos caricatos nas especialidades ou indicadores.
-   - **Reumatologia (`reuma`):** Estilo original travado permanentemente em fundo *dark-slate* (`#303b4d`) com osso branco em visão anterolateral de joelho (30°) e halo de inflamação articular.
-   - **Especialidades Renovadas:** Coração anatômico 3D com pulso ECG para Cardiologia (`heart`); Tireoide borboleta 3D pura para Endocrinologia (`endocrino`); osso anatômico 3D único com fratura angulada para Ortopedia (`bone`); rostinho de bebê com topete e chupeta para Pediatria (`baby`); corte histológico de pele 3D + folículo piloso + dermatoscópio para Dermatologia (`skin`); idoso com bengala curva e coração de cuidado para Geriatria (`geriatria`); e perfil humano nobre com símbolo Psi (`Ψ`) esculpido para Psiquiatria (`psiq`).
-   - **Diferenciação Cromática entre Módulos:** Cada módulo exibe seu próprio brilho cromático radial no squircle do ícone (`getIconSquircleStyle`), borda colorida (`1.5px`), barra de acento lateral e barra de progresso `h-2` viva.
-5. **Fluxo de Cadastro de Módulos e Aulas (Fricção Zero & UI 2026):**
-   - **Smart Auto-Match:** Ao digitar o nome do módulo (ex: *Cardio*, *Endócrino*, *Gineco*, *Gastro*, *Reumato*, *Ped*), seleciona automaticamente o ícone e a cor correspondente.
-   - **Visualização em Lista por Padrão (`moduleViewMode: 'list'`) & Botão `+` Único e Limpo:** A aba `Módulos` abre em formato de lista vertical limpa por padrão (com botão `+` em cada matéria). Dentro do detalhe da matéria (`#tab-modulo-detail`), há **apenas um único** botão `+ Adicionar Aula` (`#btn-add-lesson-in-module`), sem botões duplicados no topo/card ou FAB flutuante sobrepondo as aulas.
-   - **Novas Aulas (`#sheet-lesson`):** Layout moderno com seletor numérico integrado (`-` / `+`), card unificado de anotações com botão `• Lista` sem quebra de linha e barra horizontal de *pills* clínicos rápidos (`Alerta`, `Padrão-Ouro`, `Fisiopato`, `Diagnóstico`, `Conduta`, `Conceito`).
-   - **Botão "Salvar e +1":** Permite cadastrar várias aulas seguidas mantendo o *bottom sheet* aberto na numeração seguinte.
-6. **Ergonomia Mobile & Fluidez 120Hz One UI (v2.5.0):**
-   - **Transições deslizantes nativas One UI / Android a 120Hz:** Deslize lateral suave e contínuo ao abrir a matéria e ao voltar via botão ou gesto de swipe direito com física elástica, sem congelamento de quadros da View Transition.
-   - **Bottom Sheet & Modais com Física Elástica em Tempo Real:** Acompanhamento do dedo milimétrico para baixo, resistência elástica para cima e retorno elástico tipo mola caso solto antes de 80px.
-   - **Micro-interações Táteis & Recompensas:** Toques com resposta imediata (`tap-smooth active:scale-[0.965]`), animação de saída suave ao concluir ciclos e celebração visual com confete leve nas revisões.
-   - Preservação cirúrgica da posição de rolagem (*scroll restoration*) e suporte 1-para-1 ao botão voltar físico do Android.
+1. **Identidade Visual Editorial Minimalista Claro (`#F7F6F3`) & Azul Marinho Cirúrgico (`#162654`):**
+   - **Superfícies:** Canvas editorial claro (`#F7F6F3`), cards brancos planos (`#FFFFFF`) com bordas hairline (`1px solid #E7E5DF`) e elevação sutil sem gradientes pesados nem sombreamento excessivo.
+   - **Tipografia Empacotada Offline (`@fontsource`):** `Instrument Serif` para títulos editoriais e marca do cabeçalho, `Plus Jakarta Sans` para leitura e controles de UI, e `JetBrains Mono` (`tabular-nums`) para badges, percentuais, numeração de aulas e cronômetros.
+   - **Ícone Oficial (`public/icon.svg`, PNGs adaptativos & Brasão do App):** Emblema minimalista **Caderno Médico + Pulso Clínico** (capa dura Azul Marinho `#162654` com lombada tonal, bloco de páginas em `#ECEFF6`, marcador editorial e traço de ECG P-QRS-T) sobre fundo `#F7F6F3` plano full-bleed em `public/icon.svg`, `public/icon-192.png`, `public/icon-512.png`, `public/icon-maskable-512.png` (safe zone <= 66%) e `public/apple-touch-icon.png` (`purpose: "any"` e `"maskable"` com `id: "./index.html"` no `public/manifest.json`).
+   - **Azul Marinho (`#162654`):** Reservado de forma cirúrgica para CTAs primários, brasão editorial, borda de foco `:focus-visible` (contraste >= 3:1), indicador ativo no Dock flutuante inferior e marcadores conceituais; zero emojis caricatos na interface.
+2. **Barra Superior Editorial & Dock Flutuante Inferior:**
+   - Cabeçalho leve sobre o canvas com botão de busca global à esquerda, brasão + título `Meu Estudo` (`Med`) + status ao vivo no centro e configurações à direita.
+   - Navegação inferior em **Floating Minimal Dock** (`#app-dock`) translúcido com indicador deslizante CSS (`Módulos`, `Estudo`, `Provas`), ponto indicador vermelho de revisões (`#nav-rev-dot`) e contador de provas próximas (`#nav-provas-badge`).
+3. **Arquitetura Modular ES + Vite 100% Offline-First:**
+   - Zero CDNs externos de runtime (`dist/index.html` 100% autossuficiente com CSS em camadas `@layer reset, tokens, base, components, motion, utilities`, JS modular e fontes `.woff/.woff2` locais).
+   - Código-fonte separado em domínio puro (`src/domain/*`), iconografia (`src/icons/*`), infraestrutura UI/gestos/reconciliação (`src/ui/*`), views modulares (`src/ui/views/*`) e atualizador PWA (`src/pwa/updater.js`), com `public/` como fonte única de `manifest.json`, `icon.svg`, `sw.js` e `version.json`.
+   - `vite.config.js` injeta `__APP_VERSION__` / `__BUILD_TIME__` e gera `PRECACHE_ASSETS` automaticamente em `dist/sw.js`.
+   - **Zero `innerHTML` em conteúdo do usuário:** Notas clínicas são convertidas por `buildNotesFragment` em nós DOM puros (`createTextNode`), protegendo contra XSS.
+4. **Sistema de Ícones Médicos (`32x32` Traço Arquitetônico Ink `#162654` + Pastel Duotone):**
+   - Todos os **26** ícones anatômicos médicos utilizam traço arquitetônico preciso em Azul Marinho (`#162654`) com preenchimento pastel suave via `currentColor` sobre squircles claros com borda hairline `1px`.
+   - Chaves legadas (`joint`, `general`, `brain` em módulos de Psiquiatria/Mental) migram de forma determinística via `canonicalizeIconKey` e são normalizadas na inicialização mantendo 100% de compatibilidade com `meu_estudo_data_v1`.
+5. **Fluxo de Cadastro, Acessibilidade & Reconciliação DOM:**
+   - **Smart Auto-Match:** Sugere ícone e cor automaticamente ao digitar o nome do eixo/módulo.
+   - **Lista por Padrão (`meu_estudo_view_mode_v2` = `'list'`) & Botão Único na Matéria:** Alternável com Grade em 2 colunas; no detalhe (`#tab-modulo-detail`) permanece um único botão `+ Adicionar Aula` (`#btn-add-lesson-in-module`).
+   - **Botões Sem Aninhamento Interativo:** Cards de módulo, aula e itens de revisão utilizam `<button class="card-open-trigger">` com overlay CSS (`::after`), mantendo ações laterais (`+`, `Editar`, `Estudada`, `Concluir D+x`) como controles irmãos independentes em `z-index: 2`.
+   - **Folha de Nova Aula (`#sheet-lesson`):** Seletor numérico integrado (`-`/`+`), `input` >= `16px` (`max(1rem, 1em)`) para impedir zoom automático no iOS/Android, pílulas clínicas rápidas (`Alerta`, `Padrão-Ouro`, `Fisiopato`, `Diagnóstico`, `Conduta`, `Conceito`) e botão `Salvar e +1`.
+6. **Ergonomia Mobile, 120Hz & Física por Velocidade (v3.0.0):**
+   - **Master -> Detail Direcional:** `document.startViewTransition` com `types: ['forward' | 'backward']` + retorno interativo por arrasto da borda esquerda (`attachMasterDetailSwipeBack`) com fallback limpo e respeito a `prefers-reduced-motion`.
+   - **Sheets & Dialogs Nativos Top-Layer:** `<dialog closedby="any">` com `@starting-style` + `transition-behavior: allow-discrete` + `[data-closing]` fallback, prevenção de scroll chaining (`overscroll-behavior: contain`), e arrasto vertical interruptível por velocidade via Web Animations API + `setPointerCapture` (`attachSheetDrag`).
+   - **Swipe-to-Complete (`SwipeableList`):** CSS Scroll Snap horizontal com `IntersectionObserver` (sem interceptar `touchmove` na main thread) em `Para Revisar` e `Para Estudar`, sempre pareado com botão acessível visível, anúncio em região `role="status"` e Toast com **Desfazer (1 toque)**.
+   - Preservação de rolagem por aba e pilha de histórico 1-para-1 alinhada ao botão Voltar físico do Android (inclusive em *light-dismiss* de `<dialog>`).
 
 ---
 
 ## 2. Histórico de Versões Recentes (Git Log)
-- **v2.5.1 (23/10/2026):** Correção do loop no banner de atualização (sincronização do timestamp interno em `index.html` com `version.json`), limpeza agressiva de cache HTTP no reload e botão de fechar (`✕`) no banner flutuante.
-- **v2.5.0 (23/10/2026):** Ícone full-bleed adaptativo para Android One UI (eliminação definitiva do ícone minúsculo e resolução do aviso de segurança do Chrome), transições laterais One UI a 120Hz no detalhe do módulo, física elástica com arrasto contínuo no Bottom Sheet (`#sheet-lesson`), resposta tátil calibrada em botões e celebrações fluidas nas revisões de estudo.
-- **v2.4.3 (08/10/2026):** Ajuste fino da proporção minimalista do ícone (`icon.svg` + `manifest.json` com `purpose: "any"` sem zoom excessivo), visualização em Lista como padrão nos Módulos, remoção dos 3 botões `+` redundantes/sobrepostos dentro da matéria (mantendo apenas o botão único `+ Adicionar Aula`) e correção da pilha de histórico 1-para-1 para o botão Voltar no Chrome Android.
-- **v2.4.2 (08/10/2026):** Correção de runtime em `renderProvasTab` e ajustes iniciais de navegação.
-- **v2.4.1 (08/10/2026):** Restauração da Tireoide 3D pura para Endocrinologia, osso único com fratura angulada para Ortopedia e coração 3D com pulso ECG para Cardiologia.
-- **v2.4.0 (08/10/2026):** Header e Barra Inferior em Azul Marinho Escuro com texto branco e badge vermelho vibrante nas Provas; novos ícones 3D para Cardio, Endócrino, Ortopedia, Pediatria, Dermato, Geriatria e Psiquiatria; alto contraste cromático entre módulos; e redesign moderno da folha de criação de aulas (`#sheet-lesson`).
-- **v2.3.1 – v2.3.2 (08/10/2026):** Adaptação do novo ícone minimalista acadêmico (`icon.svg` e brasões internos com Capelo + Livro Aberto em Azul Marinho sobre Squircle Perolado) e transição do tema principal do app para Azul Marinho / Escuro (`#162654`).
-- **v2.3.0 (08/10/2026):** Unificação dos 21 ícones médicos na estética Dark-Slate & Anatomia Branca 3D (padrão Reumatologia); modernização do Header com Busca Rápida Global e status ao vivo; botão Desfazer (Undo) no Toast; filtros rápidos por status/módulo; sincronização bidirecional Prova ↔ Aula.
-- **v2.2.0 (04/10/2026):** Ergonomia UX mobile, performance 120Hz, restauração de rolagem e gestos de swipe com uma mão.
-- **v2.1.1 (04/10/2026):** Redesign dos ícones de Endócrino, Gastro e Nefro; trava permanente do estilo dark-slate & osso branco na Reumatologia.
-- **v2.1.0 (04/10/2026):** Novas aulas iniciam como não estudadas por padrão; ícones médicos 32x32 de alto contraste; joelho anterolateral 30° para Reumato.
-- **v2.0.0 – v2.0.1 (04/10/2026):** Pacote de ícones médicos vetoriais Duotone, cards de módulo limpos sem barra no topo, Smart Auto-Match e botão "Salvar e +1".
-- **v1.0.0 – v1.7.0 (25/09/2026):** Criação do PWA offline-first, detector de auto-update (`version.json`), suporte ao botão voltar do Android e redesign Light Mode.
+- **v3.0.0 (11/11/2026):** Remake completo da interface e arquitetura: migração do monólito para arquitetura modular ES + Vite (`src/domain`, `src/icons`, `src/ui`, `src/styles`, `src/pwa`) 100% livre de CDN externo; estética **Editorial Minimalista Claro (`#F7F6F3`)** com `Instrument Serif` + `Plus Jakarta Sans` + `JetBrains Mono` empacotadas; redesign dos 26 ícones anatômicos em traço `#162654` duotone; reconciliação cirúrgica de DOM (`reconcileKeyedList`); `<dialog>` top-layer com `@starting-style` + física interruptível via WAAPI + swipe-to-complete via CSS Scroll Snap + View Transitions direcionais; e suíte automatizada Vitest (unitário) + Edge/Playwright headless (E2E mobile Galaxy A54 + desktop).
+- **v2.5.1 (23/10/2026):** Correção do loop no banner de atualização (`version.json`), limpeza agressiva de cache HTTP e botão de fechar (`✕`) no banner flutuante.
+- **v2.5.0 (23/10/2026):** Ícone full-bleed adaptativo para Android One UI, transições laterais One UI a 120Hz no detalhe do módulo, física elástica com arrasto contínuo no Bottom Sheet (`#sheet-lesson`) e celebrações nas revisões.
+- **v2.4.0 – v2.4.3 (08/10/2026):** Novo sistema de ícones 3D, visualização em Lista por padrão nos Módulos, botão único `+ Adicionar Aula`, correção da pilha de histórico 1-para-1 e redesenho do modal de aula.
+- **v2.0.0 – v2.3.2 (04–08/10/2026):** Identidade Azul Marinho (`#162654`), busca rápida global, Toast com Desfazer (Undo), filtros por status, sincronização bidirecional Prova ↔ Aula e Smart Auto-Match.
+- **v1.0.0 – v1.7.0 (25/09/2026):** Criação do PWA offline-first com revisões espaçadas `D+1`, `D+7`, `D+30`, backup JSON e suporte offline.
 
+---
+
+## 3. Skills Vinculadas & Diretrizes de Atuação
+Sempre que o agente atuar no **Meu Estudo**, deve utilizar prioritariamente as seguintes skills instaladas:
+- **`design-mobile-apps`**: Manter ergonomia de uma mão no Samsung Galaxy A54 (19.5:9), alvos de toque >= 48px na safe-zone e navegação acessível pelo polegar.
+- **`emil-design-eng`**: Garantir micro-interações táteis de alta qualidade, física elástica contínua em sheets/modais e fluidez a 120Hz sem engasgos.
+- **`karpathy-llm-wiki`**: Ao estruturar ou resumir conteúdos médicos para as aulas e revisões espaçadas, utilizar a arquitetura de notas atômicas interligadas (`[[conceitos]]`), focando em alta retenção clínica e clareza diagnóstica.
+- **`web-design-guidelines`**: Auditar contraste de texto sobre fundo Azul Marinho (`#162654`), safe-areas de viewport móvel e integridade do Service Worker offline.

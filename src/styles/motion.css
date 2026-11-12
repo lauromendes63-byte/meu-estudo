@@ -1,0 +1,159 @@
+@layer motion {
+  /* ==================== TOP-LAYER DIALOG ANIMATIONS (@starting-style + [data-closing] fallback) ==================== */
+  dialog.app-dialog {
+    opacity: 0;
+    transition-property: opacity, translate, scale, display, overlay;
+    transition-duration: var(--dur-normal);
+    transition-timing-function: var(--ease-drawer);
+    transition-behavior: allow-discrete;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    dialog.app-dialog {
+      translate: 0 22px;
+      scale: 0.985;
+    }
+  }
+
+  dialog.app-dialog[open]:where(:not([data-closing])) {
+    opacity: 1;
+
+    @starting-style {
+      opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      translate: 0 0;
+      scale: 1;
+
+      @starting-style {
+        translate: 0 22px;
+        scale: 0.985;
+      }
+    }
+  }
+
+  dialog.app-dialog[open]:where(:not([data-closing]))::backdrop {
+    background-color: rgba(20, 20, 19, 0.36);
+
+    @starting-style {
+      background-color: rgba(20, 20, 19, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    dialog.app-dialog {
+      transition-duration: 120ms;
+    }
+  }
+
+  /* ==================== TAB & MASTER-DETAIL VIEW TRANSITIONS ==================== */
+  .tab-pane.is-entering {
+    @media (prefers-reduced-motion: no-preference) {
+      animation: paneFadeUp 170ms var(--ease-out) both;
+    }
+  }
+
+  @keyframes paneFadeUp {
+    from {
+      opacity: 0;
+      translate: 0 4px;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  /* Directional View Transitions for Module Master -> Detail Navigation */
+  @supports (view-transition-name: main) {
+    #main-content {
+      view-transition-name: main-shell;
+    }
+
+    ::view-transition-group(main-shell) {
+      animation-duration: 240ms;
+      animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    html:active-view-transition-type(forward)::view-transition-old(main-shell) {
+      animation-name: vtSlideOutLeft;
+    }
+
+    html:active-view-transition-type(forward)::view-transition-new(main-shell) {
+      animation-name: vtSlideInRight;
+    }
+
+    html:active-view-transition-type(backward)::view-transition-old(main-shell) {
+      animation-name: vtSlideOutRight;
+    }
+
+    html:active-view-transition-type(backward)::view-transition-new(main-shell) {
+      animation-name: vtSlideInLeft;
+    }
+
+    @keyframes vtSlideOutLeft {
+      to {
+        transform: translate3d(-18%, 0, 0);
+        opacity: 0.55;
+      }
+    }
+
+    @keyframes vtSlideInRight {
+      from {
+        transform: translate3d(100%, 0, 0);
+      }
+    }
+
+    @keyframes vtSlideOutRight {
+      to {
+        transform: translate3d(100%, 0, 0);
+      }
+    }
+
+    @keyframes vtSlideInLeft {
+      from {
+        transform: translate3d(-18%, 0, 0);
+        opacity: 0.55;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      ::view-transition-group(main-shell),
+      ::view-transition-old(main-shell),
+      ::view-transition-new(main-shell) {
+        animation: none !important;
+      }
+    }
+  }
+
+  /* Interactive Fallback Slide Class when StartViewTransition is skipped (e.g. swipe-back release) */
+  .detail-slide-enter {
+    @media (prefers-reduced-motion: no-preference) {
+      animation: detailIn 220ms var(--ease-out) both;
+    }
+  }
+
+  @keyframes detailIn {
+    from {
+      transform: translate3d(100%, 0, 0);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .SwipeableList-item.is-activating::before,
+    .SwipeableList-item.is-activating::after {
+      scale: 1;
+    }
+
+    .dock-indicator,
+    .segmented-thumb,
+    .module-progress-fill,
+    .sheet-drawer {
+      transition-duration: 120ms;
+    }
+  }
+}
